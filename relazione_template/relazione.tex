@@ -1,0 +1,84 @@
+%!TEX TS-program = pdflatex
+%!TEX encoding = UTF-8 Unicode
+
+%\documentclass[draft]{article} %TODO rimuovere draft in versione finale
+\documentclass{article}
+
+
+\usepackage[italian]{babel}
+\usepackage[utf8]{inputenc}
+
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+%\usepackage{float} %#$@&*!
+
+%\usepackage{caption}
+%\usepackage{hyperref} % lasciare per ultimo
+%\hypersetup{colorlinks=true, linkcolor=blue, citecolor=black, plainpages=false, urlcolor=blue}
+
+
+\usepackage{listings}
+%\lstset{  %TODO migliorare stile
+%   language=SQL,
+%   showspaces=false,
+%   showstringspaces=false,
+%   basicstyle=\ttfamily,
+%%   %numbers=left,
+%%   %numberstyle=\tiny,
+%   commentstyle=\color{gray}
+% }
+
+
+\usepackage{wallpaper}
+
+\begin{document}
+\ThisCenterWallPaper{0.95}{polloPallido}
+\begin{titlepage}
+ 	\centering
+  \Huge{\textbf{Progetto}}\\
+ 	[30mm]
+  \raggedright
+  \Large{\textbf{Studente:}}\\
+  \Large{\textbf{TRISTANO MUNINI}}\\
+ 	[90mm]
+ 	\centering
+  \LARGE{\underline{\textbf{ANNO ACCADEMICO 2018-2019}}}\\
+\end{titlepage}
+
+%Vecchia Versione
+%\begin{titlepage}
+%    \begin{center}
+%        \Huge{Tristano Munini}\\
+%        [2mm]
+%        \huge{MATR: 134419}\\
+%        \huge{tristano.munini@spes.uniud.it}
+%    \end{center}
+%\end{titlepage}
+
+
+\tableofcontents
+\thispagestyle{empty}
+\cleardoublepage
+\setcounter{page}{1}
+
+
+
+
+\input{./sections/introduction.tex}
+
+\cleardoublepage
+
+\input{./sections/introduction.tex}
+
+
+
+
+
+\end{document}
+
+% Code example
+%\begin{lstlisting}[language=bash,title={bash version}]
+%#!/bin/bash
+%echo "Hello , world!"
+%\end{lstlisting}
