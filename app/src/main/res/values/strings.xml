@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Ricettavola</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="main_recipes_tab_title">Recipes</string>
+    <string name="main_shopping_list_tab_title">Shopping List</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
 </resources>
