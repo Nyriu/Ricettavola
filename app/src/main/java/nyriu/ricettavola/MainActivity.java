@@ -1,5 +1,7 @@
 package nyriu.ricettavola;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -92,7 +97,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * A fragment containing recipes list.
      */
-    public static class RecipesFragment extends Fragment { // TODO perche static?
+    public static class RecipesFragment extends Fragment implements
+            RecipesRecyclerAdapter.OnRecipeListener
+    {
+         // TODO perche static?
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -151,9 +159,7 @@ public class MainActivity extends AppCompatActivity {
             VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(10);
             mRecyclerView.addItemDecoration(itemDecorator);
 
-            //new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
-
-            mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes);
+            mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes, this);
             mRecyclerView.setAdapter(mRecipesRecyclerAdapter);
 
             insertFakeRecipes(20);
@@ -167,6 +173,19 @@ public class MainActivity extends AppCompatActivity {
             }
             // Estremamente importante altrimenti NON aggiorna
             mRecipesRecyclerAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onRecipeClick(int position) {
+
+            //Log.d("DEBUG", "onRecipeClick: clicked");
+            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_LONG).show();
+            //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
+            Intent intent = new Intent(getContext(), RecipeActivity.class);
+            //intent.putExtra("selected_note", mNotes.get(position));
+            //intent.putExtra("new_note", false);
+            startActivity(intent);
         }
     }
 
@@ -206,8 +225,8 @@ public class MainActivity extends AppCompatActivity {
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        private int POSITION_RECIPES = 0;
-        private int POSITION_SHOPPING_LIST = 1;
+        private final int POSITION_RECIPES = 0;
+        private final int POSITION_SHOPPING_LIST = 1;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -218,13 +237,15 @@ public class MainActivity extends AppCompatActivity {
             // TODO qua va messa logica per schermate differenti per ricetta e lista della spesa
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == this.POSITION_RECIPES) {
-                return RecipesFragment.newInstance();
-            } else if (position == this.POSITION_SHOPPING_LIST) {
-                return ShoppingListFragment.newInstance();
-            } else {
-                // TODO throw error
-                return null;
+            switch (position) {
+
+                case POSITION_RECIPES:
+                    return RecipesFragment.newInstance();
+                case POSITION_SHOPPING_LIST:
+                    return ShoppingListFragment.newInstance();
+                default:
+                    // TODO throw error
+                    return null;
             }
         }
 
