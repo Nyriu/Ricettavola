@@ -2,6 +2,7 @@ package nyriu.ricettavola.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         try {
             viewHolder.title.setText(mRecipes.get(i).getTitle());
         } catch (NullPointerException e) {
-            //Log.e(TAG, "onBindViewHolder: " + e.getMessage());
+            Log.e("DEBUG", "onBindViewHolder: " + e.getMessage());
         }
     }
 

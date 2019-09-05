@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
+import nyriu.ricettavola.models.Ingredient;
+import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 public class RecipeActivity extends AppCompatActivity implements
         View.OnClickListener
@@ -123,13 +132,24 @@ public class RecipeActivity extends AppCompatActivity implements
     /**
      * A fragment containing recipe summary
      */
-    public static class IngredientsFragment extends Fragment {
+    public static class IngredientsFragment extends Fragment implements
+        IngredientsRecyclerAdapter.OnIngredientListener {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
 
+        // Ui compontents
+        private RecyclerView mRecyclerView;
+
+        // vars
+        private ArrayList<Ingredient> mIngredients; // TODO spostare nella IngredientActivity e passarlo qua alla creazione
+        private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
+        //private NoteRepository mNoteRepository; // TODO
+
+
         public IngredientsFragment() {
+                this.mIngredients = new ArrayList<>();
         }
 
         /**
@@ -151,12 +171,38 @@ public class RecipeActivity extends AppCompatActivity implements
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false);
+
+            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+            initRecyclerView();
+
             return rootView;
         }
 
+        public void initRecyclerView() {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+
+            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(2);
+            mRecyclerView.addItemDecoration(itemDecorator);
+
+            mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
+            mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
+
+            insertFakeIngredients(10);
+        }
+
+        private void insertFakeIngredients(int num) {
+            for (int i=0; i<num; i++) {
+                Ingredient note = new Ingredient("Ingredient #" + i);
+                mIngredients.add(note);
+            }
+            mIngredientsRecyclerAdapter.notifyDataSetChanged();
+        }
+
         @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onIngredientClick(int position) {
+            Log.d("DEBUG", "onIngredientClick: " + position);
+            Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
         }
     }
 
