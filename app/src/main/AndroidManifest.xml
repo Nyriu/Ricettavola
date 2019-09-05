@@ -21,7 +21,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RecipeActivity"></activity>
+        <activity android:name=".RecipeActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            ></activity>
 
     </application>
 

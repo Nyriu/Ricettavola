@@ -28,13 +28,20 @@ public class RecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("DEBUG", "onCreate: ");
+        Log.d("DEBUG", "onCreate:1");
         setContentView(R.layout.activity_recipe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Log.d("DEBUG", "onCreate: ");
-        //setSupportActionBar(toolbar);
-        Log.d("DEBUG", "onCreate: ");
+        Toolbar toolbar = (Toolbar) findViewById(R.id.recipe_toolbar);
+        Log.d("DEBUG", "onCreate:2" + toolbar);
+
+
+        try {
+            setSupportActionBar(toolbar);
+        } catch (Exception e) {
+            Log.d("DEBUG", "onCreate:" + e);
+        }
+
+        Log.d("DEBUG", "onCreate:3");
         //setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
