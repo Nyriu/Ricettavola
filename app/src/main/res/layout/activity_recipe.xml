@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    tools:context=".RecipeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -20,10 +20,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="enterAlways|scroll"
+            app:layout_scrollFlags="enterAlways"
             >
 
-            <include layout="@layout/toolbar_main"/>
+            <include layout="@layout/toolbar_recipe"/>
 
         </android.support.v7.widget.Toolbar>
 
@@ -38,14 +38,21 @@
                 android:id="@+id/tab_recipes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/main_recipes_tab_title"
+                android:text="@string/recipe_summary_tab_title"
                 />
 
             <android.support.design.widget.TabItem
-                android:id="@+id/tab_shopping_list"
+                android:id="@+id/tab_ingredients"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/main_shopping_list_tab_title"
+                android:text="@string/recipe_ingredients_tab_title"
+                />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/tab_preparation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_preparation_tab_title"
                 />
 
         </android.support.design.widget.TabLayout>
@@ -57,15 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_black_24dp"
         />
 
 </android.support.design.widget.CoordinatorLayout>

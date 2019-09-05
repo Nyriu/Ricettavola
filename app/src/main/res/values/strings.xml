@@ -1,10 +1,27 @@
 <resources>
     <string name="app_name">Ricettavola</string>
 
+    <!-- Main -->
     <string name="title_activity_main">MainActivity</string>
     <string name="main_recipes_tab_title">Recipes</string>
     <string name="main_shopping_list_tab_title">Shopping List</string>
 
+
+    <!-- Recipe -->
+    <string name="title_activity_recipe">RecipeActivity</string>
+
+    <string name="recipe_summary_tab_title">Summary</string>
+    <string name="recipe_ingredients_tab_title">Ingredients</string>
+    <string name="recipe_preparation_tab_title">Preparation</string>
+
+    <string name="recipe_summary_text_preparation">Preparation</string>
+    <string name="recipe_summary_text_cooking">Cooking</string>
+    <string name="recipe_summary_text_portions">Portions</string>
+    <string name="recipe_summary_text_difficulty">Difficulty</string>
+    <string name="recipe_summary_text_tags">TAGS</string>
+
+
+    <!-- Main Menu Settings -->
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
