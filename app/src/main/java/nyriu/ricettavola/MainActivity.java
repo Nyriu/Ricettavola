@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
      * A fragment containing recipes list.
      */
     public static class RecipesFragment extends Fragment implements
-            RecipesRecyclerAdapter.OnRecipeListener
-    {
-         // TODO perche static?
+            RecipesRecyclerAdapter.OnRecipeListener {
+        // TODO perche static?
+
         /**
          * The fragment argument representing the section number for this
          * fragment.

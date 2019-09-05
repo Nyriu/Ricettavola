@@ -13,36 +13,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
-public class RecipeActivity extends AppCompatActivity {
-
+public class RecipeActivity extends AppCompatActivity implements
+        View.OnClickListener
+{
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-
+    // UI
+    private ImageButton mBackArrow;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("DEBUG", "onCreate:1");
         setContentView(R.layout.activity_recipe);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.recipe_toolbar);
-        Log.d("DEBUG", "onCreate:2" + toolbar);
+        setSupportActionBar(toolbar);
 
-
-        try {
-            setSupportActionBar(toolbar);
-        } catch (Exception e) {
-            Log.d("DEBUG", "onCreate:" + e);
-        }
-
-        Log.d("DEBUG", "onCreate:3");
-        //setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -55,10 +50,36 @@ public class RecipeActivity extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+
+
+        mBackArrow = findViewById(R.id.toolbar_back_arrow);
+
+        setListeners();
+    }
+
+    private void setListeners() {
+        mBackArrow.setOnClickListener(this);
     }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recipe, menu);
+        return true;
+    }
 
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()) {
+
+            case R.id.toolbar_back_arrow:{
+                finish(); // distrugge activity
+                break;
+            }
+
+        }
+    }
 
 
 
@@ -66,10 +87,6 @@ public class RecipeActivity extends AppCompatActivity {
      * A fragment containing recipe summary
      */
     public static class SummaryFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
 
         public SummaryFragment() {
         }
@@ -103,6 +120,87 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * A fragment containing recipe summary
+     */
+    public static class IngredientsFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+
+        public IngredientsFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static IngredientsFragment newInstance() {
+            IngredientsFragment fragment = new IngredientsFragment();
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+        }
+    }
+
+
+    /**
+     * A fragment containing recipe summary
+     */
+    public static class PreparationFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+
+        public PreparationFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PreparationFragment newInstance() {
+            PreparationFragment fragment = new PreparationFragment();
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false); //TODO change
+            return rootView;
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+        }
+    }
+
 
 
 
@@ -129,16 +227,20 @@ public class RecipeActivity extends AppCompatActivity {
             switch (position) {
                 case POSITION_SUMMARY:
                     return SummaryFragment.newInstance();
+                case POSITION_INGREDIENTS:
+                    return IngredientsFragment.newInstance();
+                case POSITION_PREPARATION:
+                    return PreparationFragment.newInstance();
                 default:
                     // TODO throw error
                     return SummaryFragment.newInstance();
-                    //return null;
+                //return null;
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 }

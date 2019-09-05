@@ -29,7 +29,6 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         return new ViewHolder(view, mOnRecipeListener);
     }
 
-    private static final String TAG = "NotesRecyclerAdapter";
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
