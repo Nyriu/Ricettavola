@@ -102,13 +102,14 @@ public class MainActivity extends AppCompatActivity {
         private RecyclerView mRecyclerView;
 
         // vars
-        private ArrayList<Recipe> mRecipes = new ArrayList<>(); // TODO spostare nella mainActivity e passarlo qua alla creazione
+        private ArrayList<Recipe> mRecipes; // TODO spostare nella mainActivity e passarlo qua alla creazione
         private RecipesRecyclerAdapter mRecipesRecyclerAdapter;
         //private NoteRepository mNoteRepository; // TODO
 
 
 
         public RecipesFragment() {
+            this.mRecipes = new ArrayList<>();
         }
 
         /**
@@ -117,9 +118,12 @@ public class MainActivity extends AppCompatActivity {
          */
         public static RecipesFragment newInstance() {
             RecipesFragment fragment = new RecipesFragment();
-            Bundle args = new Bundle();
-            fragment.setArguments(args);
             return fragment;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
         }
 
         @Override
@@ -129,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
             View rootView = inflater.inflate(R.layout.recipes_fragment_main, container, false);
 
             mRecyclerView = rootView.findViewById(R.id.recyclerView);
+            initRecyclerView();
 
             return rootView;
         }
@@ -137,10 +142,9 @@ public class MainActivity extends AppCompatActivity {
         public void onActivityCreated(@Nullable Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             // TODO qua initRecyclerView()
-            initRecyclerView();
         }
 
-        private void initRecyclerView() {
+        public void initRecyclerView() {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(linearLayoutManager);
 
@@ -152,11 +156,11 @@ public class MainActivity extends AppCompatActivity {
             mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes);
             mRecyclerView.setAdapter(mRecipesRecyclerAdapter);
 
-            insertFakeRecipes();
+            insertFakeRecipes(20);
         }
 
-        private void insertFakeRecipes() {
-            for (int i=0; i<100; i++) {
+        private void insertFakeRecipes(int num) {
+            for (int i=0; i<num; i++) {
                 Recipe note = new Recipe();
                 note.setTitle("title #" + i);
                 mRecipes.add(note);
@@ -164,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
             // Estremamente importante altrimenti NON aggiorna
             mRecipesRecyclerAdapter.notifyDataSetChanged();
         }
-
     }
 
 
