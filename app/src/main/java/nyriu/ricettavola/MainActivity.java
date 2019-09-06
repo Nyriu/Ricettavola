@@ -1,7 +1,6 @@
 package nyriu.ricettavola;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,7 +15,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nyriu.ricettavola.adapters.RecipesRecyclerAdapter;
 import nyriu.ricettavola.models.Recipe;
@@ -39,9 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
 
+    // vars
+    private ArrayList<Recipe> mRecipes;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mRecipes = new ArrayList<>();
+        insertFakeRecipes(2);
+
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mRecipes);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -94,6 +102,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void insertFakeRecipes(int num) {
+        for (int i=0; i<num; i++) {
+            Recipe recipe = new Recipe();
+            mRecipes.add(recipe);
+        }
+    }
 
     /**
      * A fragment containing recipes list.
@@ -107,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         private RecyclerView mRecyclerView;
 
         // vars
-        private ArrayList<Recipe> mRecipes; // TODO spostare nella mainActivity e passarlo qua alla creazione
+        private ArrayList<Recipe> mRecipes = new ArrayList<>();
         private RecipesRecyclerAdapter mRecipesRecyclerAdapter;
         //private NoteRepository mNoteRepository; // TODO
 
@@ -118,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         public RecipesFragment() {
-            this.mRecipes = new ArrayList<>();
+            //this.mRecipes = new ArrayList<>();
         }
 
         /**
@@ -133,6 +147,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            try {
+                Log.d("DEBUG", "getting recipes");
+                this.mRecipes = (ArrayList)getArguments().getParcelableArrayList("recipes");
+                Log.d("DEBUG", "got #" + mRecipes.size() + "  " + mRecipes);
+            } catch (Exception e) {
+                // TODO gestire
+                Toast.makeText(getContext(), "Missing recipes!", Toast.LENGTH_LONG).show();
+            }
+
         }
 
         @Override
@@ -162,19 +186,8 @@ public class MainActivity extends AppCompatActivity {
 
             mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes, this);
             mRecyclerView.setAdapter(mRecipesRecyclerAdapter);
-
-            insertFakeRecipes(20);
         }
 
-        private void insertFakeRecipes(int num) {
-            for (int i=0; i<num; i++) {
-                Recipe note = new Recipe();
-                note.setTitle("title #" + i);
-                mRecipes.add(note);
-            }
-            // Estremamente importante altrimenti NON aggiorna
-            mRecipesRecyclerAdapter.notifyDataSetChanged();
-        }
 
         @Override
         public void onRecipeClick(int position) {
@@ -229,8 +242,13 @@ public class MainActivity extends AppCompatActivity {
         private final int POSITION_RECIPES = 0;
         private final int POSITION_SHOPPING_LIST = 1;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+        // vars
+        private ArrayList<Recipe> mRecipes;
+
+
+        public SectionsPagerAdapter(FragmentManager fm, ArrayList<Recipe> recipes) {
             super(fm);
+            this.mRecipes = recipes;
         }
 
         @Override
@@ -241,7 +259,12 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
 
                 case POSITION_RECIPES:
-                    return RecipesFragment.newInstance();
+                    RecipesFragment recipesFragment = RecipesFragment.newInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelableArrayList("recipes", this.mRecipes); // TODO sostituire con Parcelable?
+                    recipesFragment.setArguments(bundle);
+                    return recipesFragment;
+
                 case POSITION_SHOPPING_LIST:
                     return ShoppingListFragment.newInstance();
                 default:

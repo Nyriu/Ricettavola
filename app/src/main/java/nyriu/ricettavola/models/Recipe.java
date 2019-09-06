@@ -1,8 +1,7 @@
 package nyriu.ricettavola.models;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.util.ArraySet;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,9 +15,10 @@ import java.util.TreeSet;
  * It includes general informations (title, cooking time,...),
  * necessary ingredients and preparation steps
  */
-public class Recipe {
+public class Recipe implements Parcelable {
 
     // Summary Stuff
+    // TODO matrix
     private String title;
     private String preparation_time;
     private String cooking_time;
@@ -33,7 +33,6 @@ public class Recipe {
     private List<PreparationStep> preparationSteps = new ArrayList<>();
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public Recipe() {
         initPlaceholderRecipe();
     }
@@ -42,7 +41,6 @@ public class Recipe {
         this.title = title;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initPlaceholderRecipe() {
         this.title = "Biscuits with Nutella";
         this.preparation_time = "2 mins";
@@ -91,14 +89,12 @@ public class Recipe {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addStep(PreparationStep preparationStep) {
         // TODO verificare che siano numerati correttamente (no buchi, ordine corretto, ...)
         this.preparationSteps.add(preparationStep);
         reorderSteps();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void removeStep(PreparationStep preparationStep) {
         // TODO verificare che siano numerati correttamente (no buchi, ordine corretto, ...)
         this.preparationSteps.remove(preparationStep);
@@ -110,7 +106,6 @@ public class Recipe {
      * Order steps by their number
      * If number missing or not contiguous they will be reassigned starting from 0
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void reorderSteps() {
         // TODO cosa succede se due step stesso numero?
         this.preparationSteps.sort(new Comparator<PreparationStep>() {
@@ -205,6 +200,29 @@ public class Recipe {
         return tags;
     }
 
+
+
+    // #############################################################################################
+    // Parcelable Stuff
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.title);
+        dest.writeString(this.preparation_time);
+        dest.writeString(this.cooking_time);
+        dest.writeString(this.portions);
+
+        dest.writeInt(this.difficulty);
+        dest.writeList((ArrayList<TAG>)this.tags);
+
+        dest.writeList(this.ingredients);
+        dest.writeList(this.preparationSteps);
+    }
 }
 
 
