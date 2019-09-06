@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
             RecipesRecyclerAdapter.OnRecipeListener {
         // TODO perche static?
 
-
         // Ui compontents
         private RecyclerView mRecyclerView;
 
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         public RecipesFragment() {
-            //this.mRecipes = new ArrayList<>();
         }
 
         /**
@@ -149,11 +147,11 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             try {
-                // Log.d("DEBUG", "getting recipes");
                 this.mRecipes = (ArrayList)getArguments().getParcelableArrayList("recipes");
-                // Log.d("DEBUG", "got #" + mRecipes.size() + "  " + mRecipes);
+
             } catch (Exception e) {
                 // TODO gestire
+                Log.d("DEBUG", "Missing recipes");
                 Toast.makeText(getContext(), "Missing recipes!", Toast.LENGTH_LONG).show();
             }
 
@@ -185,13 +183,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onRecipeClick(int position) {
-            //Log.d("DEBUG", "onRecipeClick: clicked");
             //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_LONG).show();
-            //((AppCompatActivity)getActivity()).getSupportActionBar().hide();
-
             Intent intent = new Intent(getContext(), RecipeActivity.class);
-            //intent.putExtra("selected_note", mNotes.get(position));
-            //intent.putExtra("new_note", false);
+            intent.putExtra("recipe", this.mRecipes.get(position));
             startActivity(intent);
         }
     }

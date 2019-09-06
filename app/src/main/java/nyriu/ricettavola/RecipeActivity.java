@@ -26,17 +26,21 @@ import java.util.ArrayList;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.models.Ingredient;
+import nyriu.ricettavola.models.Recipe;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 public class RecipeActivity extends AppCompatActivity implements
-        View.OnClickListener
-{
+        View.OnClickListener {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     // UI
     private ImageButton mBackArrow;
+
+    // vars
+    private Recipe mRecipe;
+
 
 
     @Override
@@ -49,7 +53,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this.mRecipe);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -62,6 +66,14 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
         mBackArrow = findViewById(R.id.toolbar_back_arrow);
+
+        // Intent stuff
+        if (getIntent().hasExtra("recipe")) {
+            this.mRecipe = getIntent().getExtras().getParcelable("recipe");
+        } else {
+            this.mRecipe = new Recipe();
+        }
+        // END Intent stuff
 
         setListeners();
     }
@@ -97,6 +109,8 @@ public class RecipeActivity extends AppCompatActivity implements
      */
     public static class SummaryFragment extends Fragment {
 
+        private Recipe mRecipe;
+
         public SummaryFragment() {
         }
 
@@ -112,6 +126,8 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            this.mRecipe = (Recipe)getArguments().getParcelable("recipe");
         }
 
         @Override
@@ -263,8 +279,13 @@ public class RecipeActivity extends AppCompatActivity implements
         private final int POSITION_INGREDIENTS = 1;
         private final int POSITION_PREPARATION = 2;
 
-        public SectionsPagerAdapter(FragmentManager fm) {
+
+        // vars
+        private Recipe mRecipe;
+
+        public SectionsPagerAdapter(FragmentManager fm, Recipe recipe) {
             super(fm);
+            this.mRecipe = recipe;
         }
 
         @Override
@@ -274,7 +295,12 @@ public class RecipeActivity extends AppCompatActivity implements
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case POSITION_SUMMARY:
-                    return SummaryFragment.newInstance();
+                    SummaryFragment summaryFragment = SummaryFragment.newInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("recipe", this.mRecipe);
+                    summaryFragment.setArguments(bundle);
+                    return summaryFragment;
+
                 case POSITION_INGREDIENTS:
                     return IngredientsFragment.newInstance();
                 case POSITION_PREPARATION:
