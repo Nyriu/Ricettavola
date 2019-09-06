@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mRecipes = new ArrayList<>();
-        insertFakeRecipes(2);
+        insertFakeRecipes(1);
 
 
         setContentView(R.layout.activity_main);
