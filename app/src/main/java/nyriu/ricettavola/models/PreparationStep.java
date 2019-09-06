@@ -1,6 +1,9 @@
 package nyriu.ricettavola.models;
 
-public class PreparationStep implements Comparable {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class PreparationStep implements Comparable, Parcelable {
     private int number;
     private String description;
 
@@ -13,6 +16,7 @@ public class PreparationStep implements Comparable {
         this.number = number;
         this.description = description;
     }
+
 
     @Override
     public int compareTo(Object o) {
@@ -44,8 +48,11 @@ public class PreparationStep implements Comparable {
         return s;
     }
 
+
+
     // #############################################################################################
     // Getter & Setter
+
     public int getNumber() {
         return number;
     }
@@ -60,6 +67,40 @@ public class PreparationStep implements Comparable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+
+
+    // #############################################################################################
+    // Parcelable Stuff
+
+    protected PreparationStep(Parcel in) {
+        number = in.readInt();
+        description = in.readString();
+    }
+
+    public static final Creator<PreparationStep> CREATOR = new Creator<PreparationStep>() {
+        @Override
+        public PreparationStep createFromParcel(Parcel in) {
+            return new PreparationStep(in);
+        }
+
+        @Override
+        public PreparationStep[] newArray(int size) {
+            return new PreparationStep[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(number);
+        dest.writeString(description);
     }
 
 }

@@ -27,10 +27,10 @@ public class Recipe implements Parcelable {
     private Set<TAG> tags = new TreeSet<>();
 
     // Ingredients Stuff
-    private List<Ingredient> ingredients = new ArrayList<>();
+    private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
     // Preparation Stuff
-    private List<PreparationStep> preparationSteps = new ArrayList<>();
+    private ArrayList<PreparationStep> preparationSteps = new ArrayList<>();
 
 
     public Recipe() {
@@ -202,6 +202,14 @@ public class Recipe implements Parcelable {
         return tags;
     }
 
+    public ArrayList<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public ArrayList<PreparationStep> getPreparationSteps() {
+        return preparationSteps;
+    }
+
 
 
     // #############################################################################################
@@ -213,7 +221,8 @@ public class Recipe implements Parcelable {
         cooking_time = in.readString();
         portions = in.readString();
         difficulty = in.readInt();
-        // TODO aggiunere Tags, Ingredients, Steps
+        ingredients = in.createTypedArrayList(Ingredient.CREATOR);
+        preparationSteps = in.createTypedArrayList(PreparationStep.CREATOR);
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
@@ -231,8 +240,6 @@ public class Recipe implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-
-
     }
 
     @Override
@@ -242,6 +249,8 @@ public class Recipe implements Parcelable {
         dest.writeString(cooking_time);
         dest.writeString(portions);
         dest.writeInt(difficulty);
-        // TODO aggiunere Tags, Ingredients, Steps
+        dest.writeTypedList(ingredients);
+        dest.writeTypedList(preparationSteps);
     }
+
 }

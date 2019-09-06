@@ -1,6 +1,7 @@
 package nyriu.ricettavola;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.models.Ingredient;
@@ -140,7 +142,6 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
             this.mRecipe = (Recipe)getArguments().getParcelable("recipe");
         }
 
@@ -178,22 +179,16 @@ public class RecipeActivity extends AppCompatActivity implements
      */
     public static class IngredientsFragment extends Fragment implements
         IngredientsRecyclerAdapter.OnIngredientListener {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
 
         // Ui compontents
         private RecyclerView mRecyclerView;
 
         // vars
-        private ArrayList<Ingredient> mIngredients; // TODO spostare nella IngredientActivity e passarlo qua alla creazione
+        private ArrayList<Ingredient> mIngredients = new ArrayList<>();
         private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
-        //private NoteRepository mNoteRepository; // TODO
 
 
         public IngredientsFragment() {
-                this.mIngredients = new ArrayList<>();
         }
 
         /**
@@ -205,9 +200,17 @@ public class RecipeActivity extends AppCompatActivity implements
             return fragment;
         }
 
-        @Override
+        @ Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            try {
+                assert getArguments() != null;
+                this.mIngredients = getArguments().getParcelableArrayList("ingredients");
+                Log.d("DEBUG", "mIngredients " + mIngredients.toString());
+            } catch (Exception e) {
+                Log.d("DEBUG", "Missing ingredients");
+            }
+
         }
 
         @Override
@@ -232,15 +235,6 @@ public class RecipeActivity extends AppCompatActivity implements
             mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
             mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
 
-            insertFakeIngredients(10);
-        }
-
-        private void insertFakeIngredients(int num) {
-            for (int i=0; i<num; i++) {
-                Ingredient note = new Ingredient("Ingredient #" + i);
-                mIngredients.add(note);
-            }
-            mIngredientsRecyclerAdapter.notifyDataSetChanged();
         }
 
         @Override
@@ -321,16 +315,19 @@ public class RecipeActivity extends AppCompatActivity implements
             // TODO qua va messa logica per schermate differenti per ricetta e lista della spesa
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            Bundle bundle = new Bundle();
             switch (position) {
                 case POSITION_SUMMARY:
                     SummaryFragment summaryFragment = SummaryFragment.newInstance();
-                    Bundle bundle = new Bundle();
                     bundle.putParcelable("recipe", this.mRecipe);
                     summaryFragment.setArguments(bundle);
                     return summaryFragment;
 
                 case POSITION_INGREDIENTS:
-                    return IngredientsFragment.newInstance();
+                    IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
+                    bundle.putParcelableArrayList("ingredients", this.mRecipe.getIngredients());
+                    ingredientsFragment.setArguments(bundle);
+                    return ingredientsFragment;
                 case POSITION_PREPARATION:
                     return PreparationFragment.newInstance();
                 default:
