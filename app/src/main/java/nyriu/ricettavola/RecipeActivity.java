@@ -41,6 +41,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
     // UI
     private ImageButton mBackArrow;
+    private TextView mRecipeTitle;
 
     // vars
     private Recipe mRecipe;
@@ -79,6 +80,8 @@ public class RecipeActivity extends AppCompatActivity implements
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
 
+        mRecipeTitle = findViewById(R.id.recipe_title);
+        mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
         mBackArrow = findViewById(R.id.toolbar_back_arrow);
 
         setListeners();
