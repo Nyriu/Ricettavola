@@ -207,6 +207,8 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
+    // TODO Fare Recycler view per gli step!!!!
+
     /**
      * A fragment containing recipe summary
      */

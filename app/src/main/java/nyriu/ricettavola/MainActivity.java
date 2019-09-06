@@ -102,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
             RecipesRecyclerAdapter.OnRecipeListener {
         // TODO perche static?
 
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
 
         // Ui compontents
         private RecyclerView mRecyclerView;
@@ -117,6 +113,10 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
         public RecipesFragment() {
             this.mRecipes = new ArrayList<>();
         }
