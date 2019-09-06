@@ -149,9 +149,9 @@ public class MainActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             try {
-                Log.d("DEBUG", "getting recipes");
+                // Log.d("DEBUG", "getting recipes");
                 this.mRecipes = (ArrayList)getArguments().getParcelableArrayList("recipes");
-                Log.d("DEBUG", "got #" + mRecipes.size() + "  " + mRecipes);
+                // Log.d("DEBUG", "got #" + mRecipes.size() + "  " + mRecipes);
             } catch (Exception e) {
                 // TODO gestire
                 Toast.makeText(getContext(), "Missing recipes!", Toast.LENGTH_LONG).show();
@@ -171,12 +171,6 @@ public class MainActivity extends AppCompatActivity {
             return rootView;
         }
 
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            // TODO qua initRecyclerView()
-        }
-
         public void initRecyclerView() {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -191,7 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onRecipeClick(int position) {
-
             //Log.d("DEBUG", "onRecipeClick: clicked");
             //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_LONG).show();
             //((AppCompatActivity)getActivity()).getSupportActionBar().hide();

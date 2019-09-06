@@ -41,6 +41,7 @@ public class Recipe implements Parcelable {
         this.title = title;
     }
 
+
     private void initPlaceholderRecipe() {
         this.title = "Biscuits with Nutella";
         this.preparation_time = "2 mins";
@@ -58,6 +59,7 @@ public class Recipe implements Parcelable {
         addStep(new PreparationStep(2, "Get biscuits"));
         addStep(new PreparationStep(3, "Spread the Nutella on the biscuit"));
     }
+
 
     public void setDifficulty(int value) {
         if (value < 0 || value > 5) {
@@ -205,52 +207,41 @@ public class Recipe implements Parcelable {
     // #############################################################################################
     // Parcelable Stuff
 
+    protected Recipe(Parcel in) {
+        title = in.readString();
+        preparation_time = in.readString();
+        cooking_time = in.readString();
+        portions = in.readString();
+        difficulty = in.readInt();
+        // TODO aggiunere Tags, Ingredients, Steps
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
     @Override
     public int describeContents() {
         return 0;
+
+
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.title);
-        dest.writeString(this.preparation_time);
-        dest.writeString(this.cooking_time);
-        dest.writeString(this.portions);
-
-        dest.writeInt(this.difficulty);
-        dest.writeList((ArrayList<TAG>)this.tags);
-
-        dest.writeList(this.ingredients);
-        dest.writeList(this.preparationSteps);
+        dest.writeString(title);
+        dest.writeString(preparation_time);
+        dest.writeString(cooking_time);
+        dest.writeString(portions);
+        dest.writeInt(difficulty);
+        // TODO aggiunere Tags, Ingredients, Steps
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
