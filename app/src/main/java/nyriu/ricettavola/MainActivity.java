@@ -109,10 +109,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(this, RecipeActivity.class);
-        intent.putExtra("new_recipe", true);
-        startActivity(intent);
+
+        switch (v.getId()) {
+
+            case R.id.fab:{
+                //Intent intent = new Intent(this, RecipeActivity.class);
+                //intent.putExtra("new_recipe", true);
+                //startActivity(intent);
+                this.mSectionsPagerAdapter.addRecipe(new Recipe("Nuova!"));
+                // TODO verificare che anche in this sia aggiornato
+                //Log.d("DEBUG", "");
+                break;
+            }
+        }
     }
+
 
     /**
      * A fragment containing recipes list.
@@ -122,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // TODO perche static?
 
         // Ui compontents
-        private RecyclerView mRecyclerView;
+        public RecyclerView mRecyclerView; // TODO make rpivate
 
         // vars
         private ArrayList<Recipe> mRecipes = new ArrayList<>();
@@ -193,6 +204,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             intent.putExtra("recipe", this.mRecipes.get(position));
             startActivity(intent);
         }
+
+        public void addRecipe(Recipe r) {
+            this.mRecipes.add(r);
+            this.mRecipesRecyclerAdapter.notifyDataSetChanged();
+        }
+
     }
 
 
@@ -236,11 +253,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // vars
         private ArrayList<Recipe> mRecipes;
+        private RecipesFragment mRecipesFragment;
+        private ShoppingListFragment mShoppingListFragment;
 
 
         public SectionsPagerAdapter(FragmentManager fm, ArrayList<Recipe> recipes) {
             super(fm);
             this.mRecipes = recipes;
+
+            this.mRecipesFragment = RecipesFragment.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("recipes", this.mRecipes); // TODO sostituire con Parcelable?
+            this.mRecipesFragment.setArguments(bundle);
+
+            this.mShoppingListFragment = ShoppingListFragment.newInstance();
         }
 
         @Override
@@ -251,18 +277,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             switch (position) {
 
                 case POSITION_RECIPES:
-                    RecipesFragment recipesFragment = RecipesFragment.newInstance();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("recipes", this.mRecipes); // TODO sostituire con Parcelable?
-                    recipesFragment.setArguments(bundle);
-                    return recipesFragment;
+                    return this.mRecipesFragment;
 
                 case POSITION_SHOPPING_LIST:
-                    return ShoppingListFragment.newInstance();
+                    return this.mShoppingListFragment;
                 default:
                     // TODO throw error
                     return null;
             }
+        }
+
+        public void addRecipe(Recipe r) {
+            this.mRecipesFragment.addRecipe(r);
         }
 
         @Override
