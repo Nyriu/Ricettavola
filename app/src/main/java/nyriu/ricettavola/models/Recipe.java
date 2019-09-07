@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import nyriu.ricettavola.R;
+
 /**
  * Represents a recipe
  * It includes general informations (title, cooking time,...),
@@ -34,7 +36,7 @@ public class Recipe implements Parcelable {
 
 
     public Recipe() {
-        initPlaceholderRecipe();
+        initEmptyRecipe();
     }
 
     public Recipe(String title) {
@@ -42,7 +44,15 @@ public class Recipe implements Parcelable {
     }
 
 
-    private void initPlaceholderRecipe() {
+    private void initEmptyRecipe() {
+        this.title = "";
+        this.preparation_time = "";
+        this.cooking_time = "";
+        this.portions = "";
+        setDifficulty(0);
+    }
+
+    public void initPlaceholderRecipe() {
         this.title = "Biscuits with Nutella";
         this.preparation_time = "2 mins";
         this.cooking_time = "0 mins";

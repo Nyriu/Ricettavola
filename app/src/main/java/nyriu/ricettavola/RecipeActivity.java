@@ -1,10 +1,8 @@
 package nyriu.ricettavola;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,19 +13,18 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
@@ -35,6 +32,9 @@ import nyriu.ricettavola.models.Ingredient;
 import nyriu.ricettavola.models.PreparationStep;
 import nyriu.ricettavola.models.Recipe;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
+
+
+
 
 public class RecipeActivity extends AppCompatActivity implements
         View.OnClickListener {
@@ -47,6 +47,7 @@ public class RecipeActivity extends AppCompatActivity implements
     private TextView mRecipeTitle;
 
     // vars
+    private boolean mEditMode = false;
     private Recipe mRecipe;
 
 
@@ -61,8 +62,11 @@ public class RecipeActivity extends AppCompatActivity implements
         } else {
             this.mRecipe = new Recipe();
         }
-        // END Intent stuff
 
+        if (getIntent().hasExtra("new_recipe")) {
+            mEditMode = true;
+        }
+        // END Intent stuff
 
         setContentView(R.layout.activity_recipe);
 
@@ -71,7 +75,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this.mRecipe);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this.mRecipe, this.mEditMode);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -88,7 +92,23 @@ public class RecipeActivity extends AppCompatActivity implements
         mBackArrow = findViewById(R.id.toolbar_back_arrow);
 
         setListeners();
+
+
+        Log.d("DEBUG", "Activity onCreate: fine");
     }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        //Log.d("DEBUG", "Activity onCreateView: fine");
+        //Log.d("DEBUG", "Activity onCreateView: context = "+ context);
+        //if (ismEditMode()) {
+        //    putEditModeOn();
+        //} else {
+        //    putEditModeOff();
+        //}
+        return super.onCreateView(name, context, attrs);
+    }
+
 
     private void setListeners() {
         mBackArrow.setOnClickListener(this);
@@ -116,12 +136,38 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
 
+
+
+
+    // TODO funzioni da collegare con il tasto edit
+    private boolean ismEditMode() {
+        return mEditMode;
+    }
+
+    private void putEditModeOn() {
+        this.mEditMode = true;
+        this.mRecipeTitle.setText("EDIT MODE!");
+        this.mSectionsPagerAdapter.putEditModeOn();
+    }
+
+
+    private void putEditModeOff() {
+        this.mEditMode = false;
+        //this.mSectionsPagerAdapter.putEditModeOff(); // TODO
+    }
+
+
+
+
+
+
+
     /**
      * A fragment containing recipe summary
      */
-    public static class SummaryFragment extends Fragment {
+    public static class SummaryFragment extends EditableFragment {
 
-        // UI
+        // UI normal mode
         private AppCompatImageView recipe_image;
         private TextView recipe_title;
         private TextView preparation_content;
@@ -129,6 +175,12 @@ public class RecipeActivity extends AppCompatActivity implements
         private TextView portions_content;
         //private TextView difficulty_content; // TODO modificare
         //private TextView tags_content;       // TODO modificare
+
+        // UI edit mode
+        private EditText edit_recipe_title;
+
+
+
 
         // vars
         private Recipe mRecipe;
@@ -155,15 +207,28 @@ public class RecipeActivity extends AppCompatActivity implements
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            Log.d("DEUBG", "onCreateView summmary fragment");
+
             View rootView = inflater.inflate(R.layout.summary_fragment_recipe, container, false);
 
+            // UI normal mode
             //this.recipe_image = getActivity().findViewById(R.id.recipe_image);
             this.recipe_title = rootView.findViewById(R.id.recipe_title);
             this.preparation_content = rootView.findViewById(R.id.preparation_content);
             this.cooking_content = rootView.findViewById(R.id.cooking_content);
             this.portions_content = rootView.findViewById(R.id.portions_content);
+            // UI edit mode
+            this.edit_recipe_title = rootView.findViewById(R.id.edit_recipe_title);
+            Log.d("DEUBG", "edit_recipe_title " + edit_recipe_title);
+
 
             initializeFields();
+
+            if (isEditMode()) {
+                putEditModeOn();
+            }
+
+            Log.d("DEBUG", "Summary onCreateView fine");
             return rootView;
         }
 
@@ -171,19 +236,29 @@ public class RecipeActivity extends AppCompatActivity implements
 
         private void initializeFields() {
             // //this.recipe_image   // TODO
-            this.recipe_title.setText(this.mRecipe.getTitle());
+            this.recipe_title.setText(this.mRecipe.getTitle()); // TODO uncomment me
             this.preparation_content.setText(this.mRecipe.getPreparation_time());
             this.cooking_content.setText(this.mRecipe.getCooking_time());
             this.portions_content.setText(this.mRecipe.getPortions());
+
+            // mantengo allineata anche la parte editabile
+            this.edit_recipe_title.setText(this.recipe_title.getText());
         }
 
+        @Override
+        void putEditModeOn() {
+            Log.d("DEBUG", "putEditModeOn: Inside");
+            super.putEditModeOn();
+            this.recipe_title.setVisibility(View.GONE);
+            this.edit_recipe_title.setVisibility(View.VISIBLE);
+        }
     }
 
 
     /**
      * A fragment containing recipe summary
      */
-    public static class IngredientsFragment extends Fragment implements
+    public static class IngredientsFragment extends EditableFragment implements
             IngredientsRecyclerAdapter.OnIngredientListener {
 
         // Ui compontents
@@ -212,7 +287,6 @@ public class RecipeActivity extends AppCompatActivity implements
             try {
                 assert getArguments() != null;
                 this.mIngredients = getArguments().getParcelableArrayList("ingredients");
-                Log.d("DEBUG", "mIngredients " + mIngredients.toString());
             } catch (Exception e) {
                 Log.d("DEBUG", "Missing ingredients");
             }
@@ -248,13 +322,23 @@ public class RecipeActivity extends AppCompatActivity implements
             Log.d("DEBUG", "onIngredientClick: " + position);
             Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
         }
+
+        @Override
+        public void putEditModeOn() {
+
+        }
+
+        @Override
+        public void putEditModeOff() {
+
+        }
     }
 
 
     /**
      * A fragment containing recipe summary
      */
-    public static class PreparationFragment extends Fragment implements
+    public static class PreparationFragment extends EditableFragment implements
             PreparationStepsRecyclerAdapter.OnPreparationStepListener {
         // Ui compontents
         private RecyclerView mRecyclerView;
@@ -282,9 +366,8 @@ public class RecipeActivity extends AppCompatActivity implements
             try {
                 assert getArguments() != null;
                 this.mPreparationSteps = getArguments().getParcelableArrayList("steps");
-                Log.d("DEBUG", "mIngredients " + mPreparationSteps.toString());
             } catch (Exception e) {
-                Log.d("DEBUG", "Missing ingredients");
+                Log.d("DEBUG", "Missing preparation step");
             }
 
         }
@@ -318,6 +401,16 @@ public class RecipeActivity extends AppCompatActivity implements
             Log.d("DEBUG", "onPreparationsStepClick: " + position);
             Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
         }
+
+        @Override
+        public void putEditModeOn() {
+
+        }
+
+        @Override
+        public void putEditModeOff() {
+
+        }
     }
 
 
@@ -336,41 +429,54 @@ public class RecipeActivity extends AppCompatActivity implements
 
         // vars
         private Recipe mRecipe;
+        private boolean mEditMode;
+        EditableFragment[] mFragments;
 
-        public SectionsPagerAdapter(FragmentManager fm, Recipe recipe) {
+        public SectionsPagerAdapter(FragmentManager fm, Recipe recipe, boolean editMode) {
             super(fm);
             this.mRecipe = recipe;
+            this.mFragments = new EditableFragment[3];
+            this.mEditMode = editMode;
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("edit_mode", this.mEditMode);
+            bundle.putParcelable("recipe", this.mRecipe);
+            SummaryFragment summaryFragment = SummaryFragment.newInstance();
+            summaryFragment.setArguments(bundle);
+            this.mFragments[POSITION_SUMMARY] = summaryFragment;
+
+            bundle = new Bundle();
+            bundle.putBoolean("edit_mode", this.mEditMode);
+            bundle.putParcelableArrayList("ingredients", this.mRecipe.getIngredients());
+            IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
+            ingredientsFragment.setArguments(bundle);
+            this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
+
+            bundle = new Bundle();
+            bundle.putBoolean("edit_mode", this.mEditMode);
+            bundle.putParcelableArrayList("steps", this.mRecipe.getPreparationSteps());
+            PreparationFragment preparationFragment = PreparationFragment.newInstance();
+            preparationFragment.setArguments(bundle);
+            this.mFragments[POSITION_PREPARATION] = preparationFragment;
+            Log.d("DEBUG", "SectionPagerAdapter initialization");
         }
 
         @Override
         public Fragment getItem(int position) {
-            // TODO qua va messa logica per schermate differenti per ricetta e lista della spesa
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            Bundle bundle = new Bundle();
+
             switch (position) {
                 case POSITION_SUMMARY:
-                    SummaryFragment summaryFragment = SummaryFragment.newInstance();
-                    bundle.putParcelable("recipe", this.mRecipe);
-                    summaryFragment.setArguments(bundle);
-                    return summaryFragment;
+                    return this.mFragments[POSITION_SUMMARY];
 
                 case POSITION_INGREDIENTS:
-                    IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
-                    bundle.putParcelableArrayList("ingredients", this.mRecipe.getIngredients());
-                    ingredientsFragment.setArguments(bundle);
-                    return ingredientsFragment;
+                    return this.mFragments[POSITION_INGREDIENTS];
 
                 case POSITION_PREPARATION:
-                    PreparationFragment preparationFragment = PreparationFragment.newInstance();
-                    bundle.putParcelableArrayList("steps", this.mRecipe.getPreparationSteps());
-                    preparationFragment.setArguments(bundle);
-                    return preparationFragment;
+                    return this.mFragments[POSITION_PREPARATION];
 
                 default:
                     // TODO throw error
                     return SummaryFragment.newInstance();
-                //return null;
             }
         }
 
@@ -378,5 +484,52 @@ public class RecipeActivity extends AppCompatActivity implements
         public int getCount() {
             return 3;
         }
+
+
+        // Edit Mode On/Off
+
+        private void putEditModeOn() {
+            for (EditableFragment f:
+                 mFragments) {
+                f.putEditModeOn();
+            }
+        }
+
+        private void putEditModeOff() {
+            for (EditableFragment f:
+                    mFragments) {
+                f.putEditModeOff();
+            }
+        }
+
     }
+
+
+
+
+
+
+    public static class EditableFragment extends Fragment {
+        private boolean mEditMode;
+
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            try {
+                assert getArguments() != null;
+                this.mEditMode = getArguments().getBoolean("edit_mode");
+            } catch(Exception e) {
+                Log.d("DEBUG", "Missing edit_mode");
+            }
+        }
+
+        boolean isEditMode() {
+            return this.mEditMode;
+        }
+
+        void putEditModeOn() {}
+        void putEditModeOff() {}
+    }
+
 }

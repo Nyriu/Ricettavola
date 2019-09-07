@@ -32,7 +32,7 @@ import nyriu.ricettavola.adapters.RecipesRecyclerAdapter;
 import nyriu.ricettavola.models.Recipe;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mRecipes = new ArrayList<>();
-        insertFakeRecipes(20);
+        insertFakeRecipes(2);
 
 
         setContentView(R.layout.activity_main);
@@ -69,13 +69,9 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        fab.setOnClickListener(this);
+
 
     }
 
@@ -105,8 +101,17 @@ public class MainActivity extends AppCompatActivity {
     private void insertFakeRecipes(int num) {
         for (int i=0; i<num; i++) {
             Recipe recipe = new Recipe();
+            Log.d("DEBUG", "insertFakeRecipes: " + i);
+            recipe.initPlaceholderRecipe();
             mRecipes.add(recipe);
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent(this, RecipeActivity.class);
+        intent.putExtra("new_recipe", true);
+        startActivity(intent);
     }
 
     /**
