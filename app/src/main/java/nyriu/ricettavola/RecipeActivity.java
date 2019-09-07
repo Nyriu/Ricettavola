@@ -44,6 +44,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
     // UI
     private ImageButton mBackArrow;
+    private ImageButton mEditButton;
     private TextView mRecipeTitle;
 
     // vars
@@ -87,9 +88,11 @@ public class RecipeActivity extends AppCompatActivity implements
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
 
-        mRecipeTitle = findViewById(R.id.recipe_title);
+        mRecipeTitle = findViewById(R.id.toolbar_recipe_title);
         mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
+
         mBackArrow = findViewById(R.id.toolbar_back_arrow);
+        mEditButton = findViewById(R.id.toolbar_edit);
 
         setListeners();
 
@@ -99,19 +102,13 @@ public class RecipeActivity extends AppCompatActivity implements
 
     @Override
     public View onCreateView(String name, Context context, AttributeSet attrs) {
-        //Log.d("DEBUG", "Activity onCreateView: fine");
-        //Log.d("DEBUG", "Activity onCreateView: context = "+ context);
-        //if (ismEditMode()) {
-        //    putEditModeOn();
-        //} else {
-        //    putEditModeOff();
-        //}
         return super.onCreateView(name, context, attrs);
     }
 
 
     private void setListeners() {
         mBackArrow.setOnClickListener(this);
+        mEditButton.setOnClickListener(this);
     }
 
 
@@ -131,6 +128,13 @@ public class RecipeActivity extends AppCompatActivity implements
                 break;
             }
 
+            case R.id.toolbar_edit:{
+                if (!ismEditMode()) {
+                    putEditModeOn();
+                }
+                break;
+            }
+
         }
     }
 
@@ -139,14 +143,12 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
 
-    // TODO funzioni da collegare con il tasto edit
     private boolean ismEditMode() {
         return mEditMode;
     }
 
     private void putEditModeOn() {
         this.mEditMode = true;
-        this.mRecipeTitle.setText("EDIT MODE!");
         this.mSectionsPagerAdapter.putEditModeOn();
     }
 
@@ -218,7 +220,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
             // UI normal mode
             //this.recipe_image = getActivity().findViewById(R.id.recipe_image);
-            this.recipe_title        = rootView.findViewById(R.id.recipe_title);
+            this.recipe_title        = rootView.findViewById(R.id.toolbar_recipe_title);
             this.preparation_content = rootView.findViewById(R.id.preparation_content);
             this.cooking_content     = rootView.findViewById(R.id.cooking_content);
             this.portions_content    = rootView.findViewById(R.id.portions_content);
@@ -506,6 +508,8 @@ public class RecipeActivity extends AppCompatActivity implements
             }
         }
 
+
+
         @Override
         public int getCount() {
             return 3;
@@ -532,9 +536,6 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
 
-
-
-
     public static class EditableFragment extends Fragment {
         private boolean mEditMode;
 
@@ -554,8 +555,14 @@ public class RecipeActivity extends AppCompatActivity implements
             return this.mEditMode;
         }
 
-        void putEditModeOn() {}
-        void putEditModeOff() {}
-    }
+        void putEditModeOn() {
+            this.mEditMode = true;
+            // TODO verificare che non ci sia la possibilta di perdere le modifiche fatte entrando
+            // TODO due volte nella EditMode
+        }
 
+        void putEditModeOff() {
+            this.mEditMode = false;
+        }
+    }
 }

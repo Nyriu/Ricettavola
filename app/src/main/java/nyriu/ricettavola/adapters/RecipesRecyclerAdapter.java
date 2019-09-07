@@ -62,7 +62,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
 
         public ViewHolder(@NonNull View itemView, @NonNull OnRecipeListener onRecipeListener) {
             super(itemView);
-            title = itemView.findViewById(R.id.recipe_title);
+            title = itemView.findViewById(R.id.toolbar_recipe_title);
             this.mOnRecipeListener = onRecipeListener;
             itemView.setOnClickListener(this);
         }
