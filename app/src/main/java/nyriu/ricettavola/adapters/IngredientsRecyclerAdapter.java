@@ -19,8 +19,8 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
     private ArrayList<Ingredient> mIngredients = new ArrayList<>();
     private OnIngredientListener mOnIngredientListener;
 
-    public IngredientsRecyclerAdapter(ArrayList<Ingredient> recipes, @NonNull OnIngredientListener onIngredientListener) {
-        this.mIngredients = recipes;
+    public IngredientsRecyclerAdapter(ArrayList<Ingredient> ingredients, @NonNull OnIngredientListener onIngredientListener) {
+        this.mIngredients = ingredients;
         this.mOnIngredientListener = onIngredientListener;
     }
 

@@ -22,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
+import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.models.Ingredient;
+import nyriu.ricettavola.models.PreparationStep;
 import nyriu.ricettavola.models.Recipe;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
@@ -181,7 +184,7 @@ public class RecipeActivity extends AppCompatActivity implements
      * A fragment containing recipe summary
      */
     public static class IngredientsFragment extends Fragment implements
-        IngredientsRecyclerAdapter.OnIngredientListener {
+            IngredientsRecyclerAdapter.OnIngredientListener {
 
         // Ui compontents
         private RecyclerView mRecyclerView;
@@ -248,16 +251,18 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    // TODO Fare Recycler view per gli step!!!!
-
     /**
      * A fragment containing recipe summary
      */
-    public static class PreparationFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
+    public static class PreparationFragment extends Fragment implements
+            PreparationStepsRecyclerAdapter.OnPreparationStepListener {
+        // Ui compontents
+        private RecyclerView mRecyclerView;
+
+       // vars
+        private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
+        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter;
+
 
         public PreparationFragment() {
         }
@@ -271,25 +276,49 @@ public class RecipeActivity extends AppCompatActivity implements
             return fragment;
         }
 
-        @Override
+        @ Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            try {
+                assert getArguments() != null;
+                this.mPreparationSteps = getArguments().getParcelableArrayList("steps");
+                Log.d("DEBUG", "mIngredients " + mPreparationSteps.toString());
+            } catch (Exception e) {
+                Log.d("DEBUG", "Missing ingredients");
+            }
+
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false); //TODO change
+            View rootView = inflater.inflate(R.layout.preparationsteps_fragment_recipe, container, false);
+
+            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+            initRecyclerView();
+
             return rootView;
         }
 
+        public void initRecyclerView() {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+
+            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
+            mRecyclerView.addItemDecoration(itemDecorator);
+
+            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
+            mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
+
+        }
+
         @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
+        public void onPreparationStepClick(int position) {
+            Log.d("DEBUG", "onPreparationsStepClick: " + position);
+            Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
 
@@ -331,8 +360,13 @@ public class RecipeActivity extends AppCompatActivity implements
                     bundle.putParcelableArrayList("ingredients", this.mRecipe.getIngredients());
                     ingredientsFragment.setArguments(bundle);
                     return ingredientsFragment;
+
                 case POSITION_PREPARATION:
-                    return PreparationFragment.newInstance();
+                    PreparationFragment preparationFragment = PreparationFragment.newInstance();
+                    bundle.putParcelableArrayList("steps", this.mRecipe.getPreparationSteps());
+                    preparationFragment.setArguments(bundle);
+                    return preparationFragment;
+
                 default:
                     // TODO throw error
                     return SummaryFragment.newInstance();

@@ -57,7 +57,7 @@ public class Recipe implements Parcelable {
         addStep(new PreparationStep(4, "Eat"));
         addStep(new PreparationStep(1, "Get Nutella"));
         addStep(new PreparationStep(2, "Get biscuits"));
-        addStep(new PreparationStep(3, "Spread the Nutella on the biscuit"));
+        addStep(new PreparationStep(3, "Spread the Nutella on the biscuits"));
     }
 
 
@@ -132,12 +132,13 @@ public class Recipe implements Parcelable {
         //     }
         // }
 
-        // A prescindere resetto i numeri da 0 a len(steps)
-        int number = 1;
-        while (iterator.hasNext()) {
-            PreparationStep p = iterator.next();
-            p.setNumber(number++);
-        }
+        // TODO verificare correttezza
+        // // A prescindere resetto i numeri da 0 a len(steps)
+        // int number = 1;
+        // while (iterator.hasNext()) {
+        //     PreparationStep p = iterator.next();
+        //     p.setNumber(number++);
+        // }
 
     }
 
