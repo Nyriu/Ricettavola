@@ -24,7 +24,6 @@
         android:text="Recipe Title"
         android:textColor="@color/black"
         android:textSize="23sp" />
-
     <EditText
         android:id="@+id/edit_recipe_title"
         android:layout_width="match_parent"
@@ -38,135 +37,204 @@
         android:visibility="gone"
         />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="50">
+        android:layout_weight="50"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        >
 
+        <TableRow
+            android:background="@color/lightGrey"
+            android:layout_margin="2dp"
+            >
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/preparation_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_summary_text_preparation"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
 
-        <TextView
-            android:id="@+id/preparation_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:text="@string/recipe_summary_text_preparation"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+            <TextView
+                android:layout_weight="2"
+                android:id="@+id/preparation_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 mins"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
+            <EditText
+                android:layout_weight="2"
+                android:id="@+id/edit_preparation_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 mins"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                android:visibility="gone"
+                />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/cooking_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/preparation_text"
-            android:layout_alignStart="@+id/preparation_text"
-            android:layout_alignLeft="@+id/preparation_text"
-            android:text="@string/recipe_summary_text_cooking"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+        <TableRow
+            android:background="@color/lightGrey"
+            android:layout_margin="2dp"
+            >
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/cooking_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_summary_text_cooking"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
 
-        <TextView
-            android:id="@+id/portions_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cooking_text"
-            android:layout_alignStart="@+id/cooking_text"
-            android:layout_alignLeft="@+id/cooking_text"
-            android:text="@string/recipe_summary_text_portions"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+            <TextView
+                android:layout_weight="2"
+                android:id="@+id/cooking_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 mins"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
+            <EditText
+                android:layout_weight="2"
+                android:id="@+id/edit_cooking_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 mins"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                android:visibility="gone"
+                />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/difficulty_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/portions_text"
-            android:layout_alignStart="@+id/portions_text"
-            android:layout_alignLeft="@+id/portions_text"
-            android:text="@string/recipe_summary_text_difficulty"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+        <TableRow
+            android:background="@color/lightGrey"
+            android:layout_margin="2dp"
+            >
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/portions_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_summary_text_portions"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
 
-        <TextView
-            android:id="@+id/tags_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/difficulty_text"
-            android:layout_alignStart="@+id/difficulty_text"
-            android:layout_alignLeft="@+id/difficulty_text"
-            android:text="@string/recipe_summary_text_tags"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+            <TextView
+                android:layout_weight="2"
+                android:id="@+id/portions_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 people"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
+            <EditText
+                android:layout_weight="2"
+                android:id="@+id/edit_portions_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 people"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                android:visibility="gone"
+                />
+        </TableRow>
 
+        <TableRow
+            android:background="@color/lightGrey"
+            android:layout_margin="2dp"
+            >
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/difficulty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_summary_text_difficulty"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
 
-        <TextView
-            android:id="@+id/preparation_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/preparation_text"
-            android:layout_marginStart="45dp"
-            android:layout_marginLeft="45dp"
-            android:layout_toEndOf="@+id/preparation_text"
-            android:layout_toRightOf="@+id/preparation_text"
-            android:text="5 mins"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+            <TextView
+                android:layout_weight="2"
+                android:id="@+id/difficulty_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODO mettere"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
+            <EditText
+                android:layout_weight="2"
+                android:id="@+id/edit_difficulty_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODO EDIT"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                android:visibility="gone"
+                />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/cooking_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/preparation_content"
-            android:layout_alignStart="@+id/preparation_content"
-            android:layout_alignLeft="@+id/preparation_content"
-            android:layout_toEndOf="@+id/cooking_text"
-            android:layout_toRightOf="@+id/cooking_text"
-            android:text="5 mins"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+        <TableRow
+            android:background="@color/lightGrey"
+            android:layout_margin="2dp"
+            >
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_summary_text_tags"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
 
-        <TextView
-            android:id="@+id/portions_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cooking_content"
-            android:layout_alignStart="@+id/cooking_content"
-            android:layout_alignLeft="@+id/cooking_content"
-            android:layout_toEndOf="@+id/portions_text"
-            android:layout_toRightOf="@+id/portions_text"
-            android:text="4 people"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
+            <TextView
+                android:layout_weight="2"
+                android:id="@+id/tags_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODO mettere"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                />
+            <EditText
+                android:layout_weight="2"
+                android:id="@+id/edit_tags_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODO EDIT"
+                android:textColor="@color/black"
+                android:textSize="19sp"
+                android:padding="5dp"
+                android:visibility="gone"
+                />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/difficulty_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/portions_content"
-            android:layout_alignStart="@+id/portions_content"
-            android:layout_alignLeft="@+id/portions_content"
-            android:layout_toEndOf="@+id/difficulty_text"
-            android:layout_toRightOf="@+id/difficulty_text"
-            android:text="TODO mettere stelle"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
-
-        <TextView
-            android:id="@+id/tags_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/difficulty_content"
-            android:layout_alignStart="@+id/difficulty_content"
-            android:layout_alignLeft="@+id/difficulty_content"
-            android:layout_toEndOf="@+id/tags_text"
-            android:layout_toRightOf="@+id/tags_text"
-            android:text="TODO mettere TAGS"
-            android:textColor="@color/black"
-            android:textSize="19sp" />
-
-
-    </RelativeLayout>
+    </TableLayout>
 
 </LinearLayout>

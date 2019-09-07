@@ -173,11 +173,16 @@ public class RecipeActivity extends AppCompatActivity implements
         private TextView preparation_content;
         private TextView cooking_content;
         private TextView portions_content;
-        //private TextView difficulty_content; // TODO modificare
-        //private TextView tags_content;       // TODO modificare
+        private TextView difficulty_content; // TODO modificare
+        private TextView tags_content;       // TODO modificare
 
         // UI edit mode
         private EditText edit_recipe_title;
+        private EditText edit_preparation_content;
+        private EditText edit_cooking_content;
+        private EditText edit_portions_content;
+        private TextView edit_difficulty_content; // TODO modificare
+        private TextView edit_tags_content;       // TODO modificare
 
 
 
@@ -213,13 +218,20 @@ public class RecipeActivity extends AppCompatActivity implements
 
             // UI normal mode
             //this.recipe_image = getActivity().findViewById(R.id.recipe_image);
-            this.recipe_title = rootView.findViewById(R.id.recipe_title);
+            this.recipe_title        = rootView.findViewById(R.id.recipe_title);
             this.preparation_content = rootView.findViewById(R.id.preparation_content);
-            this.cooking_content = rootView.findViewById(R.id.cooking_content);
-            this.portions_content = rootView.findViewById(R.id.portions_content);
+            this.cooking_content     = rootView.findViewById(R.id.cooking_content);
+            this.portions_content    = rootView.findViewById(R.id.portions_content);
+            this.portions_content    = rootView.findViewById(R.id.portions_content);
+            this.difficulty_content  = rootView.findViewById(R.id.difficulty_content);
+            this.tags_content        = rootView.findViewById(R.id.tags_content);
             // UI edit mode
-            this.edit_recipe_title = rootView.findViewById(R.id.edit_recipe_title);
-            Log.d("DEUBG", "edit_recipe_title " + edit_recipe_title);
+            this.edit_recipe_title        = rootView.findViewById(R.id.edit_recipe_title);
+            this.edit_preparation_content = rootView.findViewById(R.id.edit_preparation_content);
+            this.edit_cooking_content     = rootView.findViewById(R.id.edit_cooking_content);
+            this.edit_portions_content    = rootView.findViewById(R.id.edit_portions_content);
+            this.edit_difficulty_content  = rootView.findViewById(R.id.edit_difficulty_content);
+            this.edit_tags_content        = rootView.findViewById(R.id.edit_tags_content);
 
 
             initializeFields();
@@ -236,21 +248,35 @@ public class RecipeActivity extends AppCompatActivity implements
 
         private void initializeFields() {
             // //this.recipe_image   // TODO
-            this.recipe_title.setText(this.mRecipe.getTitle()); // TODO uncomment me
+            this.recipe_title       .setText(this.mRecipe.getTitle());
             this.preparation_content.setText(this.mRecipe.getPreparation_time());
-            this.cooking_content.setText(this.mRecipe.getCooking_time());
-            this.portions_content.setText(this.mRecipe.getPortions());
+            this.cooking_content    .setText(this.mRecipe.getCooking_time());
+            this.portions_content   .setText(this.mRecipe.getPortions());
 
             // mantengo allineata anche la parte editabile
-            this.edit_recipe_title.setText(this.recipe_title.getText());
+            this.edit_recipe_title       .setText(this.recipe_title.getText());
+            this.edit_preparation_content.setText(this.edit_preparation_content.getText());
+            this.edit_cooking_content    .setText(this.edit_cooking_content.getText());
+            this.edit_portions_content   .setText(this.edit_portions_content.getText());
         }
 
         @Override
         void putEditModeOn() {
             Log.d("DEBUG", "putEditModeOn: Inside");
             super.putEditModeOn();
-            this.recipe_title.setVisibility(View.GONE);
-            this.edit_recipe_title.setVisibility(View.VISIBLE);
+            this.recipe_title       .setVisibility(View.GONE);
+            this.preparation_content.setVisibility(View.GONE);
+            this.cooking_content    .setVisibility(View.GONE);
+            this.portions_content   .setVisibility(View.GONE);
+            this.difficulty_content .setVisibility(View.GONE);
+            this.tags_content       .setVisibility(View.GONE);
+
+            this.edit_recipe_title       .setVisibility(View.VISIBLE);
+            this.edit_preparation_content.setVisibility(View.VISIBLE);
+            this.edit_cooking_content    .setVisibility(View.VISIBLE);
+            this.edit_portions_content   .setVisibility(View.VISIBLE);
+            this.edit_difficulty_content .setVisibility(View.VISIBLE);
+            this.edit_tags_content       .setVisibility(View.VISIBLE);
         }
     }
 
