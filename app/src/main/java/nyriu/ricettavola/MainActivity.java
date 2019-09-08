@@ -113,12 +113,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.fab:{
-                //Intent intent = new Intent(this, RecipeActivity.class);
-                //intent.putExtra("new_recipe", true);
-                //startActivity(intent);
-                this.mSectionsPagerAdapter.addRecipe(new Recipe("Nuova!"));
-                // TODO verificare che anche in this sia aggiornato
-                //Log.d("DEBUG", "");
+                Intent intent = new Intent(this, RecipeActivity.class);
+                intent.putExtra("new_recipe", true);
+                startActivity(intent);
+                //this.mSectionsPagerAdapter.addRecipe(new Recipe("Nuova!"));
                 break;
             }
         }

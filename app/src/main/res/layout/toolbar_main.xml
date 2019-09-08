@@ -27,8 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_weight="10"
         android:id="@+id/toolbar_search_container"
+        android:visibility="gone"
         >
-        <android.support.v7.widget.AppCompatImageButton
+    <android.support.v7.widget.AppCompatImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/ic_search_black_24dp"

@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -43,8 +42,8 @@ public class RecipeActivity extends AppCompatActivity implements
     private ViewPager mViewPager;
 
     // UI
-    private ImageButton mBackArrow;
-    private ImageButton mEditButton;
+    private Toolbar mToolbar;
+    private ImageButton mBackArrow, mEditButton, mCheckButton, mShareButton;
     private TextView mRecipeTitle;
 
     // vars
@@ -71,8 +70,8 @@ public class RecipeActivity extends AppCompatActivity implements
 
         setContentView(R.layout.activity_recipe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.recipe_toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.recipe_toolbar);
+        setSupportActionBar(mToolbar);
 
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
@@ -91,8 +90,10 @@ public class RecipeActivity extends AppCompatActivity implements
         mRecipeTitle = findViewById(R.id.toolbar_recipe_title);
         mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
 
-        mBackArrow = findViewById(R.id.toolbar_back_arrow);
-        mEditButton = findViewById(R.id.toolbar_edit);
+        mBackArrow   = findViewById(R.id.toolbar_back_arrow);
+        mEditButton  = findViewById(R.id.toolbar_edit);
+        mCheckButton = findViewById(R.id.toolbar_check);
+        mShareButton = findViewById(R.id.toolbar_share);
 
         setListeners();
 
@@ -107,16 +108,19 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
     private void setListeners() {
-        mBackArrow.setOnClickListener(this);
-        mEditButton.setOnClickListener(this);
+        mBackArrow  .setOnClickListener(this);
+        mEditButton .setOnClickListener(this);
+        mCheckButton.setOnClickListener(this);
+        mShareButton.setOnClickListener(this);
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_recipe, menu);
-        return true;
-    }
+    //@Override
+    //public boolean onCreateOptionsMenu(Menu menu) {
+    //    //getMenuInflater().inflate(R.menu.menu_recipe, menu);
+    //    return true;
+    //}
+
 
     @Override
     public void onClick(View v) {
@@ -135,12 +139,33 @@ public class RecipeActivity extends AppCompatActivity implements
                 break;
             }
 
+            case R.id.toolbar_check:{
+                if (ismEditMode()) {
+                    putEditModeOff();
+                }
+                break;
+            }
+
+            case R.id.toolbar_share:{
+                Toast.makeText(this, "Sharing not implemented yet!",Toast.LENGTH_SHORT).show();
+                break;
+            }
+
         }
     }
 
 
 
 
+
+    @Override
+    public void onBackPressed() {
+        if (ismEditMode()){
+            putEditModeOff();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
 
     private boolean ismEditMode() {
@@ -149,13 +174,33 @@ public class RecipeActivity extends AppCompatActivity implements
 
     private void putEditModeOn() {
         this.mEditMode = true;
+        putToolbarEditModeOn();
         this.mSectionsPagerAdapter.putEditModeOn();
+    }
+    private void putToolbarEditModeOn(){
+        mRecipeTitle.setText("Modify your recipe!");
+        //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(false);
+
+        this.mEditButton .setVisibility(View.GONE);
+        this.mBackArrow  .setVisibility(View.GONE);
+        this.mShareButton.setVisibility(View.GONE);
+        this.mCheckButton.setVisibility(View.VISIBLE);
     }
 
 
     private void putEditModeOff() {
         this.mEditMode = false;
-        //this.mSectionsPagerAdapter.putEditModeOff(); // TODO
+        putToolbarEditModeOff();
+        this.mSectionsPagerAdapter.putEditModeOff();
+    }
+    private void putToolbarEditModeOff(){
+        mRecipeTitle.setText(mRecipe.getTitle());
+        //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(true);
+
+        this.mEditButton .setVisibility(View.VISIBLE);
+        this.mBackArrow  .setVisibility(View.VISIBLE);
+        this.mShareButton.setVisibility(View.VISIBLE);
+        this.mCheckButton.setVisibility(View.GONE);
     }
 
 
@@ -257,9 +302,9 @@ public class RecipeActivity extends AppCompatActivity implements
 
             // mantengo allineata anche la parte editabile
             this.edit_recipe_title       .setText(this.recipe_title.getText());
-            this.edit_preparation_content.setText(this.edit_preparation_content.getText());
-            this.edit_cooking_content    .setText(this.edit_cooking_content.getText());
-            this.edit_portions_content   .setText(this.edit_portions_content.getText());
+            this.edit_preparation_content.setText(this.preparation_content.getText());
+            this.edit_cooking_content    .setText(this.cooking_content.getText());
+            this.edit_portions_content   .setText(this.portions_content.getText());
         }
 
         @Override
@@ -273,12 +318,51 @@ public class RecipeActivity extends AppCompatActivity implements
             this.difficulty_content .setVisibility(View.GONE);
             this.tags_content       .setVisibility(View.GONE);
 
+            // mantengo allineata anche la parte editabile
+            this.edit_recipe_title       .setText(this.recipe_title.getText());
+            this.edit_preparation_content.setText(this.preparation_content.getText());
+            this.edit_cooking_content    .setText(this.cooking_content.getText());
+            this.edit_portions_content   .setText(this.portions_content.getText());
+
             this.edit_recipe_title       .setVisibility(View.VISIBLE);
             this.edit_preparation_content.setVisibility(View.VISIBLE);
             this.edit_cooking_content    .setVisibility(View.VISIBLE);
             this.edit_portions_content   .setVisibility(View.VISIBLE);
             this.edit_difficulty_content .setVisibility(View.VISIBLE);
             this.edit_tags_content       .setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        void putEditModeOff() {
+            Log.d("DEBUG", "putEditModeOff: Inside");
+            super.putEditModeOff();
+            this.edit_recipe_title       .setVisibility(View.GONE);
+            this.edit_preparation_content.setVisibility(View.GONE);
+            this.edit_cooking_content    .setVisibility(View.GONE);
+            this.edit_portions_content   .setVisibility(View.GONE);
+            this.edit_difficulty_content .setVisibility(View.GONE);
+            this.edit_tags_content       .setVisibility(View.GONE);
+
+            // aggiorno la parte non editabile
+            this.recipe_title       .setText(String.valueOf(this.edit_recipe_title.getText()));
+            this.preparation_content.setText(String.valueOf(this.edit_preparation_content.getText()));
+            this.cooking_content    .setText(String.valueOf(this.edit_cooking_content.getText()));
+            this.portions_content   .setText(String.valueOf(this.edit_portions_content.getText()));
+
+            this.recipe_title       .setVisibility(View.VISIBLE);
+            this.preparation_content.setVisibility(View.VISIBLE);
+            this.cooking_content    .setVisibility(View.VISIBLE);
+            this.portions_content   .setVisibility(View.VISIBLE);
+            this.difficulty_content .setVisibility(View.VISIBLE);
+            this.tags_content       .setVisibility(View.VISIBLE);
+            updateRecipe();
+        }
+
+        private void updateRecipe(){
+            this.mRecipe.setTitle           (String.valueOf(this.edit_recipe_title.getText()));
+            this.mRecipe.setPreparation_time(String.valueOf(this.edit_preparation_content.getText()));
+            this.mRecipe.setCooking_time    (String.valueOf(this.edit_cooking_content.getText()));
+            this.mRecipe.setPortions        (String.valueOf(this.edit_portions_content.getText()));
         }
     }
 
@@ -295,6 +379,9 @@ public class RecipeActivity extends AppCompatActivity implements
         // vars
         private ArrayList<Ingredient> mIngredients = new ArrayList<>();
         private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
+
+        private String newIngredientText = "Insert new ingredient";
+
 
 
         public IngredientsFragment() {
@@ -330,6 +417,8 @@ public class RecipeActivity extends AppCompatActivity implements
             mRecyclerView = rootView.findViewById(R.id.recyclerView);
             initRecyclerView();
 
+            setUserVisibleHint(false);
+
             return rootView;
         }
 
@@ -349,17 +438,43 @@ public class RecipeActivity extends AppCompatActivity implements
         public void onIngredientClick(int position) {
             Log.d("DEBUG", "onIngredientClick: " + position);
             Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+            if (isEditMode()) {
+            }
         }
 
         @Override
         public void putEditModeOn() {
-
-        }
+            super.putEditModeOn();
+            mIngredients.add(new Ingredient(newIngredientText));
+            mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            mIngredientsRecyclerAdapter.putEditModeOn();
+       }
 
         @Override
         public void putEditModeOff() {
-
+            super.putEditModeOff();
+            for (Ingredient i:
+                 mIngredients) {
+               if (i.getDescription().equals(newIngredientText)) {
+                   mIngredients.remove(i);
+               }
+            }
+            mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            mIngredientsRecyclerAdapter.putEditModeOff();
         }
+
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+        }
+
+        @Override
+        public boolean getUserVisibleHint() {
+            Log.d("DEBUG", "now visible");
+            return super.getUserVisibleHint();
+        }
+
     }
 
 
@@ -507,7 +622,6 @@ public class RecipeActivity extends AppCompatActivity implements
                     return SummaryFragment.newInstance();
             }
         }
-
 
 
         @Override

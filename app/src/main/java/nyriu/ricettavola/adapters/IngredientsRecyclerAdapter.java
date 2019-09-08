@@ -2,20 +2,27 @@ package nyriu.ricettavola.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import nyriu.ricettavola.R;
 import nyriu.ricettavola.models.Ingredient;
+import nyriu.ricettavola.models.Recipe;
 
 
+public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<IngredientsRecyclerAdapter.ViewHolder> implements
+    EditableRecyclerAdapter {
 
-public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<IngredientsRecyclerAdapter.ViewHolder> {
+    private boolean mEditMode;
+
     private ArrayList<Ingredient> mIngredients = new ArrayList<>();
     private OnIngredientListener mOnIngredientListener;
 
@@ -34,12 +41,9 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-
-        try {
-            viewHolder.title.setText(mIngredients.get(i).getDescription());
-        } catch (NullPointerException e) {
-            Log.e("DEBUG", "onBindViewHolder: " + e.getMessage());
-        }
+        viewHolder.setEditMode(isEditMode());
+        viewHolder.mIngredient = mIngredients.get(i);
+        viewHolder.setTitle(mIngredients.get(i).getDescription());
     }
 
     @Override
@@ -57,25 +61,86 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
     /**
      * TODO describe
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, TextWatcher {
 
         TextView title;
+        EditText edit_title;
         OnIngredientListener mOnIngredientListener;
+
+        Ingredient mIngredient;
+
+        boolean editMode = false;
 
         public ViewHolder(@NonNull View itemView, @NonNull OnIngredientListener onIngredientListener) {
             super(itemView);
-            title = itemView.findViewById(R.id.ingredient_content);
+            title      = itemView.findViewById(R.id.ingredient_content);
+            edit_title = itemView.findViewById(R.id.edit_ingredient_content);
             this.mOnIngredientListener = onIngredientListener;
             itemView.setOnClickListener(this);
         }
 
+        public void setTitle(String s) {
+            title     .setText(s);
+            edit_title.setText(s);
+            edit_title.addTextChangedListener(this);
+            if (isEditMode()) {
+                title     .setVisibility(View.GONE);
+                edit_title.setVisibility(View.VISIBLE);
+            } else {
+                title     .setVisibility(View.VISIBLE);
+                edit_title.setVisibility(View.GONE);
+            }
+        }
+
         @Override
         public void onClick(View v) {
+            if (isEditMode()) {
+                edit_title.hasFocus();
+            }
             mOnIngredientListener.onIngredientClick(getAdapterPosition());
+        }
+
+        public boolean isEditMode() {
+            return editMode;
+        }
+
+        public void setEditMode(boolean editMode) {
+            this.editMode = editMode;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mIngredient.setDescription(String.valueOf(edit_title.getText()));
+           //title.setText(String.valueOf(edit_title.getText()));
         }
     }
 
     public interface OnIngredientListener{
         void onIngredientClick(int position);
     }
+
+
+
+    public boolean isEditMode() {
+        return this.mEditMode;
+    }
+
+    public void putEditModeOn() {
+        this.mEditMode = true;
+    }
+
+    public void putEditModeOff() {
+        this.mEditMode = false;
+    }
+
 }
