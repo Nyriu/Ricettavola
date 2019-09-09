@@ -1,5 +1,6 @@
 package nyriu.ricettavola;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,12 +19,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
@@ -188,10 +193,19 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    private void putEditModeOff() {
+    private void putEditModeOff() { // TODO non funziona con summary
         this.mEditMode = false;
         putToolbarEditModeOff();
         this.mSectionsPagerAdapter.putEditModeOff();
+        hideSofKeyboard();
+    }
+    private void hideSofKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
     private void putToolbarEditModeOff(){
         mRecipeTitle.setText(mRecipe.getTitle());
@@ -380,9 +394,6 @@ public class RecipeActivity extends AppCompatActivity implements
         private ArrayList<Ingredient> mIngredients = new ArrayList<>();
         private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
 
-        private String newIngredientText = "Insert new ingredient";
-
-
 
         public IngredientsFragment() {
         }
@@ -445,7 +456,7 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void putEditModeOn() {
             super.putEditModeOn();
-            mIngredients.add(new Ingredient(newIngredientText));
+            mIngredients.add(new Ingredient(""));
             mIngredientsRecyclerAdapter.notifyDataSetChanged();
             mIngredientsRecyclerAdapter.putEditModeOn();
        }
@@ -453,12 +464,14 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void putEditModeOff() {
             super.putEditModeOff();
+            List<Ingredient> toRemove = new ArrayList<>();
             for (Ingredient i:
                  mIngredients) {
-               if (i.getDescription().equals(newIngredientText)) {
-                   mIngredients.remove(i);
+               if (i.getDescription().equals("")) {
+                   toRemove.add(i);
                }
             }
+            mIngredients.removeAll(toRemove);
             mIngredientsRecyclerAdapter.notifyDataSetChanged();
             mIngredientsRecyclerAdapter.putEditModeOff();
         }
@@ -506,6 +519,8 @@ public class RecipeActivity extends AppCompatActivity implements
         @ Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
             try {
                 assert getArguments() != null;
                 this.mPreparationSteps = getArguments().getParcelableArrayList("steps");

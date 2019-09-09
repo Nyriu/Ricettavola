@@ -20,6 +20,9 @@
     <string name="recipe_summary_text_difficulty">Difficulty</string>
     <string name="recipe_summary_text_tags">TAGS</string>
 
+    <string name="recipe_ingredients_placeholder_item">Insert new ingredient</string>
+
+
 
     <!-- Main Menu Settings -->
     <string name="action_settings">Settings</string>

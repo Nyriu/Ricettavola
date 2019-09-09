@@ -5,11 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         viewHolder.setEditMode(isEditMode());
         viewHolder.mIngredient = mIngredients.get(i);
         viewHolder.setTitle(mIngredients.get(i).getDescription());
+        viewHolder.mIngredientsRecyclerAdapter = this;
     }
 
     @Override
@@ -52,6 +56,9 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         return this.mIngredients.size();
     }
 
+    public void focusNext(int position) {
+        Log.d("DEBUG", "focusNext: ");
+    }
 
 
 
@@ -68,6 +75,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         OnIngredientListener mOnIngredientListener;
 
         Ingredient mIngredient;
+        IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
 
         boolean editMode = false;
 
@@ -75,6 +83,11 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
             super(itemView);
             title      = itemView.findViewById(R.id.ingredient_content);
             edit_title = itemView.findViewById(R.id.edit_ingredient_content);
+            edit_title.setMaxLines(1);
+            edit_title.setSingleLine(true);
+
+            edit_title.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
             this.mOnIngredientListener = onIngredientListener;
             itemView.setOnClickListener(this);
         }
@@ -115,7 +128,6 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
         }
 
         @Override
