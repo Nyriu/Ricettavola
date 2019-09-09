@@ -10,9 +10,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:padding="5dp"
         android:textSize="22sp"
         android:textColor="@color/black"
-        android:text="Insert new ingredient:"
+        android:text="@string/recipe_ingredient_popup_title"
         />
 
     <EditText
@@ -24,7 +25,7 @@
         android:textSize="22sp"
         android:textColor="@color/black"
         android:background="@color/white"
-        android:hint="@string/recipe_ingredients_placeholder_item"
+        android:hint="@string/recipe_ingredient_placeholder_item"
         android:inputType="" />
 
 

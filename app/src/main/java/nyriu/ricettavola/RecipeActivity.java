@@ -20,7 +20,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
@@ -62,8 +60,6 @@ public class RecipeActivity extends AppCompatActivity implements
     private boolean mEditMode = false;
     private Recipe mRecipe;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,10 +69,10 @@ public class RecipeActivity extends AppCompatActivity implements
             this.mRecipe = getIntent().getExtras().getParcelable("recipe");
         } else {
             this.mRecipe = new Recipe();
+            this.mRecipe.initExampleRecipe();
         }
-
         if (getIntent().hasExtra("new_recipe")) {
-            mEditMode = true;
+            // TODO da usare per salvare la ricetta
         }
         // END Intent stuff
 
@@ -117,7 +113,6 @@ public class RecipeActivity extends AppCompatActivity implements
     public View onCreateView(String name, Context context, AttributeSet attrs) {
         return super.onCreateView(name, context, attrs);
     }
-
 
     private void setListeners() {
         mBackArrow  .setOnClickListener(this);
@@ -545,7 +540,7 @@ public class RecipeActivity extends AppCompatActivity implements
             // inflate the layout of the popup window
             LayoutInflater inflater = (LayoutInflater)
                     getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
+            View popupView = inflater.inflate(R.layout.popup_window, null);
 
             // create the popup window
             int width = LinearLayout.LayoutParams.WRAP_CONTENT;

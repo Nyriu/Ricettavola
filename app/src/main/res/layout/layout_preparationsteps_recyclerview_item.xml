@@ -26,17 +26,28 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:background="@color/lightGrey"
             android:textSize="20sp"
+            android:padding="5dp"
             />
 
         <TextView
             android:id="@+id/step_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Placeholder placeholder placeholder placeholder placeholder placeholder "
+            android:text="Placeholder"
             android:layout_toEndOf="@+id/step_number"
             android:layout_marginStart="20dp"
             android:textColor="@color/black"
             android:textSize="16sp"
+            />
+        <EditText
+            android:id="@+id/edit_step_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/step_number"
+            android:layout_marginStart="20dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:hint="@string/recipe_ingredient_placeholder_item"
             />
 
     </RelativeLayout>

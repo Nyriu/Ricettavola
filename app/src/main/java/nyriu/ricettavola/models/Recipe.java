@@ -52,7 +52,22 @@ public class Recipe implements Parcelable {
         setDifficulty(0);
     }
 
-    public void initPlaceholderRecipe() {
+    public void initExampleRecipe() { // TODO parametrizzare
+        this.title = "Put your title";
+        this.preparation_time = "number of minutes";
+        this.cooking_time = "number of minutes";
+        this.portions = "number of people";
+        setDifficulty(2);
+
+        addTag(TAG.PLACEHOLDER);
+
+        addIngredient(new Ingredient("Your ingredient"));
+
+        addStep(new PreparationStep(1, "First step"));
+        addStep(new PreparationStep(2, "Second step"));
+    }
+
+    public void initPlaceholderRecipe() { // TODO parametrizzare
         this.title = "Biscuits with Nutella";
         this.preparation_time = "2 mins";
         this.cooking_time = "0 mins";

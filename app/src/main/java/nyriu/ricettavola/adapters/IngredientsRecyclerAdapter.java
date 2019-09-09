@@ -48,6 +48,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.setTitle(mIngredients.get(i).getDescription());
         viewHolder.setEditMode(isEditMode());
+        viewHolder.mIngredientsRecyclerAdapter = this;
     }
 
     @Override
@@ -69,7 +70,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         //OnIngredientListener mOnIngredientListener;
 
         //Ingredient mIngredient;
-        //IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
+        IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
 
 
 
@@ -119,6 +120,9 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
             switch (v.getId()) {
                 case R.id.delete_button:{
                     Log.d("DEBUG", "onClick: ingredient delete button Clicked!!");
+                    int position = getAdapterPosition();
+                    mIngredients.remove(position);
+                    mIngredientsRecyclerAdapter.notifyItemRemoved(position);
                     break;
                 }
             }
