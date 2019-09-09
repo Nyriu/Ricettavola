@@ -197,16 +197,27 @@ public class RecipeActivity extends AppCompatActivity implements
     private void putEditModeOff() { // TODO non funziona con summary
         this.mEditMode = false;
         putToolbarEditModeOff();
-        this.mSectionsPagerAdapter.putEditModeOff();
         hideSofKeyboard();
+        this.mSectionsPagerAdapter.putEditModeOff();
     }
-    private void hideSofKeyboard() {
+    public void hideSofKeyboard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
         if (view == null) {
             view = new View(this);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+    public void hideNShowSofKeyboard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        InputMethodManager inputMethodManager =
+                (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
     private void putToolbarEditModeOff(){
         mRecipeTitle.setText(mRecipe.getTitle());
@@ -454,12 +465,14 @@ public class RecipeActivity extends AppCompatActivity implements
             mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
             mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
 
+            mIngredientsRecyclerAdapter.mRecipeActivity = (RecipeActivity) getActivity();
+
         }
 
         @Override
         public void onIngredientClick(int position) {
             Log.d("DEBUG", "onIngredientClick: " + position);
-            Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
             if (isEditMode()) {
             }
         }
@@ -467,9 +480,18 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void putEditModeOn() {
             super.putEditModeOn();
-            mIngredients.add(new Ingredient(""));
-            mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            List<Ingredient> emptyIngredients = new ArrayList<>();
+            for (Ingredient i:
+                    mIngredients) {
+                if (i.getDescription().equals("")) {
+                    emptyIngredients.add(i);
+                }
+            }
+            if (emptyIngredients.isEmpty()) {
+                mIngredients.add(new Ingredient(""));
+            }
             mIngredientsRecyclerAdapter.putEditModeOn();
+            mIngredientsRecyclerAdapter.notifyDataSetChanged();
        }
 
         @Override
@@ -483,8 +505,9 @@ public class RecipeActivity extends AppCompatActivity implements
                }
             }
             mIngredients.removeAll(toRemove);
-            mIngredientsRecyclerAdapter.notifyDataSetChanged();
             mIngredientsRecyclerAdapter.putEditModeOff();
+            mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            Log.d("DEBUG", "putEditModeOff: ehila'");
         }
 
 

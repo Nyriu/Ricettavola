@@ -1,24 +1,23 @@
 package nyriu.ricettavola.adapters;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import nyriu.ricettavola.R;
+import nyriu.ricettavola.RecipeActivity;
 import nyriu.ricettavola.models.Ingredient;
-import nyriu.ricettavola.models.Recipe;
 
 
 public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<IngredientsRecyclerAdapter.ViewHolder> implements
@@ -28,6 +27,8 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     private ArrayList<Ingredient> mIngredients = new ArrayList<>();
     private OnIngredientListener mOnIngredientListener;
+
+    public RecipeActivity mRecipeActivity;
 
     public IngredientsRecyclerAdapter(ArrayList<Ingredient> ingredients, @NonNull OnIngredientListener onIngredientListener) {
         this.mIngredients = ingredients;
@@ -71,6 +72,8 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         Ingredient mIngredient;
         IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
 
+
+
         boolean editMode = false;
 
         public ViewHolder(@NonNull View itemView, @NonNull OnIngredientListener onIngredientListener) {
@@ -80,6 +83,32 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
             edit_title.setSingleLine(true);
             edit_title.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //edit_title.setOnKeyListener(new View.OnKeyListener() {
+            //    public boolean onKey(View v, int keyCode, KeyEvent event) {
+            //        // If the event is a key-down event on the "enter" button
+            //        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+            //                (keyCode == KeyEvent.KEYCODE_ENTER)) {
+            //            // Perform action on key press
+            //            Log.d("DEBUG", "onKey: return pressed");
+            //            // TODO unfocus edittext e passa al prossimo
+            //            //IngredientsRecyclerAdapter.ViewHolder viewHolder = (IngredientsRecyclerAdapter.ViewHolder) edit_title.getParent();
+            //            Log.d("DEBUG", "getParent " + edit_title.getParent().toString());
+            //            Log.d("DEBUG", "getRootView " + edit_title.getRootView().toString());
+            //            Log.d("DEBUG", "nextFocusDownId " + edit_title.getNextFocusDownId());
+            //            edit_title.findViewById()
+
+            //            //viewHolder.mIngredientsRecyclerAdapter.focusNext(viewHolder.getAdapterPosition());
+
+            //            Log.d("DEBUG", "mandi!!");
+            //            return true;
+            //        }
+            //        return false;
+            //    }
+            //});
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             this.mOnIngredientListener = onIngredientListener;
             itemView.setOnClickListener(this);
@@ -100,9 +129,9 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
         @Override
         public void onClick(View v) {
-            if (isEditMode()) {
-                edit_title.hasFocus();
-            }
+            //if (isEditMode()) {
+            //    edit_title.hasFocus();
+            //}
             mOnIngredientListener.onIngredientClick(getAdapterPosition());
         }
 
@@ -123,11 +152,20 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
 
+        private boolean firstChange = true;
         @Override
         public void afterTextChanged(Editable s) {
             mIngredient.setDescription(String.valueOf(edit_title.getText()));
-            Log.d("DEBUG", "afterTextChanged: ");
-           //title.setText(String.valueOf(edit_title.getText()));
+            int count = mIngredientsRecyclerAdapter.getItemCount();
+            boolean isLast = this.getAdapterPosition() == count-1;
+
+            if (firstChange && isLast) {
+                Log.d("DEBUG", "Creo uno nuovo");
+                mIngredients.add(new Ingredient(""));
+                //mIngredientsRecyclerAdapter.mRecipeActivity.hideNShowSofKeyboard();
+                //edit_title.callOnClick();
+                //notifyItemInserted(count);
+            }
         }
     }
 
@@ -147,6 +185,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     public void putEditModeOff() {
         this.mEditMode = false;
+        //notifyDataSetChanged();
     }
 
 }
