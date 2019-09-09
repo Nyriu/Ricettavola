@@ -3,10 +3,13 @@ package nyriu.ricettavola.adapters;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -20,11 +23,15 @@ import nyriu.ricettavola.R;
 import nyriu.ricettavola.RecipeActivity;
 import nyriu.ricettavola.models.Ingredient;
 import nyriu.ricettavola.models.PreparationStep;
+import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 
 
-public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> {
+public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> implements
+        ItemTouchHelperAdapter {
+
     private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
     private OnPreparationStepListener mOnPreparationStepListener;
+    private ItemTouchHelper mItemTouchHelper;
 
     private boolean mEditMode;
 
@@ -42,9 +49,12 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        viewHolder.setEditMode(isEditMode());
+        mPreparationSteps.get(i).setNumber(i+1);
         viewHolder.step_number.setText("" + mPreparationSteps.get(i).getNumber());
         viewHolder.step_description.setText(mPreparationSteps.get(i).getDescription());
         viewHolder.mPreparationStepsRecyclerAdapter = this;
+        //viewHolder.setItemTouchHelper(this.mItemTouchHelper);
     }
 
     @Override
@@ -54,17 +64,34 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
         return this.mPreparationSteps.size();
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        PreparationStep p = mPreparationSteps.get(fromPosition);
+        mPreparationSteps.remove(p);
+        mPreparationSteps.add(toPosition, p);
+        notifyItemMoved(fromPosition, toPosition);
+    }
 
+    public void setItemTouchHelper(ItemTouchHelper itemTouchHelper) {
+        this.mItemTouchHelper = itemTouchHelper;
+    }
 
     /**
      * TODO describe
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements
+            View.OnClickListener,
+            View.OnTouchListener,
+            GestureDetector.OnGestureListener {
 
         TextView step_number;
         TextView step_description;
         PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter;
         boolean editMode = false;
+
+        GestureDetector mGestureDetector;
+        ItemTouchHelper mItemTouchHelper;
+
 
         ImageButton delete_button;
 
@@ -75,8 +102,19 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
 
             delete_button = itemView.findViewById(R.id.delete_button);
             delete_button.setOnClickListener(this);
+
+            mGestureDetector = new GestureDetector(itemView.getContext(), this);
+            itemView.setOnClickListener(this);
+            itemView.setOnTouchListener(this);
+
+            if (isEditMode()) {
+                putEditModeOn();
+            }
         }
 
+        public void setItemTouchHelper(ItemTouchHelper mItemTouchHelper) {
+            this.mItemTouchHelper = mItemTouchHelper;
+        }
         public void setdescription(String s) {
             step_description.setText(s);
         }
@@ -115,6 +153,44 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
                     break;
                 }
             }
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.d("DEBUG", "onLongPress: mItemTouchHelper " + mItemTouchHelper);
+            Log.d("DEBUG", "onLongPress: this " + this);
+            mItemTouchHelper.startDrag(this);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            return false;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            mGestureDetector.onTouchEvent(event);
+            return true;
         }
     }
 

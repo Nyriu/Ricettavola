@@ -3,7 +3,9 @@ package nyriu.ricettavola;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -16,8 +18,10 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +44,7 @@ import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.models.Ingredient;
 import nyriu.ricettavola.models.PreparationStep;
 import nyriu.ricettavola.models.Recipe;
+import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 
@@ -452,7 +457,7 @@ public class RecipeActivity extends AppCompatActivity implements
             mRecyclerView = rootView.findViewById(R.id.recyclerView);
             initRecyclerView();
 
-            setUserVisibleHint(false);
+            setUserVisibleHint(false); // TODO cosa fa effettivamente? Toglierlo?
 
             mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
             mFab.setOnClickListener(this);
@@ -476,8 +481,6 @@ public class RecipeActivity extends AppCompatActivity implements
         public void onIngredientClick(int position) {
             Log.d("DEBUG", "onIngredientClick: " + position);
             //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
-            if (isEditMode()) {
-            }
         }
 
         @SuppressLint("RestrictedApi")
@@ -496,18 +499,6 @@ public class RecipeActivity extends AppCompatActivity implements
             mIngredientsRecyclerAdapter.putEditModeOff();
             mFab.setVisibility(View.GONE);
             //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-        }
-
-
-        @Override
-        public void setUserVisibleHint(boolean isVisibleToUser) {
-            super.setUserVisibleHint(isVisibleToUser);
-        }
-
-        @Override
-        public boolean getUserVisibleHint() {
-            Log.d("DEBUG", "now visible");
-            return super.getUserVisibleHint();
         }
 
         @Override
@@ -581,22 +572,23 @@ public class RecipeActivity extends AppCompatActivity implements
      * A fragment containing recipe summary
      */
     public static class PreparationFragment extends EditableFragment implements
-            PreparationStepsRecyclerAdapter.OnPreparationStepListener {
+            PreparationStepsRecyclerAdapter.OnPreparationStepListener,
+            View.OnClickListener {
+
+
         // Ui compontents
         private RecyclerView mRecyclerView;
+        private FloatingActionButton mFab;
 
        // vars
         private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
-        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter;
+        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
 
 
         public PreparationFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
+
         public static PreparationFragment newInstance() {
             PreparationFragment fragment = new PreparationFragment();
             return fragment;
@@ -625,6 +617,9 @@ public class RecipeActivity extends AppCompatActivity implements
             mRecyclerView = rootView.findViewById(R.id.recyclerView);
             initRecyclerView();
 
+            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            mFab.setOnClickListener(this);
+
             return rootView;
         }
 
@@ -635,25 +630,116 @@ public class RecipeActivity extends AppCompatActivity implements
             VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
             mRecyclerView.addItemDecoration(itemDecorator);
 
+            ItemTouchHelper.Callback callback = new PreparationStepItemTouchHelper(mPreparationStepsRecyclerAdapter);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+            mPreparationStepsRecyclerAdapter.setItemTouchHelper(itemTouchHelper);
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
             mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
             mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
-
         }
 
         @Override
         public void onPreparationStepClick(int position) {
             Log.d("DEBUG", "onPreparationsStepClick: " + position);
-            Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
         }
 
+        @SuppressLint("RestrictedApi")
         @Override
         public void putEditModeOn() {
+            super.putEditModeOn();
+            try {
+                mPreparationStepsRecyclerAdapter.putEditModeOn();
+                mFab.setVisibility(View.VISIBLE);
+                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                Log.d("DEBUG", "sarebbe esploso...");
+                editModeFailed = true;
+            }
+        }
 
+        @SuppressLint("RestrictedApi")
+        @Override
+        public void putEditModeOff() {
+            mPreparationStepsRecyclerAdapter.putEditModeOff();
+            mFab.setVisibility(View.GONE);
         }
 
         @Override
-        public void putEditModeOff() {
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab:{
+                    onButtonShowPopupWindowClick(getView());
+                    break;
+                }
+                case R.id.cancel_button:{
+                    mPopupWindow.dismiss();
+                    break;
+                }
+                case R.id.confirm_button:{
+                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_preparationstep_edit);
+                    String content = String.valueOf(editText.getText());
 
+                    if (!content.isEmpty()) {
+                        int num = mPreparationSteps.size() + 1;
+                        mPreparationSteps.add(new PreparationStep(num,content));
+                    }
+                    mPopupWindow.dismiss();
+                    break;
+                }
+            }
+        }
+
+        private PopupWindow mPopupWindow;
+        public void onButtonShowPopupWindowClick(View view) {
+
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater)
+                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.preparationstep_popup_window, null);
+
+            // create the popup window
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            // show the popup window
+            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
+
+            final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(final View v, final boolean hasFocus) {
+                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
+                        editText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+                            }
+                        });
+                    }
+                }
+            });
+
+            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
+            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
+            cancelButton.setOnClickListener(this);
+            confirmButton.setOnClickListener(this);
+
+            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (isEditMode()) {
+                putEditModeOn();
+            } else {
+                putEditModeOff();
+            }
         }
     }
 
@@ -702,7 +788,7 @@ public class RecipeActivity extends AppCompatActivity implements
             PreparationFragment preparationFragment = PreparationFragment.newInstance();
             preparationFragment.setArguments(bundle);
             this.mFragments[POSITION_PREPARATION] = preparationFragment;
-            Log.d("DEBUG", "SectionPagerAdapter initialization");
+
         }
 
         @Override
@@ -716,6 +802,9 @@ public class RecipeActivity extends AppCompatActivity implements
                     return this.mFragments[POSITION_INGREDIENTS];
 
                 case POSITION_PREPARATION:
+                    if (this.mFragments[POSITION_PREPARATION].editModeFailed || mEditMode){
+                        this.mFragments[POSITION_PREPARATION].putEditModeOn();
+                    }
                     return this.mFragments[POSITION_PREPARATION];
 
                 default:
@@ -752,8 +841,8 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
     public static class EditableFragment extends Fragment {
-        private boolean mEditMode;
-
+        protected boolean mEditMode;
+        protected boolean editModeFailed = false;
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
