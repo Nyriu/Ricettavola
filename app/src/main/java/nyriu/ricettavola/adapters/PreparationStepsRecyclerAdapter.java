@@ -29,15 +29,17 @@ import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> implements
         ItemTouchHelperAdapter {
 
-    private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
+    private ArrayList<PreparationStep> mPreparationSteps;
     private OnPreparationStepListener mOnPreparationStepListener;
     private ItemTouchHelper mItemTouchHelper;
 
     private boolean mEditMode;
 
     public PreparationStepsRecyclerAdapter(ArrayList<PreparationStep> preparationSteps, @NonNull OnPreparationStepListener onPreparationStepListener) {
+        Log.d("DEBUG", "PreparationStepsRycAdap constructor before " + mPreparationSteps);
         this.mPreparationSteps = preparationSteps;
         this.mOnPreparationStepListener = onPreparationStepListener;
+        Log.d("DEBUG", "PreparationStepsRycAdap constructor after" + mPreparationSteps);
     }
 
     @NonNull
@@ -50,11 +52,13 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.setEditMode(isEditMode());
+        Log.d("DEBUG", "PreparationStepsRycAdap onBind after" + mPreparationSteps);
         mPreparationSteps.get(i).setNumber(i+1);
         viewHolder.step_number.setText("" + mPreparationSteps.get(i).getNumber());
         viewHolder.step_description.setText(mPreparationSteps.get(i).getDescription());
         viewHolder.mPreparationStepsRecyclerAdapter = this;
         //viewHolder.setItemTouchHelper(this.mItemTouchHelper);
+        Log.d("DEBUG", "PreparationStepsRycAdap onBind after" + mPreparationSteps);
     }
 
     @Override
@@ -66,6 +70,8 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
+        Log.d("DEBUG", "fromPosition " + fromPosition + " toPosition " + toPosition);
+        Log.d("DEBUG", "mPreparationStep lens " + this.mPreparationSteps.size());
         PreparationStep p = mPreparationSteps.get(fromPosition);
         mPreparationSteps.remove(p);
         mPreparationSteps.add(toPosition, p);
@@ -90,8 +96,6 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
         boolean editMode = false;
 
         GestureDetector mGestureDetector;
-        ItemTouchHelper mItemTouchHelper;
-
 
         ImageButton delete_button;
 
@@ -112,9 +116,6 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
             }
         }
 
-        public void setItemTouchHelper(ItemTouchHelper mItemTouchHelper) {
-            this.mItemTouchHelper = mItemTouchHelper;
-        }
         public void setdescription(String s) {
             step_description.setText(s);
         }
@@ -179,6 +180,7 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
         public void onLongPress(MotionEvent e) {
             Log.d("DEBUG", "onLongPress: mItemTouchHelper " + mItemTouchHelper);
             Log.d("DEBUG", "onLongPress: this " + this);
+            Log.d("DEBUG", "onLongPress mPreparationSteps " + mPreparationSteps);
             mItemTouchHelper.startDrag(this);
         }
 
@@ -189,7 +191,7 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            mGestureDetector.onTouchEvent(event);
+            //mGestureDetector.onTouchEvent(event); // TODO uncomment to move items up and down
             return true;
         }
     }

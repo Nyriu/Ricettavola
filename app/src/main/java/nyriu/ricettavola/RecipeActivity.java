@@ -602,6 +602,7 @@ public class RecipeActivity extends AppCompatActivity implements
             try {
                 assert getArguments() != null;
                 this.mPreparationSteps = getArguments().getParcelableArrayList("steps");
+                Log.d("DEBUG", "RecipeActivity PreparationSteps onCreate " + mPreparationSteps);
             } catch (Exception e) {
                 Log.d("DEBUG", "Missing preparation step");
             }
@@ -632,10 +633,13 @@ public class RecipeActivity extends AppCompatActivity implements
 
             ItemTouchHelper.Callback callback = new PreparationStepItemTouchHelper(mPreparationStepsRecyclerAdapter);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+
+            Log.d("DEBUG", "RecipeActivity PreparationSteps initRecyclerView " + mPreparationSteps);
+            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
+
             mPreparationStepsRecyclerAdapter.setItemTouchHelper(itemTouchHelper);
             itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
-            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
             mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
         }
 
@@ -684,6 +688,7 @@ public class RecipeActivity extends AppCompatActivity implements
                     if (!content.isEmpty()) {
                         int num = mPreparationSteps.size() + 1;
                         mPreparationSteps.add(new PreparationStep(num,content));
+                        Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
                     }
                     mPopupWindow.dismiss();
                     break;
