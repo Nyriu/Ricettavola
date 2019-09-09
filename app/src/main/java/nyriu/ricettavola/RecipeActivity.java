@@ -497,6 +497,7 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void putEditModeOff() {
             super.putEditModeOff();
+            mIngredientsRecyclerAdapter.notifyDataSetChanged();
             List<Ingredient> toRemove = new ArrayList<>();
             for (Ingredient i:
                  mIngredients) {
