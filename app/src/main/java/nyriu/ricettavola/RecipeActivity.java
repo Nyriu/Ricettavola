@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -319,6 +320,16 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_preparation_content.setText(this.preparation_content.getText());
             this.edit_cooking_content    .setText(this.cooking_content.getText());
             this.edit_portions_content   .setText(this.portions_content.getText());
+
+            // Evito che gli edit text possano contenere piu' di una riga
+            this.edit_recipe_title       .setSingleLine(true);
+            this.edit_preparation_content.setSingleLine(true);
+            this.edit_cooking_content    .setSingleLine(true);
+            this.edit_portions_content   .setSingleLine(true);
+            this.edit_recipe_title       .setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            this.edit_preparation_content.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            this.edit_cooking_content    .setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            this.edit_portions_content   .setImeOptions(EditorInfo.IME_ACTION_NEXT);
         }
 
         @Override

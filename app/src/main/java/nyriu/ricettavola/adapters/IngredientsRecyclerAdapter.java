@@ -56,12 +56,6 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         return this.mIngredients.size();
     }
 
-    public void focusNext(int position) {
-        Log.d("DEBUG", "focusNext: ");
-    }
-
-
-
 
 
 
@@ -83,9 +77,8 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
             super(itemView);
             title      = itemView.findViewById(R.id.ingredient_content);
             edit_title = itemView.findViewById(R.id.edit_ingredient_content);
-            edit_title.setMaxLines(1);
-            edit_title.setSingleLine(true);
 
+            edit_title.setSingleLine(true);
             edit_title.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
             this.mOnIngredientListener = onIngredientListener;
@@ -133,6 +126,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         @Override
         public void afterTextChanged(Editable s) {
             mIngredient.setDescription(String.valueOf(edit_title.getText()));
+            Log.d("DEBUG", "afterTextChanged: ");
            //title.setText(String.valueOf(edit_title.getText()));
         }
     }
