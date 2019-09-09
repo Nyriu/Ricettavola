@@ -1,9 +1,11 @@
 package nyriu.ricettavola;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +18,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -24,6 +28,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -407,10 +413,11 @@ public class RecipeActivity extends AppCompatActivity implements
      * A fragment containing recipe summary
      */
     public static class IngredientsFragment extends EditableFragment implements
-            IngredientsRecyclerAdapter.OnIngredientListener {
+            IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
 
         // Ui compontents
         private RecyclerView mRecyclerView;
+        private FloatingActionButton mFab;
 
         // vars
         private ArrayList<Ingredient> mIngredients = new ArrayList<>();
@@ -452,6 +459,9 @@ public class RecipeActivity extends AppCompatActivity implements
 
             setUserVisibleHint(false);
 
+            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            mFab.setOnClickListener(this);
+
             return rootView;
         }
 
@@ -465,8 +475,6 @@ public class RecipeActivity extends AppCompatActivity implements
             mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
             mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
 
-            mIngredientsRecyclerAdapter.mRecipeActivity = (RecipeActivity) getActivity();
-
         }
 
         @Override
@@ -477,38 +485,22 @@ public class RecipeActivity extends AppCompatActivity implements
             }
         }
 
+        @SuppressLint("RestrictedApi")
         @Override
         public void putEditModeOn() {
             super.putEditModeOn();
-            List<Ingredient> emptyIngredients = new ArrayList<>();
-            for (Ingredient i:
-                    mIngredients) {
-                if (i.getDescription().equals("")) {
-                    emptyIngredients.add(i);
-                }
-            }
-            if (emptyIngredients.isEmpty()) {
-                mIngredients.add(new Ingredient(""));
-            }
             mIngredientsRecyclerAdapter.putEditModeOn();
-            mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            mFab.setVisibility(View.VISIBLE);
+            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
        }
 
+        @SuppressLint("RestrictedApi")
         @Override
         public void putEditModeOff() {
             super.putEditModeOff();
-            mIngredientsRecyclerAdapter.notifyDataSetChanged();
-            List<Ingredient> toRemove = new ArrayList<>();
-            for (Ingredient i:
-                 mIngredients) {
-               if (i.getDescription().equals("")) {
-                   toRemove.add(i);
-               }
-            }
-            mIngredients.removeAll(toRemove);
             mIngredientsRecyclerAdapter.putEditModeOff();
-            mIngredientsRecyclerAdapter.notifyDataSetChanged();
-            Log.d("DEBUG", "putEditModeOff: ehila'");
+            mFab.setVisibility(View.GONE);
+            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
         }
 
 
@@ -523,6 +515,70 @@ public class RecipeActivity extends AppCompatActivity implements
             return super.getUserVisibleHint();
         }
 
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab:{
+                    onButtonShowPopupWindowClick(getView());
+                    break;
+                }
+                case R.id.cancel_button:{
+                    mPopupWindow.dismiss();
+                    break;
+                }
+                case R.id.confirm_button:{
+                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_ingredient_edit);
+                    String content = String.valueOf(editText.getText());
+
+                    if (!content.isEmpty()) {
+                        mIngredients.add(new Ingredient(content));
+                    }
+                    mPopupWindow.dismiss();
+                    break;
+                }
+            }
+        }
+
+        private PopupWindow mPopupWindow;
+        public void onButtonShowPopupWindowClick(View view) {
+
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater)
+                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
+
+            // create the popup window
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            // show the popup window
+            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -200);
+
+            final EditText editText = popupView.findViewById(R.id.new_ingredient_edit);
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(final View v, final boolean hasFocus) {
+                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
+                        editText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+                            }
+                        });
+                    }
+                }
+            });
+
+            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
+            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
+            cancelButton.setOnClickListener(this);
+            confirmButton.setOnClickListener(this);
+
+            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
     private ArrayList<Ingredient> mIngredients = new ArrayList<>();
     private OnIngredientListener mOnIngredientListener;
 
-    public RecipeActivity mRecipeActivity;
+    //public RecipeActivity mRecipeActivity;
 
     public IngredientsRecyclerAdapter(ArrayList<Ingredient> ingredients, @NonNull OnIngredientListener onIngredientListener) {
         this.mIngredients = ingredients;
@@ -45,10 +46,8 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.setEditMode(isEditMode());
-        viewHolder.mIngredient = mIngredients.get(i);
         viewHolder.setTitle(mIngredients.get(i).getDescription());
-        viewHolder.mIngredientsRecyclerAdapter = this;
+        viewHolder.setEditMode(isEditMode());
     }
 
     @Override
@@ -63,14 +62,14 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
     /**
      * TODO describe
      */
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, TextWatcher {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView title;
-        EditText edit_title;
-        OnIngredientListener mOnIngredientListener;
+        ImageButton delete_button;
+        //OnIngredientListener mOnIngredientListener;
 
-        Ingredient mIngredient;
-        IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
+        //Ingredient mIngredient;
+        //IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
 
 
 
@@ -78,61 +77,17 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
         public ViewHolder(@NonNull View itemView, @NonNull OnIngredientListener onIngredientListener) {
             super(itemView);
-            title      = itemView.findViewById(R.id.ingredient_content);
-            edit_title = itemView.findViewById(R.id.edit_ingredient_content);
+            title         = itemView.findViewById(R.id.ingredient_content);
+            delete_button = itemView.findViewById(R.id.delete_button);
 
-            edit_title.setSingleLine(true);
-            edit_title.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            delete_button.setOnClickListener(this);
 
-
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //edit_title.setOnKeyListener(new View.OnKeyListener() {
-            //    public boolean onKey(View v, int keyCode, KeyEvent event) {
-            //        // If the event is a key-down event on the "enter" button
-            //        if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-            //                (keyCode == KeyEvent.KEYCODE_ENTER)) {
-            //            // Perform action on key press
-            //            Log.d("DEBUG", "onKey: return pressed");
-            //            // TODO unfocus edittext e passa al prossimo
-            //            //IngredientsRecyclerAdapter.ViewHolder viewHolder = (IngredientsRecyclerAdapter.ViewHolder) edit_title.getParent();
-            //            Log.d("DEBUG", "getParent " + edit_title.getParent().toString());
-            //            Log.d("DEBUG", "getRootView " + edit_title.getRootView().toString());
-            //            Log.d("DEBUG", "nextFocusDownId " + edit_title.getNextFocusDownId());
-            //            edit_title.findViewById()
-
-            //            //viewHolder.mIngredientsRecyclerAdapter.focusNext(viewHolder.getAdapterPosition());
-
-            //            Log.d("DEBUG", "mandi!!");
-            //            return true;
-            //        }
-            //        return false;
-            //    }
-            //});
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            this.mOnIngredientListener = onIngredientListener;
-            itemView.setOnClickListener(this);
+            //this.mOnIngredientListener = onIngredientListener;
+            //itemView.setOnClickListener(this);
         }
 
         public void setTitle(String s) {
             title     .setText(s);
-            edit_title.setText(s);
-            edit_title.addTextChangedListener(this);
-            if (isEditMode()) {
-                title     .setVisibility(View.GONE);
-                edit_title.setVisibility(View.VISIBLE);
-            } else {
-                title     .setVisibility(View.VISIBLE);
-                edit_title.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            //if (isEditMode()) {
-            //    edit_title.hasFocus();
-            //}
-            mOnIngredientListener.onIngredientClick(getAdapterPosition());
         }
 
         public boolean isEditMode() {
@@ -141,30 +96,31 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
         public void setEditMode(boolean editMode) {
             this.editMode = editMode;
+            if (editMode) {
+                putEditModeOn();
+            } else {
+                putEditModeOff();
+            }
+        }
+
+        public void putEditModeOn() {
+            this.editMode = true;
+            delete_button.setVisibility(View.VISIBLE);
+        }
+
+        public void putEditModeOff() {
+            this.editMode = false;
+            delete_button.setVisibility(View.GONE);
+            //notifyDataSetChanged();
         }
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        private boolean firstChange = true;
-        @Override
-        public void afterTextChanged(Editable s) {
-            mIngredient.setDescription(String.valueOf(edit_title.getText()));
-            int count = mIngredientsRecyclerAdapter.getItemCount();
-            boolean isLast = this.getAdapterPosition() == count-1;
-
-            if (firstChange && isLast) {
-                Log.d("DEBUG", "Creo uno nuovo");
-                mIngredients.add(new Ingredient(""));
-                //mIngredientsRecyclerAdapter.mRecipeActivity.hideNShowSofKeyboard();
-                //edit_title.callOnClick();
-                //notifyItemInserted(count);
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.delete_button:{
+                    Log.d("DEBUG", "onClick: ingredient delete button Clicked!!");
+                    break;
+                }
             }
         }
     }
@@ -181,11 +137,12 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     public void putEditModeOn() {
         this.mEditMode = true;
+        notifyDataSetChanged();
     }
 
     public void putEditModeOff() {
         this.mEditMode = false;
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
 }
