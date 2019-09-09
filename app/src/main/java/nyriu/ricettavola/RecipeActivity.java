@@ -540,7 +540,7 @@ public class RecipeActivity extends AppCompatActivity implements
             // inflate the layout of the popup window
             LayoutInflater inflater = (LayoutInflater)
                     getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.popup_window, null);
+            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
 
             // create the popup window
             int width = LinearLayout.LayoutParams.WRAP_CONTENT;

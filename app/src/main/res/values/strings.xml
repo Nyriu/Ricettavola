@@ -20,11 +20,11 @@
     <string name="recipe_summary_text_difficulty">Difficulty</string>
     <string name="recipe_summary_text_tags">TAGS</string>
 
-    <string name="recipe_ingredient_placeholder_item">Insert new ingredient</string>
     <string name="recipe_ingredient_popup_title">Insert new ingredient: </string>
+    <string name="recipe_ingredient_placeholder_item">Insert new ingredient</string>
 
-    <string name="recipe_preparationstep_placeholder_item">Insert new step: </string>
-    <string name="recipe_preparationstep_popup_title">Insert new step</string>
+    <string name="recipe_preparationstep_popup_title">Insert new step: </string>
+    <string name="recipe_preparationstep_placeholder_item">Insert new step description</string>
 
 
 
