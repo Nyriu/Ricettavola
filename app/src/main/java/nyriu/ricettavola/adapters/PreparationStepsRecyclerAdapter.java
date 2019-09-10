@@ -150,7 +150,8 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
                     Log.d("DEBUG", "onClick: ingredient delete button Clicked!!");
                     int position = getAdapterPosition();
                     mPreparationSteps.remove(position);
-                    mPreparationStepsRecyclerAdapter.notifyItemRemoved(position);
+                    //mPreparationStepsRecyclerAdapter.notifyItemRemoved(position);
+                    mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
                     break;
                 }
             }

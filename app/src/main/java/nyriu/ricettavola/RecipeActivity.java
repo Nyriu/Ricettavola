@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
@@ -658,7 +661,6 @@ public class RecipeActivity extends AppCompatActivity implements
                 mFab.setVisibility(View.VISIBLE);
                 //mIngredientsRecyclerAdapter.notifyDataSetChanged();
             } catch (Exception e) {
-                Log.d("DEBUG", "sarebbe esploso...");
                 editModeFailed = true;
             }
         }
@@ -687,13 +689,23 @@ public class RecipeActivity extends AppCompatActivity implements
 
                     if (!content.isEmpty()) {
                         int num = mPreparationSteps.size() + 1;
-                        mPreparationSteps.add(new PreparationStep(num,content));
+                        this.addPreparationStep(num, content);
                         Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
                     }
                     mPopupWindow.dismiss();
                     break;
                 }
             }
+        }
+        private void addPreparationStep(int num, String content) {
+            mPreparationSteps.add(new PreparationStep(num,content));
+            mPreparationSteps.sort(new Comparator<PreparationStep>() {
+                @Override
+                public int compare(PreparationStep p1, PreparationStep p2) {
+                    return p2.compareTo(p1);
+                }
+            });
+            mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
         }
 
         private PopupWindow mPopupWindow;
@@ -704,14 +716,23 @@ public class RecipeActivity extends AppCompatActivity implements
                     getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
             View popupView = inflater.inflate(R.layout.preparationstep_popup_window, null);
 
+
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+
+            int margin = 50;
+
             // create the popup window
-            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            //int width = LinearLayout.LayoutParams.MATCH_PARENT;
             int height = LinearLayout.LayoutParams.WRAP_CONTENT;
             boolean focusable = true; // lets taps outside the popup also dismiss it
-            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
+            mPopupWindow = new PopupWindow(popupView, width-margin, height, focusable);
 
             // show the popup window
-            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
+            //mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
+            mPopupWindow.showAtLocation(view, Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, 2*margin);
 
             final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
             editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {

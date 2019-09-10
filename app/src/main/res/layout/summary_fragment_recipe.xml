@@ -163,6 +163,7 @@
         <TableRow
             android:background="@color/lightGrey"
             android:layout_margin="2dp"
+            android:visibility="gone"
             >
             <TextView
                 android:layout_weight="1"
@@ -201,6 +202,7 @@
         <TableRow
             android:background="@color/lightGrey"
             android:layout_margin="2dp"
+            android:visibility="gone"
             >
             <TextView
                 android:layout_weight="1"

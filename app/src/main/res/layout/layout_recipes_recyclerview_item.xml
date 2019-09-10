@@ -50,6 +50,8 @@
             android:singleLine="true"
             android:text="TAGS HERE"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="gone"
             android:textSize="14sp" />
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
