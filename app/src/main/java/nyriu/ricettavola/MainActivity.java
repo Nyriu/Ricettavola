@@ -2,6 +2,7 @@ package nyriu.ricettavola;
 
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -34,7 +35,7 @@ import nyriu.ricettavola.models.Recipe;
 import nyriu.ricettavola.persistence.RecipeRepository;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, Observer<List<Recipe>> {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -82,18 +83,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void retriveRecipes() {
-        mRecipeRepository.retriveRecipeTask().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                if (mRecipes.size() > 0) {
-                    mRecipes.clear();
-                }
-                if (recipes != null) {
-                    mRecipes.addAll(recipes);
-                }
-                //mRecipeRecyclerAdapter.notifyDataSetChanged(); // TODO rimuovere
-            }
-        });
+        mRecipeRepository.retriveRecipeTask().observe(this, this);
+    }
+
+    @Override
+    public void onChanged(@Nullable List<Recipe> recipes) {
+        if (mRecipes.size() > 0) {
+            mRecipes.clear();
+        }
+        if (recipes != null) {
+            mRecipes.addAll(recipes);
+        }
+        this.mSectionsPagerAdapter.mRecipesFragment.updateAdapter();
     }
 
 
@@ -138,7 +139,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(this, RecipeActivity.class);
                 intent.putExtra("new_recipe", true);
                 startActivity(intent);
-                //this.mSectionsPagerAdapter.addRecipe(new Recipe("Nuova!"));
+                Log.d("DEBUG", "ciao");
+                this.mSectionsPagerAdapter.mRecipesFragment.updateAdapter();
                 break;
             }
         }
@@ -214,6 +216,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes, this);
             mRecyclerView.setAdapter(mRecipesRecyclerAdapter);
+            mRecipesRecyclerAdapter.notifyDataSetChanged();
+        }
+
+        public void updateAdapter(){
+            mRecipesRecyclerAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            //mRecipesRecyclerAdapter.notifyDataSetChanged();
         }
 
 
@@ -223,6 +236,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(getContext(), RecipeActivity.class);
             intent.putExtra("recipe", this.mRecipes.get(position));
             startActivity(intent);
+            //startActivityForResult();
+            //mRecipesRecyclerAdapter.notifyDataSetChanged();
         }
 
         public void addRecipe(Recipe r) {

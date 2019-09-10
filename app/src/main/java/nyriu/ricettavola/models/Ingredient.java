@@ -12,7 +12,7 @@ public class Ingredient implements Parcelable {
 
 
     //@PrimaryKey(autoGenerate = true)
-    //private int id;
+    private int id;
 
 
     //@ColumnInfo(name = "description")
@@ -26,6 +26,34 @@ public class Ingredient implements Parcelable {
         this.description = description;
     }
 
+
+    protected Ingredient(Parcel in) {
+        id = in.readInt();
+        description = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(description);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+        @Override
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        @Override
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
 
     @Override
     public String toString() {
@@ -48,32 +76,8 @@ public class Ingredient implements Parcelable {
     // #############################################################################################
     // Parcelable Stuff
 
-    protected Ingredient(Parcel in) {
-        description = in.readString();
-    }
-
-    public static final Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
-        @Override
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
-
-        @Override
-        public Ingredient[] newArray(int size) {
-            return new Ingredient[size];
-        }
-    };
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(description);
-    }
 }
