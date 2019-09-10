@@ -2,6 +2,7 @@ package nyriu.ricettavola.persistence;
 
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import java.util.List;
 

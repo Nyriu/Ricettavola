@@ -85,6 +85,48 @@ public class Recipe implements Parcelable {
         this.preparationSteps = preparationSteps;
     }
 
+    protected Recipe(Parcel in) {
+        id = in.readInt();
+        imageUri = in.readParcelable(Uri.class.getClassLoader());
+        title = in.readString();
+        preparation_time = in.readString();
+        cooking_time = in.readString();
+        portions = in.readString();
+        difficulty = in.readInt();
+        ingredients = in.createTypedArrayList(Ingredient.CREATOR);
+        preparationSteps = in.createTypedArrayList(PreparationStep.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeParcelable(imageUri, flags);
+        dest.writeString(title);
+        dest.writeString(preparation_time);
+        dest.writeString(cooking_time);
+        dest.writeString(portions);
+        dest.writeInt(difficulty);
+        dest.writeTypedList(ingredients);
+        dest.writeTypedList(preparationSteps);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
+        @Override
+        public Recipe createFromParcel(Parcel in) {
+            return new Recipe(in);
+        }
+
+        @Override
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
+
     private void initEmptyRecipe() {
         this.title = "";
         this.preparation_time = "";
@@ -306,43 +348,5 @@ public class Recipe implements Parcelable {
     }
     // #############################################################################################
     // Parcelable Stuff
-
-    protected Recipe(Parcel in) {
-        title = in.readString();
-        preparation_time = in.readString();
-        cooking_time = in.readString();
-        portions = in.readString();
-        difficulty = in.readInt();
-        ingredients = in.createTypedArrayList(Ingredient.CREATOR);
-        preparationSteps = in.createTypedArrayList(PreparationStep.CREATOR);
-    }
-
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(preparation_time);
-        dest.writeString(cooking_time);
-        dest.writeString(portions);
-        dest.writeInt(difficulty);
-        dest.writeTypedList(ingredients);
-        dest.writeTypedList(preparationSteps);
-    }
 
 }
