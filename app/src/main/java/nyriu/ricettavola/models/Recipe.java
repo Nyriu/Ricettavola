@@ -1,5 +1,7 @@
 package nyriu.ricettavola.models;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -19,8 +21,10 @@ import nyriu.ricettavola.R;
  */
 public class Recipe implements Parcelable {
 
+    public final Uri DEFAULT_IMAGE_URI = Uri.parse("android.resource://nyriu.ricettavola/" + R.drawable.ic_insert_photo_black_24dp);
+
     // Summary Stuff
-    // TODO matrix
+    private Uri imageUri = DEFAULT_IMAGE_URI;
     private String title;
     private String preparation_time;
     private String cooking_time;
@@ -236,9 +240,14 @@ public class Recipe implements Parcelable {
         return preparationSteps;
     }
 
+    public Uri getImageUri() {
+        return imageUri;
+    }
 
-
-    // #############################################################################################
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
+    }
+// #############################################################################################
     // Parcelable Stuff
 
     protected Recipe(Parcel in) {

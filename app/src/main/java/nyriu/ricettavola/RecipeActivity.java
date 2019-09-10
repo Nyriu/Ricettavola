@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.drm.DrmStore;
+import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -38,6 +42,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
@@ -247,9 +253,11 @@ public class RecipeActivity extends AppCompatActivity implements
     /**
      * A fragment containing recipe summary
      */
-    public static class SummaryFragment extends EditableFragment {
+    public static class SummaryFragment extends EditableFragment implements View.OnClickListener {
 
         // UI normal mode
+        private TextView toolbar_recipe_title;
+
         private AppCompatImageView recipe_image;
         private TextView recipe_title;
         private TextView preparation_content;
@@ -259,6 +267,7 @@ public class RecipeActivity extends AppCompatActivity implements
         private TextView tags_content;       // TODO modificare
 
         // UI edit mode
+        private TextView fab;
         private EditText edit_recipe_title;
         private EditText edit_preparation_content;
         private EditText edit_cooking_content;
@@ -269,8 +278,10 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
 
+
         // vars
         private Recipe mRecipe;
+        private Uri mImageUri;
 
         public SummaryFragment() {
         }
@@ -299,8 +310,10 @@ public class RecipeActivity extends AppCompatActivity implements
             View rootView = inflater.inflate(R.layout.summary_fragment_recipe, container, false);
 
             // UI normal mode
-            //this.recipe_image = getActivity().findViewById(R.id.recipe_image);
-            this.recipe_title        = rootView.findViewById(R.id.toolbar_recipe_title);
+            this.toolbar_recipe_title = getActivity().findViewById(R.id.toolbar_recipe_title);
+
+            this.recipe_image        = rootView.findViewById(R.id.recipe_image);
+            this.recipe_title        = rootView.findViewById(R.id.recipe_title);
             this.preparation_content = rootView.findViewById(R.id.preparation_content);
             this.cooking_content     = rootView.findViewById(R.id.cooking_content);
             this.portions_content    = rootView.findViewById(R.id.portions_content);
@@ -314,6 +327,7 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_portions_content    = rootView.findViewById(R.id.edit_portions_content);
             this.edit_difficulty_content  = rootView.findViewById(R.id.edit_difficulty_content);
             this.edit_tags_content        = rootView.findViewById(R.id.edit_tags_content);
+            this.fab                      = rootView.findViewById(R.id.fab);
 
 
             initializeFields();
@@ -329,7 +343,26 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
         private void initializeFields() {
-            // //this.recipe_image   // TODO
+            mImageUri = this.mRecipe.getImageUri();
+            recipe_image.setOnClickListener(this);
+
+
+            if (mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+                this.recipe_image.setAlpha((float) 0.3);
+            } else {
+                this.recipe_image.setAlpha((float) 1);
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
+                    // Log.d(TAG, String.valueOf(bitmap));
+
+                    recipe_image.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    // e.printStackTrace();
+                }
+            }
+
+
+            this.toolbar_recipe_title.setText(this.mRecipe.getTitle());
             this.recipe_title       .setText(this.mRecipe.getTitle());
             this.preparation_content.setText(this.mRecipe.getPreparation_time());
             this.cooking_content    .setText(this.mRecipe.getCooking_time());
@@ -375,6 +408,13 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_portions_content   .setVisibility(View.VISIBLE);
             this.edit_difficulty_content .setVisibility(View.VISIBLE);
             this.edit_tags_content       .setVisibility(View.VISIBLE);
+            this.fab                     .setVisibility(View.VISIBLE);
+
+            if (mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+                this.recipe_image.setAlpha((float) 0.3);
+            } else {
+                this.recipe_image.setAlpha((float) 1);
+            }
         }
 
         @Override
@@ -387,8 +427,16 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_portions_content   .setVisibility(View.GONE);
             this.edit_difficulty_content .setVisibility(View.GONE);
             this.edit_tags_content       .setVisibility(View.GONE);
+            this.fab                     .setVisibility(View.GONE);
 
             // aggiorno la parte non editabile
+            this.toolbar_recipe_title.setText(String.valueOf(this.edit_recipe_title.getText()));
+
+            if (mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+                this.recipe_image.setAlpha((float) 0.3);
+            } else {
+                this.recipe_image.setAlpha((float) 1);
+            }
             this.recipe_title       .setText(String.valueOf(this.edit_recipe_title.getText()));
             this.preparation_content.setText(String.valueOf(this.edit_preparation_content.getText()));
             this.cooking_content    .setText(String.valueOf(this.edit_cooking_content.getText()));
@@ -400,21 +448,65 @@ public class RecipeActivity extends AppCompatActivity implements
             this.portions_content   .setVisibility(View.VISIBLE);
             this.difficulty_content .setVisibility(View.VISIBLE);
             this.tags_content       .setVisibility(View.VISIBLE);
+
             updateRecipe();
         }
 
         private void updateRecipe(){
+            if (mImageUri==null || !mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+                this.mRecipe.setImageUri(mImageUri);
+            }
             this.mRecipe.setTitle           (String.valueOf(this.edit_recipe_title.getText()));
             this.mRecipe.setPreparation_time(String.valueOf(this.edit_preparation_content.getText()));
             this.mRecipe.setCooking_time    (String.valueOf(this.edit_cooking_content.getText()));
             this.mRecipe.setPortions        (String.valueOf(this.edit_portions_content.getText()));
         }
+
+        private final int PICK_IMAGE_REQUEST = 1;
+        private void changeImage() {
+            Intent intent = new Intent();
+            // Show only images, no videos or anything else
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            // Always show the chooser (if there are multiple options available)
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        }
+
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+
+            if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+                mImageUri = data.getData();
+
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
+                    // Log.d(TAG, String.valueOf(bitmap));
+
+                    recipe_image.setAlpha((float)1);
+                    recipe_image.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    // e.printStackTrace();
+                }
+            }
+        }
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+                case R.id.recipe_image: {
+                    if (isEditMode()) {
+                        changeImage();
+                    }
+                    break;
+                }
+            }
+        }
     }
 
 
-    /**
-     * A fragment containing recipe summary
-     */
     public static class IngredientsFragment extends EditableFragment implements
             IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
 
@@ -571,9 +663,6 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    /**
-     * A fragment containing recipe summary
-     */
     public static class PreparationFragment extends EditableFragment implements
             PreparationStepsRecyclerAdapter.OnPreparationStepListener,
             View.OnClickListener {
@@ -668,8 +757,14 @@ public class RecipeActivity extends AppCompatActivity implements
         @SuppressLint("RestrictedApi")
         @Override
         public void putEditModeOff() {
-            mPreparationStepsRecyclerAdapter.putEditModeOff();
-            mFab.setVisibility(View.GONE);
+            super.putEditModeOn();
+            try {
+                mPreparationStepsRecyclerAdapter.putEditModeOff();
+                mFab.setVisibility(View.GONE);
+                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                // none
+            }
         }
 
         @Override
