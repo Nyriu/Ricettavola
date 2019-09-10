@@ -1,5 +1,6 @@
 package nyriu.ricettavola;
 
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -30,6 +31,7 @@ import java.util.List;
 
 import nyriu.ricettavola.adapters.RecipesRecyclerAdapter;
 import nyriu.ricettavola.models.Recipe;
+import nyriu.ricettavola.persistence.RecipeRepository;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // vars
     private ArrayList<Recipe> mRecipes;
+    private RecipeRepository mRecipeRepository;
 
 
     @Override
@@ -47,8 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         mRecipes = new ArrayList<>();
-        insertFakeRecipes(2);
+        //insertFakeRecipes(2);
 
+        mRecipeRepository = new RecipeRepository(this);
+        retriveRecipes();
 
         setContentView(R.layout.activity_main);
 
@@ -74,6 +79,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     }
+
+    private void retriveRecipes() {
+        mRecipeRepository.retriveRecipeTask().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                if (mRecipes.size() > 0) {
+                    mRecipes.clear();
+                }
+                if (recipes != null) {
+                    mRecipes.addAll(recipes);
+                }
+                //mRecipeRecyclerAdapter.notifyDataSetChanged(); // TODO rimuovere
+            }
+        });
+    }
+
 
 
     @Override
@@ -136,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // vars
         private ArrayList<Recipe> mRecipes = new ArrayList<>();
         private RecipesRecyclerAdapter mRecipesRecyclerAdapter;
-        //private NoteRepository mNoteRepository; // TODO
+        //private RecipeRepository mNoteRepository; // TODO
 
 
 

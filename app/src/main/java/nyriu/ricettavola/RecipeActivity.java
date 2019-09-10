@@ -53,6 +53,7 @@ import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.models.Ingredient;
 import nyriu.ricettavola.models.PreparationStep;
 import nyriu.ricettavola.models.Recipe;
+import nyriu.ricettavola.persistence.RecipeRepository;
 import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
@@ -72,7 +73,10 @@ public class RecipeActivity extends AppCompatActivity implements
 
     // vars
     private boolean mEditMode = false;
+    private boolean mIsNew = false;
     private Recipe mRecipe;
+    private RecipeRepository mRecipeRepository;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +91,7 @@ public class RecipeActivity extends AppCompatActivity implements
         }
         if (getIntent().hasExtra("new_recipe")) {
             // TODO da usare per salvare la ricetta
+            mIsNew = true;
         }
         // END Intent stuff
 
@@ -116,6 +121,8 @@ public class RecipeActivity extends AppCompatActivity implements
         mEditButton  = findViewById(R.id.toolbar_edit);
         mCheckButton = findViewById(R.id.toolbar_check);
         mShareButton = findViewById(R.id.toolbar_share);
+
+        mRecipeRepository = new RecipeRepository(this);
 
         setListeners();
 
@@ -213,6 +220,12 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mEditMode = false;
         putToolbarEditModeOff();
         hideSofKeyboard();
+        if (mIsNew) {
+            this.mRecipeRepository.insertRecipeTask(mRecipe);
+        } else {
+            this.mRecipeRepository.updateRecipeTask(mRecipe);
+        }
+
         this.mSectionsPagerAdapter.putEditModeOff();
     }
     public void hideSofKeyboard() {

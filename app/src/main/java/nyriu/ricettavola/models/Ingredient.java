@@ -1,11 +1,21 @@
 package nyriu.ricettavola.models;
 
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//@Entity(tableName = "ingredients")
 public class Ingredient implements Parcelable {
 
+
+    //@PrimaryKey(autoGenerate = true)
+    //private int id;
+
+
+    //@ColumnInfo(name = "description")
     private String description;
 
     public Ingredient() {

@@ -1,6 +1,11 @@
 package nyriu.ricettavola.models;
 
-import android.graphics.Bitmap;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,45 +13,77 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import nyriu.ricettavola.R;
+import nyriu.ricettavola.persistence.Converters;
 
 /**
  * Represents a recipe
- * It includes general informations (title, cooking time,...),
+ * It includes general information (title, cooking time,...),
  * necessary ingredients and preparation steps
  */
+@Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
 
     static public final Uri DEFAULT_IMAGE_URI = Uri.parse("android.resource://nyriu.ricettavola/" + R.drawable.ic_insert_photo_black_24dp);
 
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+
+
+
     // Summary Stuff
+    @ColumnInfo(name = "image_uri")
     private Uri imageUri = DEFAULT_IMAGE_URI;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "preparation_time")
     private String preparation_time;
+    @ColumnInfo(name = "cooking_time")
     private String cooking_time;
+    @ColumnInfo(name = "portions")
     private String portions;
+    @ColumnInfo(name = "difficulty")
     private int difficulty; /** MUST be in [0,5] **/
-    private Set<TAG> tags = new TreeSet<>();
+    @ColumnInfo(name = "tags")
+    private Set tags = new TreeSet<>();
 
     // Ingredients Stuff
+    @ColumnInfo(name = "ingredients")
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
     // Preparation Stuff
+    @ColumnInfo(name = "preparation_steps")
     private ArrayList<PreparationStep> preparationSteps = new ArrayList<>();
 
 
+    @Ignore
     public Recipe() {
         initEmptyRecipe();
     }
 
+    @Ignore
     public Recipe(String title) {
         this.title = title;
     }
 
+    public Recipe(int id, Uri imageUri, String title, String preparation_time, String cooking_time,
+                  String portions, int difficulty, Set tags, ArrayList<Ingredient> ingredients,
+                  ArrayList<PreparationStep> preparationSteps) {
+        this.id = id;
+        this.imageUri = imageUri;
+        this.title = title;
+        this.preparation_time = preparation_time;
+        this.cooking_time = cooking_time;
+        this.portions = portions;
+        this.difficulty = difficulty;
+        this.tags = tags;
+        this.ingredients = ingredients;
+        this.preparationSteps = preparationSteps;
+    }
 
     private void initEmptyRecipe() {
         this.title = "";
@@ -247,7 +284,27 @@ public class Recipe implements Parcelable {
     public void setImageUri(Uri imageUri) {
         this.imageUri = imageUri;
     }
-// #############################################################################################
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTags(Set tags) {
+        this.tags = tags;
+    }
+
+    public void setIngredients(ArrayList<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setPreparationSteps(ArrayList<PreparationStep> preparationSteps) {
+        this.preparationSteps = preparationSteps;
+    }
+    // #############################################################################################
     // Parcelable Stuff
 
     protected Recipe(Parcel in) {

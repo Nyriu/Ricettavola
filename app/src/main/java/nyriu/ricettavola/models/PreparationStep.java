@@ -1,10 +1,20 @@
 package nyriu.ricettavola.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+//@Entity(tableName = "preparation_steps")
 public class PreparationStep implements Comparable, Parcelable {
+
+    //@PrimaryKey(autoGenerate = true)
+    //private int id;
+
+    //@ColumnInfo(name = "number")
     private int number;
+    //@ColumnInfo(name = "description")
     private String description;
 
     public PreparationStep() {
