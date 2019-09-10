@@ -267,7 +267,7 @@ public class RecipeActivity extends AppCompatActivity implements
         private TextView tags_content;       // TODO modificare
 
         // UI edit mode
-        private TextView fab;
+        private FloatingActionButton fab;
         private EditText edit_recipe_title;
         private EditText edit_preparation_content;
         private EditText edit_cooking_content;
@@ -347,7 +347,7 @@ public class RecipeActivity extends AppCompatActivity implements
             recipe_image.setOnClickListener(this);
 
 
-            if (mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -410,7 +410,7 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_tags_content       .setVisibility(View.VISIBLE);
             this.fab                     .setVisibility(View.VISIBLE);
 
-            if (mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -432,7 +432,7 @@ public class RecipeActivity extends AppCompatActivity implements
             // aggiorno la parte non editabile
             this.toolbar_recipe_title.setText(String.valueOf(this.edit_recipe_title.getText()));
 
-            if (mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -453,7 +453,7 @@ public class RecipeActivity extends AppCompatActivity implements
         }
 
         private void updateRecipe(){
-            if (mImageUri==null || !mImageUri.equals(mRecipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri==null || !mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
                 this.mRecipe.setImageUri(mImageUri);
             }
             this.mRecipe.setTitle           (String.valueOf(this.edit_recipe_title.getText()));
@@ -481,15 +481,17 @@ public class RecipeActivity extends AppCompatActivity implements
 
                 mImageUri = data.getData();
 
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
+                //try {
+                    ////Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
                     // Log.d(TAG, String.valueOf(bitmap));
 
                     recipe_image.setAlpha((float)1);
-                    recipe_image.setImageBitmap(bitmap);
-                } catch (IOException e) {
+                    recipe_image.setImageURI(mImageUri);
+
+                    ////recipe_image.setImageBitmap(bitmap);
+                    //} catch (IOException e) {
                     // e.printStackTrace();
-                }
+                //}
             }
         }
         @Override

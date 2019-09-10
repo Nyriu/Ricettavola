@@ -1,6 +1,10 @@
 package nyriu.ricettavola.adapters;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import nyriu.ricettavola.R;
@@ -35,6 +40,14 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
 
         try {
             viewHolder.title.setText(mRecipes.get(i).getTitle());
+
+            Uri imageUri = mRecipes.get(i).getImageUri();
+            if (imageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
+                viewHolder.recipe_image.setAlpha((float) 0.3);
+            } else {
+                viewHolder.recipe_image.setAlpha((float) 1);
+            }
+            viewHolder.recipe_image.setImageURI(imageUri);
         } catch (NullPointerException e) {
             Log.e("DEBUG", "onBindViewHolder: " + e.getMessage());
         }
@@ -58,11 +71,13 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener  {
 
         TextView title;
+        AppCompatImageView recipe_image;
         OnRecipeListener mOnRecipeListener;
 
         public ViewHolder(@NonNull View itemView, @NonNull OnRecipeListener onRecipeListener) {
             super(itemView);
-            title = itemView.findViewById(R.id.toolbar_recipe_title);
+            title = itemView.findViewById(R.id.recipe_title);
+            recipe_image = itemView.findViewById(R.id.recipe_image);
             this.mOnRecipeListener = onRecipeListener;
             itemView.setOnClickListener(this);
         }

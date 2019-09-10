@@ -21,7 +21,7 @@ import nyriu.ricettavola.R;
  */
 public class Recipe implements Parcelable {
 
-    public final Uri DEFAULT_IMAGE_URI = Uri.parse("android.resource://nyriu.ricettavola/" + R.drawable.ic_insert_photo_black_24dp);
+    static public final Uri DEFAULT_IMAGE_URI = Uri.parse("android.resource://nyriu.ricettavola/" + R.drawable.ic_insert_photo_black_24dp);
 
     // Summary Stuff
     private Uri imageUri = DEFAULT_IMAGE_URI;

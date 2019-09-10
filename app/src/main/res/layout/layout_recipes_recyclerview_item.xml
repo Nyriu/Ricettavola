@@ -27,7 +27,7 @@
             android:src="@android:drawable/ic_menu_report_image" />
 
         <TextView
-            android:id="@+id/toolbar_recipe_title"
+            android:id="@+id/recipe_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/recipe_image"
@@ -39,7 +39,7 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/desc"
+            android:id="@+id/tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/toolbar_recipe_title"
