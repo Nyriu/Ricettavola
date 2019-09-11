@@ -1,6 +1,7 @@
 package nyriu.ricettavola.models;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -119,7 +120,7 @@ public class Recipe implements Parcelable {
 
         addIngredient(new Ingredient("Nutella"));
         addIngredient(new Ingredient("2 biscuits"));
-
+        // "numero.descrizione;"
         addStep(new PreparationStep(4, "Eat"));
         addStep(new PreparationStep(1, "Get Nutella"));
         addStep(new PreparationStep(2, "Get biscuits"));
@@ -224,7 +225,6 @@ public class Recipe implements Parcelable {
         s += '}';
         return s;
     }
-
 
     // #############################################################################################
     // Getter & Setter

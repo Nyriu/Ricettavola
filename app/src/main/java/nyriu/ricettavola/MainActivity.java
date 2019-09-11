@@ -2,6 +2,7 @@ package nyriu.ricettavola;
 
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,14 +28,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
+
+import Database.Database;
+import Database.DatabaseRecipe;
 import nyriu.ricettavola.adapters.RecipesRecyclerAdapter;
+import nyriu.ricettavola.models.Ingredient;
 import nyriu.ricettavola.models.Recipe;
-import nyriu.ricettavola.persistence.RecipeRepository;
+//import nyriu.ricettavola.persistence.RecipeRepository;
+import nyriu.ricettavola.models.TAG;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
+import static Database.Database.DATABASE_VERSION;
+//import static nyriu.ricettavola.persistence.RecipeDatabase.DATABASE_NAME;
+
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG="DEBUGMainActivity";
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -42,7 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // vars
     private ArrayList<Recipe> mRecipes;
-    private RecipeRepository mRecipeRepository;
+    //private RecipeRepository mRecipeRepository;
+
+    // Database
+    private Database myDatabase = new Database(this, Database.DATABASE_NAME, null, Database.DATABASE_VERSION);
 
 
     @Override
@@ -50,10 +69,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         mRecipes = new ArrayList<>();
-        //insertFakeRecipes(2);
+        insertFakeRecipes(2);
+        insertFakeRecipesInDatabase();
 
-        mRecipeRepository = new RecipeRepository(this);
-        retriveRecipes();
+        //mRecipeRepository = new RecipeRepository(this);
+        //retriveRecipes();
 
         setContentView(R.layout.activity_main);
 
@@ -80,20 +100,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void retriveRecipes() {
-        mRecipeRepository.retriveRecipeTask().observe(this, new Observer<List<Recipe>>() {
-            @Override
-            public void onChanged(@Nullable List<Recipe> recipes) {
-                if (mRecipes.size() > 0) {
-                    mRecipes.clear();
-                }
-                if (recipes != null) {
-                    mRecipes.addAll(recipes);
-                }
-                //mRecipeRecyclerAdapter.notifyDataSetChanged(); // TODO rimuovere
-            }
-        });
-    }
+    //private void retriveRecipes() {
+    //    mRecipeRepository.retriveRecipeTask().observe(this, new Observer<List<Recipe>>() {
+    //        @Override
+    //        public void onChanged(@Nullable List<Recipe> recipes) {
+    //            if (mRecipes.size() > 0) {
+    //                mRecipes.clear();
+    //            }
+    //            if (recipes != null) {
+    //                mRecipes.addAll(recipes);
+    //            }
+    //            //mRecipeRecyclerAdapter.notifyDataSetChanged(); // TODO rimuovere
+    //        }
+    //    });
+    //}
 
 
 
@@ -119,6 +139,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
+    private void insertFakeRecipesInDatabase() {
+        //Prima Ricetta
+        Set tmpTags = new TreeSet<String>();
+        tmpTags.add("PrimoPiatto");
+        tmpTags.add("Vegano");
+
+        String[] tmpIngredients = new String[]{"formaggio", "pane"};
+        Map<Integer, String> tmpSteps = new HashMap<>();
+        tmpSteps.put(1, "metti il formagggio sul pane");
+        tmpSteps.put(2, "metti il pane in forno");
+        tmpSteps.put(3, "gettare dalla finestra");
+        tmpSteps.put(4, "servire freddo");
+
+        DatabaseRecipe recipe = new DatabaseRecipe(
+                "Pane e formaggio", "5 min", "10 min", "4 persone", 3, tmpTags, tmpIngredients, tmpSteps
+        );
+        boolean result = myDatabase.addRecipe(recipe);
+        Log.d(TAG, "Risultato primo inserimento: " + result);
+
+        //Seconda Ricetta
+        tmpTags = new TreeSet<String>();
+        tmpTags.add("SecondoPiatto");
+        tmpTags.add("Vegano");
+
+        tmpIngredients = new String[]{"Braciola"};
+        tmpSteps = new HashMap<>();
+        tmpSteps.put(1, "cucinala!!");
+
+        recipe = new DatabaseRecipe(
+                "Braciola", "0 min", "50 ore", "1 persona", 1, tmpTags, tmpIngredients, tmpSteps
+        );
+        result = myDatabase.addRecipe(recipe);
+        Log.d(TAG, "Risultato secondo inserimento: " + result);
+
+        List<DatabaseRecipe> all = myDatabase.getAllReceipes();
+        Log.d(TAG, "Numero ricette: " + all.size());
+    }
     private void insertFakeRecipes(int num) {
         for (int i=0; i<num; i++) {
             Recipe recipe = new Recipe();
