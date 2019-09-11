@@ -1,13 +1,22 @@
 package Database;
 
 
+import android.net.Uri;
+
 import java.util.Map;
 import java.util.Set;
 
+import nyriu.ricettavola.R;
+
 public class DatabaseRecipe {
+    static public final Uri DEFAULT_IMAGE_URI =
+            Uri.parse("android.resource://nyriu.ricettavola/" +
+                    R.drawable.ic_insert_photo_black_24dp);
+
 
     public final static String ID_FIELD               = "id";
     public final static String TITLE_FIELD            = "title";
+    public final static String IMAGE_URI_FIELD        = "image_uri";
     public final static String PREPARATION_TIME_FIELD = "prep_time";
     public final static String COOKING_TIME           = "cook_time";
     public final static String PEOPLE_FIELD           = "people";
@@ -18,18 +27,20 @@ public class DatabaseRecipe {
 
     public final static int COLUMN_ID_FIELD               = 0;
     public final static int COLUMN_TITLE_FIELD            = 1;
-    public final static int COLUMN_PREPARATION_TIME_FIELD = 2;
-    public final static int COLUMN_COOKING_TIME           = 3;
-    public final static int COLUMN_PEOPLE_FIELD           = 4;
-    public final static int COLUMN_DIFFICULTY_FIELD       = 5;
-    public final static int COLUMN_TAG_FIELD              = 6;
-    public final static int COLUMN_INGREDIENTS_FIELD      = 7;
-    public final static int COLUMN_STEPS_FIELD            = 8;
+    public final static int COLUMN_IMAGE_URI_FIELD        = 2;
+    public final static int COLUMN_PREPARATION_TIME_FIELD = 3;
+    public final static int COLUMN_COOKING_TIME           = 4;
+    public final static int COLUMN_PEOPLE_FIELD           = 5;
+    public final static int COLUMN_DIFFICULTY_FIELD       = 6;
+    public final static int COLUMN_TAG_FIELD              = 7;
+    public final static int COLUMN_INGREDIENTS_FIELD      = 8;
+    public final static int COLUMN_STEPS_FIELD            = 9;
 
 
 
     private int id;
     private String title;
+    private Uri imageUri;
     private String prepTime;
     private String cookTime;
     private String people;
@@ -39,8 +50,12 @@ public class DatabaseRecipe {
     private String[] ingredients;
     private Map<Integer, String> steps;
 
-    public DatabaseRecipe(String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
+    public DatabaseRecipe() {
+    }
+
+    public DatabaseRecipe(String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
         this.title = title;
+        this.imageUri = imageUri;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.people = people;
@@ -50,9 +65,10 @@ public class DatabaseRecipe {
         this.steps = steps;
     }
 
-    public DatabaseRecipe(int id, String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
+    public DatabaseRecipe(int id, String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
         this.id = id;
         this.title = title;
+        this.imageUri = imageUri;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.people = people;
@@ -61,7 +77,6 @@ public class DatabaseRecipe {
         this.ingredients = ingredients;
         this.steps = steps;
     }
-
 
     public int getId() {
         return id;
@@ -77,6 +92,14 @@ public class DatabaseRecipe {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getPrepTime() {

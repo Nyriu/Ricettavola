@@ -115,13 +115,19 @@ public class RecipeActivity extends AppCompatActivity implements
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
         mRecipeTitle = findViewById(R.id.toolbar_recipe_title);
-        mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
 
         mBackArrow   = findViewById(R.id.toolbar_back_arrow);
         mEditButton  = findViewById(R.id.toolbar_edit);
         mCheckButton = findViewById(R.id.toolbar_check);
         mShareButton = findViewById(R.id.toolbar_share);
 
+        DatabaseHelper mDatatbaseHelper = new DatabaseHelper(
+                this,
+                DatabaseHelper.DATABASE_NAME,
+                null,
+                DatabaseHelper.DATABASE_VERSION);
+        this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
+        mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
 
         setListeners();
     }
@@ -270,10 +276,16 @@ public class RecipeActivity extends AppCompatActivity implements
             //IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
             //ingredientsFragment.setArguments(bundle);
             //this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
+            summaryFragment = SummaryFragment.newInstance(); //TODO
+            summaryFragment.setArguments(bundle); //TODO
+            this.mFragments[POSITION_INGREDIENTS] = summaryFragment;// TODO cambiami!!
 
             //PreparationFragment preparationFragment = PreparationFragment.newInstance();
             //preparationFragment.setArguments(bundle);
             //this.mFragments[POSITION_PREPARATION] = preparationFragment;
+            summaryFragment = SummaryFragment.newInstance(); //TODO
+            summaryFragment.setArguments(bundle); //TODO
+            this.mFragments[POSITION_PREPARATION] =  summaryFragment; // TODO cambiami!!
         }
 
         @Override
@@ -409,11 +421,6 @@ public class RecipeActivity extends AppCompatActivity implements
         private DatabaseHelper mDatatbaseHelper;
 
         public SummaryFragment() {
-            mDatatbaseHelper = new DatabaseHelper(
-                    getContext(),
-                    DatabaseHelper.DATABASE_NAME,
-                    null,
-                    DatabaseHelper.DATABASE_VERSION);
 
         }
 
@@ -425,6 +432,13 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
+
             this.mRecipeId = getArguments().getInt("recipe_id");
             this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
         }
@@ -494,7 +508,8 @@ public class RecipeActivity extends AppCompatActivity implements
             this.recipe_title       .setText(this.mRecipe.getTitle());
             this.preparation_content.setText(this.mRecipe.getPrepTime());
             this.cooking_content    .setText(this.mRecipe.getCookTime());
-            this.portions_content   .setText(this.mRecipe.getPortions());
+            //this.portions_content   .setText(this.mRecipe.getPortions());
+            this.portions_content   .setText(this.mRecipe.getPeople()); // TODO cambiami
 
             // mantengo allineata anche la parte editabile
             this.edit_recipe_title       .setText(this.recipe_title.getText());
@@ -587,7 +602,8 @@ public class RecipeActivity extends AppCompatActivity implements
             this.mRecipe.setTitle   (String.valueOf(this.edit_recipe_title.getText()));
             this.mRecipe.setPrepTime(String.valueOf(this.edit_preparation_content.getText()));
             this.mRecipe.setCookTime(String.valueOf(this.edit_cooking_content.getText()));
-            this.mRecipe.setPortions(String.valueOf(this.edit_portions_content.getText()));
+            //this.mRecipe.setPortions(String.valueOf(this.edit_portions_content.getText()));
+            this.mRecipe.setPeople(String.valueOf(this.edit_portions_content.getText())); // TODO cambiami
         }
 
         private final int PICK_IMAGE_REQUEST = 1;

@@ -2,8 +2,6 @@ package nyriu.ricettavola;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -29,9 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -55,9 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        DatabaseHelper mDatatbaseHelper = new DatabaseHelper(this, DatabaseHelper.DATABASE_NAME, null, DatabaseHelper.DATABASE_VERSION);
-
 
         setContentView(R.layout.activity_main);
 
@@ -164,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         steps.put(1, "Primo step");
 
         return new DatabaseRecipe(
-                DatabaseRecipe.DEFAULT_IMAGE_URI,
                 "Titolo",
+                DatabaseRecipe.DEFAULT_IMAGE_URI,
                 "7 min",
                 "7 min",
                 "3 persone",
@@ -239,13 +232,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         public RecipesFragment() {
-            mDatatbaseHelper = new DatabaseHelper(
-                    getContext(),
-                    DatabaseHelper.DATABASE_NAME,
-                    null,
-                    DatabaseHelper.DATABASE_VERSION);
-
-            this.mRecipes = mDatatbaseHelper.getAllReceipes();
         }
 
         public static RecipesFragment newInstance() {
@@ -257,11 +243,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
+
+            this.mRecipes = mDatatbaseHelper.getAllRecipes();
         }
 
         public void refreshRecyclerView() {
             try {
-                //this.mRecipes = mDatatbaseHelper.getAllReceipes();
+                this.mRecipes = mDatatbaseHelper.getAllRecipes();
                 mRecipesRecyclerAdapter.notifyDataSetChanged();
             } catch (NullPointerException e) {
                 Log.d(TAG, "primo refreshRecyclerView");

@@ -5,12 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return "CREATE TABLE \""+ RECIPE_TABLE_NAME + "\" (\n" +
                 "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
                 "\t\"title\"\tTEXT NOT NULL,\n" +
+                "\t\"image_uri\"\tTEXT NOT NULL,\n" +
                 "\t\"prep_time\"\tTEXT NOT NULL,\n" +
                 "\t\"cook_time\"\tTEXT NOT NULL,\n" +
                 "\t\"people\"\tTEXT NOT NULL,\n" +
@@ -60,6 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseRecipe.TITLE_FIELD, recipe.getTitle());
+        contentValues.put(DatabaseRecipe.IMAGE_URI_FIELD, convertUri(recipe.getImageUri()));
         contentValues.put(DatabaseRecipe.PREPARATION_TIME_FIELD, recipe.getPrepTime());
         contentValues.put(DatabaseRecipe.COOKING_TIME, recipe.getCookTime());
         contentValues.put(DatabaseRecipe.DIFFICULTY_FIELD, recipe.getDifficulty());
@@ -82,6 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result == 1;
     }
 
+    // TODO ripetere con altri campi
     public boolean updateRecipeTitle(int id, String newTitle) {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -105,7 +108,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public ArrayList<DatabaseRecipe> getAllReceipes() {
+
+
+    public DatabaseRecipe getRecipe(int id) {
+
+        ArrayList<DatabaseRecipe> recipes = new ArrayList<>();
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        cursor.moveToFirst();
+        if (cursor.getCount() == 1) {
+            DatabaseRecipe recipe = decodeDatabaseRecipe(cursor);
+            cursor.close();
+            return recipe;
+        }
+        Log.d(TAG, "Chiave non unica...");
+        return null;
+    }
+
+    public ArrayList<DatabaseRecipe> getAllRecipes() {
 
         ArrayList<DatabaseRecipe> recipes = new ArrayList<>();
         SQLiteDatabase database = getReadableDatabase();
@@ -126,41 +147,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return recipes;
     }
 
-    // Formato step: "numero1.descrizione1;numero2.descrizione2;..."
-    private String convertSteps(Map<Integer, String> stepsMap) {
 
-        StringBuilder result = new StringBuilder();
 
-        List<String> tokens = new ArrayList<>();
-
-        int stespNum = stepsMap.size();
-        int index = 1;
-        for (int i=index; i<stespNum; i++) {
-            result.append(i + ".");
-            result.append(stepsMap.get(i) + ";");
-        }
-
-        return result.toString();
-
+    // Formato uri: "uri"
+    private String convertUri(Uri uri) {
+        return uri.getPath();
     }
-    private Map<Integer, String> deconvertSteps(String enc) {
-
-        Map<Integer, String> result = new HashMap<Integer, String>();
-
-        String[] tokens = enc.split(";");
-
-
-        for (int i=0; i<tokens.length; i++) {
-            if (!tokens[i].isEmpty()) {
-                int pointPosition = tokens[i].indexOf(".");
-                Integer num = Integer.parseInt(tokens[i].substring(0, pointPosition));
-                String description = tokens[i].substring(pointPosition + 1);
-                result.put(num, description);
-            }
-        }
-
-        return result;
-
+    private Uri deconvertUri(String enc) {
+        return Uri.parse(enc);
     }
 
     // Formato tags: "tag1;tag2;..."
@@ -213,11 +207,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    // Formato step: "numero1.descrizione1;numero2.descrizione2;..."
+    private String convertSteps(Map<Integer, String> stepsMap) {
+
+        StringBuilder result = new StringBuilder();
+
+        int stepsNum = stepsMap.size();
+        for (int i=0; i<stepsNum; i++) {
+            result.append((i+1) + ".");
+            result.append(stepsMap.get(i+1) + ";");
+        }
+
+        return result.toString();
+
+    }
+    private Map<Integer, String> deconvertSteps(String enc) {
+
+        Map<Integer, String> result = new HashMap<Integer, String>();
+
+        String[] tokens = enc.split(";");
+
+
+        for (int i=0; i<tokens.length; i++) {
+            if (!tokens[i].isEmpty()) {
+                int pointPosition = tokens[i].indexOf(".");
+                Integer num = Integer.parseInt(tokens[i].substring(0, pointPosition));
+                String description = tokens[i].substring(pointPosition + 1);
+                result.put(num, description);
+            }
+        }
+
+        return result;
+
+    }
+
+
     private DatabaseRecipe decodeDatabaseRecipe(Cursor cursor) {
         //String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps
         return new DatabaseRecipe(
                 cursor.getInt(DatabaseRecipe.COLUMN_ID_FIELD),
                 cursor.getString(DatabaseRecipe.COLUMN_TITLE_FIELD),
+                deconvertUri(cursor.getString(DatabaseRecipe.COLUMN_IMAGE_URI_FIELD)),
                 cursor.getString(DatabaseRecipe.COLUMN_PREPARATION_TIME_FIELD),
                 cursor.getString(DatabaseRecipe.COLUMN_COOKING_TIME),
                 cursor.getString(DatabaseRecipe.COLUMN_PEOPLE_FIELD),
