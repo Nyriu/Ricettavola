@@ -1,6 +1,7 @@
 package nyriu.ricettavola;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.fab: {
                 Toast.makeText(this, "fab Clicked!", Toast.LENGTH_SHORT).show();
                 // TODO
-                //Intent intent = new Intent(this, RecipeActivity.class);
                 //intent.putExtra("new_recipe", true);
                 //startActivity(intent);
 
@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // TODO remove me
     public DatabaseRecipe newFakeRecipe(){
         Set tags = new TreeSet();
         tags.add("PrimoPiatto");
@@ -272,10 +273,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onRecipeClick(int position) {
             //Toast.makeText(getContext(), "ViewHolder clicked!" + position,Toast.LENGTH_SHORT).show();
-            // TODO
-            //Intent intent = new Intent(getContext(), RecipeActivity.class);
-            //intent.putExtra("recipe", this.mRecipes.get(position));
-            //startActivity(intent);
+            Intent intent = new Intent(getContext(), RecipeActivity.class);
+            intent.putExtra("recipe_id", this.mRecipes.get(position).getId());
+            startActivity(intent);
         }
 
         @Override

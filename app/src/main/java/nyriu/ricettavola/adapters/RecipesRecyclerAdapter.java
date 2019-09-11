@@ -16,6 +16,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Set;
 
 import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
@@ -46,6 +48,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.setTitle(mRecipes.get(i).getTitle());
+        viewHolder.setTags(mRecipes.get(i).getTags());
         viewHolder.setEditMode(isEditMode());
         //viewHolder.setImageUri(mRecipes.get(i).getImageUri()); // TODO
     }
@@ -91,6 +94,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         // vars
         private OnRecipeListener mOnRecipeListener;
         private String title;
+        private Set tags;
         private Uri imageUri;
         private boolean mEditMode;
         // TODO add image Uri
@@ -116,11 +120,25 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
 
         public void setTitle(String title) {
             this.title = title;
-            updateTextView();
+            this.titleView.setText(title);
         }
 
-        private void updateTextView() {
-            this.titleView.setText(title);
+        public Set getTags() {
+            return tags;
+        }
+
+        public void setTags(Set tags) {
+            this.tags = tags;
+            updateTagsView();
+        }
+
+        private void updateTagsView() {
+            String s = "";
+            for (Object tag:
+                    Objects.requireNonNull(tags.toArray())) {
+               s += tag.toString() + " ";
+            }
+            this.tagsView.setText(s);
         }
 
         public Uri getImageUri() {
