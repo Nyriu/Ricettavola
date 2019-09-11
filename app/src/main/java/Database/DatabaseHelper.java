@@ -19,7 +19,7 @@ import java.util.TreeSet;
 import static Database.DatabaseRecipe.ID_FIELD;
 import static Database.DatabaseRecipe.TITLE_FIELD;
 
-public class Database extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "Database";
     public final static String DATABASE_NAME = "recipes.db";
@@ -27,7 +27,7 @@ public class Database extends SQLiteOpenHelper {
     public final static int DATABASE_VERSION = 1;
 
 
-    public Database(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -105,9 +105,9 @@ public class Database extends SQLiteOpenHelper {
 
     }
 
-    public List<DatabaseRecipe> getAllReceipes() {
+    public ArrayList<DatabaseRecipe> getAllReceipes() {
 
-        List<DatabaseRecipe> recipes = new LinkedList<>();
+        ArrayList<DatabaseRecipe> recipes = new ArrayList<>();
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME, null);
 
@@ -124,10 +124,9 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
         Log.d(TAG, "Registrazioni recuperate: " + recipes.size());
         return recipes;
-
     }
 
-    // Formato step: "numero.descrizione;"
+    // Formato step: "numero1.descrizione1;numero2.descrizione2;..."
     private String convertSteps(Map<Integer, String> stepsMap) {
 
         StringBuilder result = new StringBuilder();
@@ -144,7 +143,6 @@ public class Database extends SQLiteOpenHelper {
         return result.toString();
 
     }
-    // Formato step: "numero.descrizione;"
     private Map<Integer, String> deconvertSteps(String enc) {
 
         Map<Integer, String> result = new HashMap<Integer, String>();
@@ -190,6 +188,7 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
+    // Formato ingredients: "ingredient1;ingredient2;..."
     private String convertIngredients(String[] ingredients) {
 
         StringBuilder result = new StringBuilder();
@@ -229,6 +228,7 @@ public class Database extends SQLiteOpenHelper {
         );
 
     }
+
 
 
 }

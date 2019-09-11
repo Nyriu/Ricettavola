@@ -53,7 +53,6 @@ import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.models.Ingredient;
 import nyriu.ricettavola.models.PreparationStep;
 import nyriu.ricettavola.models.Recipe;
-import nyriu.ricettavola.persistence.RecipeRepository;
 import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
@@ -75,7 +74,6 @@ public class RecipeActivity extends AppCompatActivity implements
     private boolean mEditMode = false;
     private boolean mIsNew = false;
     private Recipe mRecipe;
-    private RecipeRepository mRecipeRepository;
 
 
     @Override
@@ -122,7 +120,6 @@ public class RecipeActivity extends AppCompatActivity implements
         mCheckButton = findViewById(R.id.toolbar_check);
         mShareButton = findViewById(R.id.toolbar_share);
 
-        mRecipeRepository = new RecipeRepository(this);
 
         setListeners();
 
@@ -220,11 +217,11 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mEditMode = false;
         putToolbarEditModeOff();
         hideSofKeyboard();
-        if (mIsNew) {
-            this.mRecipeRepository.insertRecipeTask(mRecipe);
-        } else {
-            this.mRecipeRepository.updateRecipeTask(mRecipe);
-        }
+        //if (mIsNew) {
+        //    this.mRecipeRepository.insertRecipeTask(mRecipe);
+        //} else {
+        //    this.mRecipeRepository.updateRecipeTask(mRecipe);
+        //}
 
         this.mSectionsPagerAdapter.putEditModeOff();
     }
@@ -370,7 +367,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
                     recipe_image.setImageBitmap(bitmap);
                 } catch (IOException e) {
-                    // e.printStackTrace();
+                    // e.printStackTrace();lkj
                 }
             }
 

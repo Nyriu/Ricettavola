@@ -1,12 +1,5 @@
 package nyriu.ricettavola.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
-import android.arch.persistence.room.TypeConverters;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,55 +11,41 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import nyriu.ricettavola.R;
-import nyriu.ricettavola.persistence.Converters;
 
 /**
  * Represents a recipe
  * It includes general information (title, cooking time,...),
  * necessary ingredients and preparation steps
  */
-@Entity(tableName = "recipes")
 public class Recipe implements Parcelable {
 
     static public final Uri DEFAULT_IMAGE_URI = Uri.parse("android.resource://nyriu.ricettavola/" + R.drawable.ic_insert_photo_black_24dp);
 
 
-    @PrimaryKey(autoGenerate = true)
     private int id;
 
 
 
     // Summary Stuff
-    @ColumnInfo(name = "image_uri")
     private Uri imageUri = DEFAULT_IMAGE_URI;
-    @ColumnInfo(name = "title")
     private String title;
-    @ColumnInfo(name = "preparation_time")
     private String preparation_time;
-    @ColumnInfo(name = "cooking_time")
     private String cooking_time;
-    @ColumnInfo(name = "portions")
     private String portions;
-    @ColumnInfo(name = "difficulty")
     private int difficulty; /** MUST be in [0,5] **/
-    @ColumnInfo(name = "tags")
     private Set tags = new TreeSet<>();
 
     // Ingredients Stuff
-    @ColumnInfo(name = "ingredients")
     private ArrayList<Ingredient> ingredients = new ArrayList<>();
 
     // Preparation Stuff
-    @ColumnInfo(name = "preparation_steps")
     private ArrayList<PreparationStep> preparationSteps = new ArrayList<>();
 
 
-    @Ignore
     public Recipe() {
         initEmptyRecipe();
     }
 
-    @Ignore
     public Recipe(String title) {
         this.title = title;
     }

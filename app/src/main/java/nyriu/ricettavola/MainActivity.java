@@ -1,12 +1,10 @@
 package nyriu.ricettavola;
 
-import android.arch.lifecycle.Observer;
-import android.content.Intent;
-import android.provider.ContactsContract;
+import android.content.DialogInterface;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,52 +26,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-
-import Database.Database;
+import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
 import nyriu.ricettavola.adapters.RecipesRecyclerAdapter;
-import nyriu.ricettavola.models.Ingredient;
-import nyriu.ricettavola.models.Recipe;
-//import nyriu.ricettavola.persistence.RecipeRepository;
-import nyriu.ricettavola.models.TAG;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
-import static Database.Database.DATABASE_VERSION;
-//import static nyriu.ricettavola.persistence.RecipeDatabase.DATABASE_NAME;
+
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG="DEBUGMainActivity";
+    private static final String TAG = "DEBUGMainActivity";
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
 
-    // vars
-    private ArrayList<Recipe> mRecipes;
-    //private RecipeRepository mRecipeRepository;
-
-    // Database
-    private Database myDatabase = new Database(this, Database.DATABASE_NAME, null, Database.DATABASE_VERSION);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mRecipes = new ArrayList<>();
-        insertFakeRecipes(2);
-        insertFakeRecipesInDatabase();
-
-        //mRecipeRepository = new RecipeRepository(this);
-        //retriveRecipes();
 
         setContentView(R.layout.activity_main);
 
@@ -82,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mRecipes);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -96,26 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(this);
-
-
     }
-
-    //private void retriveRecipes() {
-    //    mRecipeRepository.retriveRecipeTask().observe(this, new Observer<List<Recipe>>() {
-    //        @Override
-    //        public void onChanged(@Nullable List<Recipe> recipes) {
-    //            if (mRecipes.size() > 0) {
-    //                mRecipes.clear();
-    //            }
-    //            if (recipes != null) {
-    //                mRecipes.addAll(recipes);
-    //            }
-    //            //mRecipeRecyclerAdapter.notifyDataSetChanged(); // TODO rimuovere
-    //        }
-    //    });
-    //}
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -139,96 +98,135 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void insertFakeRecipesInDatabase() {
-        //Prima Ricetta
-        Set tmpTags = new TreeSet<String>();
-        tmpTags.add("PrimoPiatto");
-        tmpTags.add("Vegano");
-
-        String[] tmpIngredients = new String[]{"formaggio", "pane"};
-        Map<Integer, String> tmpSteps = new HashMap<>();
-        tmpSteps.put(1, "metti il formagggio sul pane");
-        tmpSteps.put(2, "metti il pane in forno");
-        tmpSteps.put(3, "gettare dalla finestra");
-        tmpSteps.put(4, "servire freddo");
-
-        DatabaseRecipe recipe = new DatabaseRecipe(
-                "Pane e formaggio", "5 min", "10 min", "4 persone", 3, tmpTags, tmpIngredients, tmpSteps
-        );
-        boolean result = myDatabase.addRecipe(recipe);
-        Log.d(TAG, "Risultato primo inserimento: " + result);
-
-        //Seconda Ricetta
-        tmpTags = new TreeSet<String>();
-        tmpTags.add("SecondoPiatto");
-        tmpTags.add("Vegano");
-
-        tmpIngredients = new String[]{"Braciola"};
-        tmpSteps = new HashMap<>();
-        tmpSteps.put(1, "cucinala!!");
-
-        recipe = new DatabaseRecipe(
-                "Braciola", "0 min", "50 ore", "1 persona", 1, tmpTags, tmpIngredients, tmpSteps
-        );
-        result = myDatabase.addRecipe(recipe);
-        Log.d(TAG, "Risultato secondo inserimento: " + result);
-
-        List<DatabaseRecipe> all = myDatabase.getAllReceipes();
-        Log.d(TAG, "Numero ricette: " + all.size());
-    }
-    private void insertFakeRecipes(int num) {
-        for (int i=0; i<num; i++) {
-            Recipe recipe = new Recipe();
-            Log.d("DEBUG", "insertFakeRecipes: " + i);
-            recipe.initPlaceholderRecipe();
-            mRecipes.add(recipe);
-        }
-    }
-
     @Override
     public void onClick(View v) {
-
         switch (v.getId()) {
+            case R.id.fab: {
+                Toast.makeText(this, "fab Clicked!", Toast.LENGTH_SHORT).show();
+                // TODO
+                //Intent intent = new Intent(this, RecipeActivity.class);
+                //intent.putExtra("new_recipe", true);
+                //startActivity(intent);
 
-            case R.id.fab:{
-                Intent intent = new Intent(this, RecipeActivity.class);
-                intent.putExtra("new_recipe", true);
-                startActivity(intent);
-                //this.mSectionsPagerAdapter.addRecipe(new Recipe("Nuova!"));
+                // TODO remove me
+                DatabaseHelper databaseHelper= new DatabaseHelper(
+                        this,
+                        DatabaseHelper.DATABASE_NAME,
+                        null,
+                        DatabaseHelper.DATABASE_VERSION);
+                databaseHelper.addRecipe(newFakeRecipe());
+                // TODO aggiornare recyyclerView dopo insert
+                // END // TODO remove me
                 break;
             }
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
 
-    /**
-     * A fragment containing recipes list.
-     */
-    public static class RecipesFragment extends Fragment implements
-            RecipesRecyclerAdapter.OnRecipeListener {
-        // TODO perche static?
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+        Log.d(TAG, "onBackPressed: count" + count);
 
-        // Ui compontents
-        public RecyclerView mRecyclerView; // TODO make rpivate
+        if (count == 0) {
+            if (mSectionsPagerAdapter.getRecipesFragment().getEditMode()){
+                mSectionsPagerAdapter.getRecipesFragment().setEditMode(false);
+            } else {
+                super.onBackPressed();
+            }
+
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    public DatabaseRecipe newFakeRecipe(){
+        Set tags = new TreeSet();
+        tags.add("PrimoPiatto");
+
+        String[] ingredients = new String[]{"Primo ingrediente","Secondo ingrediente"};
+
+        HashMap steps = new HashMap<Integer, String>();
+        steps.put(1, "Primo step");
+
+        return new DatabaseRecipe(
+                "Titolo",
+                "7 min",
+                "7 min",
+                "3 persone",
+                1,
+                tags,
+                ingredients,
+                steps
+                );
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        static final int POSITION_RECIPES       = 0;
+        static final int POSITION_SHOPPING_LIST = 1;
 
         // vars
-        private ArrayList<Recipe> mRecipes = new ArrayList<>();
+        private RecipesFragment mRecipesFragment;
+        private ShoppingListFragment mShoppingListFragment;
+
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+            this.mRecipesFragment = RecipesFragment.newInstance();
+            this.mShoppingListFragment = ShoppingListFragment.newInstance();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case POSITION_RECIPES:
+                    return this.mRecipesFragment;
+
+                case POSITION_SHOPPING_LIST:
+                    return this.mShoppingListFragment;
+                default:
+                    Log.d(TAG, "fragment number incorrect");
+                    // TODO throw error
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        public RecipesFragment getRecipesFragment() {
+            return mRecipesFragment;
+        }
+
+        public ShoppingListFragment getShoppingListFragment() {
+            return mShoppingListFragment;
+        }
+    }
+
+
+
+    public static class RecipesFragment extends Fragment implements
+            RecipesRecyclerAdapter.OnRecipeListener {
+
+        // Ui compontents
+        private RecyclerView mRecyclerView;
+
+        // vars
+        private ArrayList<DatabaseRecipe> mRecipes;
         private RecipesRecyclerAdapter mRecipesRecyclerAdapter;
-        //private RecipeRepository mNoteRepository; // TODO
+
+        // Database
+        private DatabaseHelper mDatatbaseHelper;
+        private boolean mEditMode = false;
 
 
-
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
         public RecipesFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static RecipesFragment newInstance() {
             RecipesFragment fragment = new RecipesFragment();
             return fragment;
@@ -238,15 +236,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            try {
-                this.mRecipes = (ArrayList)getArguments().getParcelableArrayList("recipes");
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
 
-            } catch (Exception e) {
-                // TODO gestire
-                Log.d("DEBUG", "Missing recipes");
-                Toast.makeText(getContext(), "Missing recipes!", Toast.LENGTH_LONG).show();
-            }
-
+            this.mRecipes = mDatatbaseHelper.getAllReceipes();
         }
 
         @Override
@@ -275,23 +271,75 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onRecipeClick(int position) {
-            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getContext(), RecipeActivity.class);
-            intent.putExtra("recipe", this.mRecipes.get(position));
-            startActivity(intent);
+            //Toast.makeText(getContext(), "ViewHolder clicked!" + position,Toast.LENGTH_SHORT).show();
+            // TODO
+            //Intent intent = new Intent(getContext(), RecipeActivity.class);
+            //intent.putExtra("recipe", this.mRecipes.get(position));
+            //startActivity(intent);
         }
 
-        public void addRecipe(Recipe r) {
-            this.mRecipes.add(r);
-            this.mRecipesRecyclerAdapter.notifyDataSetChanged();
+        @Override
+        public void onRecipeDelete(final int position) {
+            //Toast.makeText(getContext(), "Delete recype button clicked!" + position,Toast.LENGTH_SHORT).show();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setCancelable(true);
+            builder.setTitle(R.string.delete_recipe_title);
+            builder.setMessage(R.string.delete_recipe_content);
+            builder.setPositiveButton(R.string.confirm,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mDatatbaseHelper.deleteRecipe(mRecipes.get(position));
+                            mRecipes.remove(position);
+                            mRecipesRecyclerAdapter.notifyItemRangeRemoved(position,1);
+                        }
+                    });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // Do nothing
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
+        @Override
+        public void onRecipeLongPress(int position) {
+            //Toast.makeText(getContext(), "Recype long press" + position,Toast.LENGTH_SHORT).show();
+            this.setEditMode(true);
+
+            Log.d(TAG, "onRecipeLongPress: ");
+        }
+
+        public boolean getEditMode() {
+            return this.mEditMode;
+        }
+        public void setEditMode(boolean editMode) {
+            if (editMode != mEditMode) {
+                if (editMode) {
+                    putEditModeOn();
+                } else {
+                    putEditModeOff();
+                }
+                this.mEditMode = editMode;
+            }
+        }
+
+        public void putEditModeOn() {
+            this.mEditMode = true;
+            mRecipesRecyclerAdapter.putEditModeOn();
+        }
+
+        public void putEditModeOff() {
+            this.mEditMode = false;
+            mRecipesRecyclerAdapter.putEditModeOff();
+        }
     }
 
 
-    /**
-     * A fragment containing the shopping list
-     */
     public static class ShoppingListFragment extends Fragment {
 
         public ShoppingListFragment() {
@@ -317,59 +365,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        private final int POSITION_RECIPES = 0;
-        private final int POSITION_SHOPPING_LIST = 1;
-
-        // vars
-        private ArrayList<Recipe> mRecipes;
-        private RecipesFragment mRecipesFragment;
-        private ShoppingListFragment mShoppingListFragment;
-
-
-        public SectionsPagerAdapter(FragmentManager fm, ArrayList<Recipe> recipes) {
-            super(fm);
-            this.mRecipes = recipes;
-
-            this.mRecipesFragment = RecipesFragment.newInstance();
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("recipes", this.mRecipes); // TODO sostituire con Parcelable?
-            this.mRecipesFragment.setArguments(bundle);
-
-            this.mShoppingListFragment = ShoppingListFragment.newInstance();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // TODO qua va messa logica per schermate differenti per ricetta e lista della spesa
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            switch (position) {
-
-                case POSITION_RECIPES:
-                    return this.mRecipesFragment;
-
-                case POSITION_SHOPPING_LIST:
-                    return this.mShoppingListFragment;
-                default:
-                    // TODO throw error
-                    return null;
-            }
-        }
-
-        public void addRecipe(Recipe r) {
-            this.mRecipesFragment.addRecipe(r);
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    }
 }

@@ -6,15 +6,15 @@ import java.util.Set;
 
 public class DatabaseRecipe {
 
-    public final static String ID_FIELD = "id";
-    public final static String TITLE_FIELD = "title";
+    public final static String ID_FIELD               = "id";
+    public final static String TITLE_FIELD            = "title";
     public final static String PREPARATION_TIME_FIELD = "prep_time";
-    public final static String COOKING_TIME = "cook_time";
-    public final static String PEOPLE_FIELD = "people";
-    public final static String DIFFICULTY_FIELD = "diff";
-    public final static String TAG_FIELD = "tag";
-    public final static String INGREDIENTS_FIELD = "ingredients";
-    public final static String STEPS_FIELD = "steps";
+    public final static String COOKING_TIME           = "cook_time";
+    public final static String PEOPLE_FIELD           = "people";
+    public final static String DIFFICULTY_FIELD       = "diff";
+    public final static String TAG_FIELD              = "tag";
+    public final static String INGREDIENTS_FIELD      = "ingredients";
+    public final static String STEPS_FIELD            = "steps";
 
     public final static int COLUMN_ID_FIELD               = 0;
     public final static int COLUMN_TITLE_FIELD            = 1;
@@ -34,6 +34,34 @@ public class DatabaseRecipe {
     private String cookTime;
     private String people;
     private int difficulty;
+
+    private Set tags;
+    private String[] ingredients;
+    private Map<Integer, String> steps;
+
+    public DatabaseRecipe(String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
+        this.title = title;
+        this.prepTime = prepTime;
+        this.cookTime = cookTime;
+        this.people = people;
+        this.difficulty = difficulty;
+        this.tags = tags;
+        this.ingredients = ingredients;
+        this.steps = steps;
+    }
+
+    public DatabaseRecipe(int id, String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
+        this.id = id;
+        this.title = title;
+        this.prepTime = prepTime;
+        this.cookTime = cookTime;
+        this.people = people;
+        this.difficulty = difficulty;
+        this.tags = tags;
+        this.ingredients = ingredients;
+        this.steps = steps;
+    }
+
 
     public int getId() {
         return id;
@@ -106,33 +134,4 @@ public class DatabaseRecipe {
     public void setSteps(Map<Integer, String> steps) {
         this.steps = steps;
     }
-
-    private Set tags;
-    private String[] ingredients;
-    private Map<Integer, String> steps;
-
-    public DatabaseRecipe(String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
-        this.title = title;
-        this.prepTime = prepTime;
-        this.cookTime = cookTime;
-        this.people = people;
-        this.difficulty = difficulty;
-        this.tags = tags;
-        this.ingredients = ingredients;
-        this.steps = steps;
-    }
-
-    public DatabaseRecipe(int id, String title, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
-        this.id = id;
-        this.title = title;
-        this.prepTime = prepTime;
-        this.cookTime = cookTime;
-        this.people = people;
-        this.difficulty = difficulty;
-        this.tags = tags;
-        this.ingredients = ingredients;
-        this.steps = steps;
-    }
-
-
 }
