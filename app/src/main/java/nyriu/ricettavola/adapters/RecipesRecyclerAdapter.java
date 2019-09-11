@@ -76,10 +76,6 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
     }
 
 
-
-
-
-
     public class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener,
             View.OnLongClickListener {

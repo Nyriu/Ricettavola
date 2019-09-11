@@ -42,17 +42,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Objects;
 
+import Database.DatabaseHelper;
+import Database.DatabaseRecipe;
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
-import nyriu.ricettavola.models.Ingredient;
-import nyriu.ricettavola.models.PreparationStep;
-import nyriu.ricettavola.models.Recipe;
 import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
@@ -61,6 +58,9 @@ import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 public class RecipeActivity extends AppCompatActivity implements
         View.OnClickListener {
+
+
+    private static final String TAG = "DEBUGRecipeActivity";
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -73,7 +73,8 @@ public class RecipeActivity extends AppCompatActivity implements
     // vars
     private boolean mEditMode = false;
     private boolean mIsNew = false;
-    private Recipe mRecipe;
+    private int mRecipeId;
+    private DatabaseRecipe mRecipe;
 
 
     @Override
@@ -81,16 +82,18 @@ public class RecipeActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         // Intent stuff
-        if (getIntent().hasExtra("recipe")) {
-            this.mRecipe = getIntent().getExtras().getParcelable("recipe");
+        if (getIntent().hasExtra("recipe_id")) {
+            this.mRecipeId = getIntent().getIntExtra("recipe_id", -1);
         } else {
-            this.mRecipe = new Recipe();
-            this.mRecipe.initExampleRecipe();
+            this.mRecipe = new DatabaseRecipe();
+            //initExampleRecipe(); // TODO mettere gli hint negli EditText
         }
         if (getIntent().hasExtra("new_recipe")) {
-            // TODO da usare per salvare la ricetta
-            mIsNew = true;
-        }
+                mIsNew = true;
+                //mEditMode = true; TODO subito?
+            } else {
+                Log.d(TAG, "Extra new_recipe=false...");
+            }
         // END Intent stuff
 
         setContentView(R.layout.activity_recipe);
@@ -100,7 +103,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
         // Create the adapter that will return a fragment for each
         // of the primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this.mRecipe, this.mEditMode);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mRecipeId, ismEditMode());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -110,7 +113,6 @@ public class RecipeActivity extends AppCompatActivity implements
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-
 
         mRecipeTitle = findViewById(R.id.toolbar_recipe_title);
         mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
@@ -122,14 +124,6 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
         setListeners();
-
-
-        Log.d("DEBUG", "Activity onCreate: fine");
-    }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
     }
 
     private void setListeners() {
@@ -200,7 +194,7 @@ public class RecipeActivity extends AppCompatActivity implements
     private void putEditModeOn() {
         this.mEditMode = true;
         putToolbarEditModeOn();
-        this.mSectionsPagerAdapter.putEditModeOn();
+        this.mSectionsPagerAdapter.setEditMode(true);
     }
     private void putToolbarEditModeOn(){
         mRecipeTitle.setText("Modify your recipe!");
@@ -213,7 +207,7 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    private void putEditModeOff() { // TODO non funziona con summary
+    private void putEditModeOff() {
         this.mEditMode = false;
         putToolbarEditModeOff();
         hideSofKeyboard();
@@ -222,8 +216,7 @@ public class RecipeActivity extends AppCompatActivity implements
         //} else {
         //    this.mRecipeRepository.updateRecipeTask(mRecipe);
         //}
-
-        this.mSectionsPagerAdapter.putEditModeOff();
+        this.mSectionsPagerAdapter.setEditMode(false);
     }
     public void hideSofKeyboard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -233,17 +226,7 @@ public class RecipeActivity extends AppCompatActivity implements
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-    public void hideNShowSofKeyboard() {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = this.getCurrentFocus();
-        if (view == null) {
-            view = new View(this);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        InputMethodManager inputMethodManager =
-                (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-    }
+
     private void putToolbarEditModeOff(){
         mRecipeTitle.setText(mRecipe.getTitle());
         //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(true);
@@ -258,11 +241,142 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
 
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private final int POSITION_SUMMARY     = 0;
+        private final int POSITION_INGREDIENTS = 1;
+        private final int POSITION_PREPARATION = 2;
 
 
-    /**
-     * A fragment containing recipe summary
-     */
+        // vars
+        private boolean mEditMode;
+        private int mRecipeId;
+        EditableFragment[] mFragments;
+
+        public SectionsPagerAdapter(FragmentManager fm, int recipeId, boolean editMode) {
+            super(fm);
+            this.mRecipeId = recipeId;
+            this.mFragments = new EditableFragment[3];
+            this.mEditMode = editMode;
+
+            Bundle bundle = new Bundle();
+            bundle.putInt("recipe_id", recipeId);
+            bundle.putBoolean("edit_mode", this.mEditMode);
+
+            SummaryFragment summaryFragment = SummaryFragment.newInstance();
+            summaryFragment.setArguments(bundle);
+            this.mFragments[POSITION_SUMMARY] = summaryFragment;
+
+            //IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
+            //ingredientsFragment.setArguments(bundle);
+            //this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
+
+            //PreparationFragment preparationFragment = PreparationFragment.newInstance();
+            //preparationFragment.setArguments(bundle);
+            //this.mFragments[POSITION_PREPARATION] = preparationFragment;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case POSITION_SUMMARY:
+                    return this.mFragments[POSITION_SUMMARY];
+
+                case POSITION_INGREDIENTS:
+                    return this.mFragments[POSITION_INGREDIENTS];
+
+                case POSITION_PREPARATION:
+                    //if (this.mFragments[POSITION_PREPARATION].editModeFailed || mEditMode){
+                    //    this.mFragments[POSITION_PREPARATION].putEditModeOn();
+                    //}
+                    return this.mFragments[POSITION_PREPARATION];
+
+                default:
+                    // TODO throw error
+                    return SummaryFragment.newInstance();
+            }
+        }
+
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+
+        // Edit Mode On/Off
+        public void setEditMode(boolean editMode) {
+            if (editMode != mEditMode) {
+                if (editMode) {
+                    putEditModeOn();
+                } else {
+                    putEditModeOff();
+                }
+                this.mEditMode = editMode;
+            }
+        }
+
+        private void putEditModeOn() {
+            for (EditableFragment f:
+                    mFragments) {
+                f.putEditModeOn();
+            }
+        }
+
+        private void putEditModeOff() {
+            for (EditableFragment f:
+                    mFragments) {
+                f.putEditModeOff();
+            }
+        }
+
+    }
+    public static class EditableFragment extends Fragment {
+        protected boolean mEditMode;
+        protected boolean editModeFailed = false;
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            try {
+                assert getArguments() != null;
+                this.mEditMode = getArguments().getBoolean("edit_mode");
+                //setEditMode(mEditMode); // TODO attivare e vedere se preparationFrgament tuona
+            } catch(Exception e) {
+                Log.d("DEBUG", "Missing edit_mode");
+            }
+        }
+
+        boolean isEditMode() {
+            return this.mEditMode;
+        }
+
+        public void setEditMode(boolean editMode) {
+            if (editMode != mEditMode) {
+                if (editMode) {
+                    putEditModeOn();
+                } else {
+                    putEditModeOff();
+                }
+                this.mEditMode = editMode;
+            }
+        }
+
+
+        void putEditModeOn() {
+            this.mEditMode = true;
+            // TODO verificare che non ci sia la possibilta di perdere le modifiche fatte entrando
+            // TODO due volte nella EditMode
+        }
+
+        void putEditModeOff() {
+            this.mEditMode = false;
+        }
+    }
+
+
+
     public static class SummaryFragment extends EditableFragment implements View.OnClickListener {
 
         // UI normal mode
@@ -286,20 +400,23 @@ public class RecipeActivity extends AppCompatActivity implements
         private TextView edit_tags_content;       // TODO modificare
 
 
-
-
-
         // vars
-        private Recipe mRecipe;
+        private int mRecipeId;
+        private DatabaseRecipe mRecipe;
         private Uri mImageUri;
 
+        // Database
+        private DatabaseHelper mDatatbaseHelper;
+
         public SummaryFragment() {
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
+
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static SummaryFragment newInstance() {
             SummaryFragment fragment = new SummaryFragment();
             return fragment;
@@ -308,7 +425,8 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            this.mRecipe = (Recipe)getArguments().getParcelable("recipe");
+            this.mRecipeId = getArguments().getInt("recipe_id");
+            this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
         }
 
         @Override
@@ -357,7 +475,7 @@ public class RecipeActivity extends AppCompatActivity implements
             recipe_image.setOnClickListener(this);
 
 
-            if (mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -374,8 +492,8 @@ public class RecipeActivity extends AppCompatActivity implements
 
             this.toolbar_recipe_title.setText(this.mRecipe.getTitle());
             this.recipe_title       .setText(this.mRecipe.getTitle());
-            this.preparation_content.setText(this.mRecipe.getPreparation_time());
-            this.cooking_content    .setText(this.mRecipe.getCooking_time());
+            this.preparation_content.setText(this.mRecipe.getPrepTime());
+            this.cooking_content    .setText(this.mRecipe.getCookTime());
             this.portions_content   .setText(this.mRecipe.getPortions());
 
             // mantengo allineata anche la parte editabile
@@ -420,7 +538,7 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_tags_content       .setVisibility(View.VISIBLE);
             this.fab                     .setVisibility(View.VISIBLE);
 
-            if (mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -442,7 +560,7 @@ public class RecipeActivity extends AppCompatActivity implements
             // aggiorno la parte non editabile
             this.toolbar_recipe_title.setText(String.valueOf(this.edit_recipe_title.getText()));
 
-            if (mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -463,13 +581,13 @@ public class RecipeActivity extends AppCompatActivity implements
         }
 
         private void updateRecipe(){
-            if (mImageUri==null || !mImageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
+            if (mImageUri==null || !mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 this.mRecipe.setImageUri(mImageUri);
             }
-            this.mRecipe.setTitle           (String.valueOf(this.edit_recipe_title.getText()));
-            this.mRecipe.setPreparation_time(String.valueOf(this.edit_preparation_content.getText()));
-            this.mRecipe.setCooking_time    (String.valueOf(this.edit_cooking_content.getText()));
-            this.mRecipe.setPortions        (String.valueOf(this.edit_portions_content.getText()));
+            this.mRecipe.setTitle   (String.valueOf(this.edit_recipe_title.getText()));
+            this.mRecipe.setPrepTime(String.valueOf(this.edit_preparation_content.getText()));
+            this.mRecipe.setCookTime(String.valueOf(this.edit_cooking_content.getText()));
+            this.mRecipe.setPortions(String.valueOf(this.edit_portions_content.getText()));
         }
 
         private final int PICK_IMAGE_REQUEST = 1;
@@ -519,487 +637,364 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    public static class IngredientsFragment extends EditableFragment implements
-            IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
+//    public static class IngredientsFragment extends EditableFragment implements
+//            IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
+//
+//        // Ui compontents
+//        private RecyclerView mRecyclerView;
+//        private FloatingActionButton mFab;
+//
+//        // vars
+//        private ArrayList<Ingredient> mIngredients = new ArrayList<>();
+//        private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
+//
+//
+//        public IngredientsFragment() {
+//        }
+//
+//        /**
+//         * Returns a new instance of this fragment for the given section
+//         * number.
+//         */
+//        public static IngredientsFragment newInstance() {
+//            IngredientsFragment fragment = new IngredientsFragment();
+//            return fragment;
+//        }
+//
+//        @ Override
+//        public void onCreate(@Nullable Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            try {
+//                assert getArguments() != null;
+//                this.mIngredients = getArguments().getParcelableArrayList("ingredients");
+//            } catch (Exception e) {
+//                Log.d("DEBUG", "Missing ingredients");
+//            }
+//
+//        }
+//
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                                 Bundle savedInstanceState) {
+//
+//            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false);
+//
+//            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+//            initRecyclerView();
+//
+//            setUserVisibleHint(false); // TODO cosa fa effettivamente? Toglierlo?
+//
+//            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+//            mFab.setOnClickListener(this);
+//
+//            return rootView;
+//        }
+//
+//        public void initRecyclerView() {
+//            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//            mRecyclerView.setLayoutManager(linearLayoutManager);
+//
+//            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(2);
+//            mRecyclerView.addItemDecoration(itemDecorator);
+//
+//            mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
+//            mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
+//
+//        }
+//
+//        @Override
+//        public void onIngredientClick(int position) {
+//            Log.d("DEBUG", "onIngredientClick: " + position);
+//            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+//        }
+//
+//        @SuppressLint("RestrictedApi")
+//        @Override
+//        public void putEditModeOn() {
+//            super.putEditModeOn();
+//            mIngredientsRecyclerAdapter.putEditModeOn();
+//            mFab.setVisibility(View.VISIBLE);
+//            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+//       }
+//
+//        @SuppressLint("RestrictedApi")
+//        @Override
+//        public void putEditModeOff() {
+//            super.putEditModeOff();
+//            mIngredientsRecyclerAdapter.putEditModeOff();
+//            mFab.setVisibility(View.GONE);
+//            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+//        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.fab:{
+//                    onButtonShowPopupWindowClick(getView());
+//                    break;
+//                }
+//                case R.id.cancel_button:{
+//                    mPopupWindow.dismiss();
+//                    break;
+//                }
+//                case R.id.confirm_button:{
+//                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_ingredient_edit);
+//                    String content = String.valueOf(editText.getText());
+//
+//                    if (!content.isEmpty()) {
+//                        mIngredients.add(new Ingredient(content));
+//                    }
+//                    mPopupWindow.dismiss();
+//                    break;
+//                }
+//            }
+//        }
+//
+//        private PopupWindow mPopupWindow;
+//        public void onButtonShowPopupWindowClick(View view) {
+//
+//            // inflate the layout of the popup window
+//            LayoutInflater inflater = (LayoutInflater)
+//                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+//            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
+//
+//            // create the popup window
+//            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            boolean focusable = true; // lets taps outside the popup also dismiss it
+//            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
+//
+//            // show the popup window
+//            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -200);
+//
+//            final EditText editText = popupView.findViewById(R.id.new_ingredient_edit);
+//            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                @Override
+//                public void onFocusChange(final View v, final boolean hasFocus) {
+//                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
+//                        editText.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+//                            }
+//                        });
+//                    }
+//                }
+//            });
+//
+//            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
+//            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
+//            cancelButton.setOnClickListener(this);
+//            confirmButton.setOnClickListener(this);
+//
+//            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        }
+//    }
+//
+//
+//    public static class PreparationFragment extends EditableFragment implements
+//            PreparationStepsRecyclerAdapter.OnPreparationStepListener,
+//            View.OnClickListener {
+//
+//
+//        // Ui compontents
+//        private RecyclerView mRecyclerView;
+//        private FloatingActionButton mFab;
+//
+//       // vars
+//        private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
+//        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
+//
+//
+//        public PreparationFragment() {
+//        }
+//
+//
+//        public static PreparationFragment newInstance() {
+//            PreparationFragment fragment = new PreparationFragment();
+//            return fragment;
+//        }
+//
+//        @ Override
+//        public void onCreate(@Nullable Bundle savedInstanceState) {
+//            super.onCreate(savedInstanceState);
+//            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+//
+//            try {
+//                assert getArguments() != null;
+//                this.mPreparationSteps = getArguments().getParcelableArrayList("steps");
+//                Log.d("DEBUG", "RecipeActivity PreparationSteps onCreate " + mPreparationSteps);
+//            } catch (Exception e) {
+//                Log.d("DEBUG", "Missing preparation step");
+//            }
+//
+//        }
+//
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                                 Bundle savedInstanceState) {
+//
+//            View rootView = inflater.inflate(R.layout.preparationsteps_fragment_recipe, container, false);
+//
+//            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+//            initRecyclerView();
+//
+//            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+//            mFab.setOnClickListener(this);
+//
+//            return rootView;
+//        }
+//
+//        public void initRecyclerView() {
+//            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+//            mRecyclerView.setLayoutManager(linearLayoutManager);
+//
+//            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
+//            mRecyclerView.addItemDecoration(itemDecorator);
+//
+//            ItemTouchHelper.Callback callback = new PreparationStepItemTouchHelper(mPreparationStepsRecyclerAdapter);
+//            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+//
+//            Log.d("DEBUG", "RecipeActivity PreparationSteps initRecyclerView " + mPreparationSteps);
+//            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
+//
+//            mPreparationStepsRecyclerAdapter.setItemTouchHelper(itemTouchHelper);
+//            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+//
+//            mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
+//        }
+//
+//        @Override
+//        public void onPreparationStepClick(int position) {
+//            Log.d("DEBUG", "onPreparationsStepClick: " + position);
+//            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+//        }
+//
+//        @SuppressLint("RestrictedApi")
+//        @Override
+//        public void putEditModeOn() {
+//            super.putEditModeOn();
+//            try {
+//                mPreparationStepsRecyclerAdapter.putEditModeOn();
+//                mFab.setVisibility(View.VISIBLE);
+//                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+//            } catch (Exception e) {
+//                editModeFailed = true;
+//            }
+//        }
+//
+//        @SuppressLint("RestrictedApi")
+//        @Override
+//        public void putEditModeOff() {
+//            super.putEditModeOn();
+//            try {
+//                mPreparationStepsRecyclerAdapter.putEditModeOff();
+//                mFab.setVisibility(View.GONE);
+//                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+//            } catch (Exception e) {
+//                // none
+//            }
+//        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.fab:{
+//                    onButtonShowPopupWindowClick(getView());
+//                    break;
+//                }
+//                case R.id.cancel_button:{
+//                    mPopupWindow.dismiss();
+//                    break;
+//                }
+//                case R.id.confirm_button:{
+//                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_preparationstep_edit);
+//                    String content = String.valueOf(editText.getText());
+//
+//                    if (!content.isEmpty()) {
+//                        int num = mPreparationSteps.size() + 1;
+//                        this.addPreparationStep(num, content);
+//                        Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
+//                    }
+//                    mPopupWindow.dismiss();
+//                    break;
+//                }
+//            }
+//        }
+//        private void addPreparationStep(int num, String content) {
+//            mPreparationSteps.add(new PreparationStep(num,content));
+//            mPreparationSteps.sort(new Comparator<PreparationStep>() {
+//                @Override
+//                public int compare(PreparationStep p1, PreparationStep p2) {
+//                    return p2.compareTo(p1);
+//                }
+//            });
+//            mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
+//        }
+//
+//        private PopupWindow mPopupWindow;
+//        public void onButtonShowPopupWindowClick(View view) {
+//
+//            // inflate the layout of the popup window
+//            LayoutInflater inflater = (LayoutInflater)
+//                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+//            View popupView = inflater.inflate(R.layout.preparationstep_popup_window, null);
+//
+//
+//            Display display = getActivity().getWindowManager().getDefaultDisplay();
+//            Point size = new Point();
+//            display.getSize(size);
+//            int width = size.x;
+//
+//            int margin = 50;
+//
+//            // create the popup window
+//            //int width = LinearLayout.LayoutParams.MATCH_PARENT;
+//            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+//            boolean focusable = true; // lets taps outside the popup also dismiss it
+//            mPopupWindow = new PopupWindow(popupView, width-margin, height, focusable);
+//
+//            // show the popup window
+//            //mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
+//            mPopupWindow.showAtLocation(view, Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, 2*margin);
+//
+//            final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
+//            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//                @Override
+//                public void onFocusChange(final View v, final boolean hasFocus) {
+//                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
+//                        editText.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+//                            }
+//                        });
+//                    }
+//                }
+//            });
+//
+//            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
+//            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
+//            cancelButton.setOnClickListener(this);
+//            confirmButton.setOnClickListener(this);
+//
+//            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        }
+//
+//        @Override
+//        public void onResume() {
+//            super.onResume();
+//            if (isEditMode()) {
+//                putEditModeOn();
+//            } else {
+//                putEditModeOff();
+//            }
+//        }
+//    }
 
-        // Ui compontents
-        private RecyclerView mRecyclerView;
-        private FloatingActionButton mFab;
 
-        // vars
-        private ArrayList<Ingredient> mIngredients = new ArrayList<>();
-        private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
 
 
-        public IngredientsFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static IngredientsFragment newInstance() {
-            IngredientsFragment fragment = new IngredientsFragment();
-            return fragment;
-        }
-
-        @ Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            try {
-                assert getArguments() != null;
-                this.mIngredients = getArguments().getParcelableArrayList("ingredients");
-            } catch (Exception e) {
-                Log.d("DEBUG", "Missing ingredients");
-            }
-
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false);
-
-            mRecyclerView = rootView.findViewById(R.id.recyclerView);
-            initRecyclerView();
-
-            setUserVisibleHint(false); // TODO cosa fa effettivamente? Toglierlo?
-
-            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-            mFab.setOnClickListener(this);
-
-            return rootView;
-        }
-
-        public void initRecyclerView() {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-
-            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(2);
-            mRecyclerView.addItemDecoration(itemDecorator);
-
-            mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
-            mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
-
-        }
-
-        @Override
-        public void onIngredientClick(int position) {
-            Log.d("DEBUG", "onIngredientClick: " + position);
-            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
-        }
-
-        @SuppressLint("RestrictedApi")
-        @Override
-        public void putEditModeOn() {
-            super.putEditModeOn();
-            mIngredientsRecyclerAdapter.putEditModeOn();
-            mFab.setVisibility(View.VISIBLE);
-            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-       }
-
-        @SuppressLint("RestrictedApi")
-        @Override
-        public void putEditModeOff() {
-            super.putEditModeOff();
-            mIngredientsRecyclerAdapter.putEditModeOff();
-            mFab.setVisibility(View.GONE);
-            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.fab:{
-                    onButtonShowPopupWindowClick(getView());
-                    break;
-                }
-                case R.id.cancel_button:{
-                    mPopupWindow.dismiss();
-                    break;
-                }
-                case R.id.confirm_button:{
-                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_ingredient_edit);
-                    String content = String.valueOf(editText.getText());
-
-                    if (!content.isEmpty()) {
-                        mIngredients.add(new Ingredient(content));
-                    }
-                    mPopupWindow.dismiss();
-                    break;
-                }
-            }
-        }
-
-        private PopupWindow mPopupWindow;
-        public void onButtonShowPopupWindowClick(View view) {
-
-            // inflate the layout of the popup window
-            LayoutInflater inflater = (LayoutInflater)
-                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
-
-            // create the popup window
-            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            boolean focusable = true; // lets taps outside the popup also dismiss it
-            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
-
-            // show the popup window
-            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -200);
-
-            final EditText editText = popupView.findViewById(R.id.new_ingredient_edit);
-            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(final View v, final boolean hasFocus) {
-                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
-                        editText.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
-                            }
-                        });
-                    }
-                }
-            });
-
-            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
-            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
-            cancelButton.setOnClickListener(this);
-            confirmButton.setOnClickListener(this);
-
-            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-
-
-    public static class PreparationFragment extends EditableFragment implements
-            PreparationStepsRecyclerAdapter.OnPreparationStepListener,
-            View.OnClickListener {
-
-
-        // Ui compontents
-        private RecyclerView mRecyclerView;
-        private FloatingActionButton mFab;
-
-       // vars
-        private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
-        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
-
-
-        public PreparationFragment() {
-        }
-
-
-        public static PreparationFragment newInstance() {
-            PreparationFragment fragment = new PreparationFragment();
-            return fragment;
-        }
-
-        @ Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-            try {
-                assert getArguments() != null;
-                this.mPreparationSteps = getArguments().getParcelableArrayList("steps");
-                Log.d("DEBUG", "RecipeActivity PreparationSteps onCreate " + mPreparationSteps);
-            } catch (Exception e) {
-                Log.d("DEBUG", "Missing preparation step");
-            }
-
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-
-            View rootView = inflater.inflate(R.layout.preparationsteps_fragment_recipe, container, false);
-
-            mRecyclerView = rootView.findViewById(R.id.recyclerView);
-            initRecyclerView();
-
-            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-            mFab.setOnClickListener(this);
-
-            return rootView;
-        }
-
-        public void initRecyclerView() {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-
-            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
-            mRecyclerView.addItemDecoration(itemDecorator);
-
-            ItemTouchHelper.Callback callback = new PreparationStepItemTouchHelper(mPreparationStepsRecyclerAdapter);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-
-            Log.d("DEBUG", "RecipeActivity PreparationSteps initRecyclerView " + mPreparationSteps);
-            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
-
-            mPreparationStepsRecyclerAdapter.setItemTouchHelper(itemTouchHelper);
-            itemTouchHelper.attachToRecyclerView(mRecyclerView);
-
-            mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
-        }
-
-        @Override
-        public void onPreparationStepClick(int position) {
-            Log.d("DEBUG", "onPreparationsStepClick: " + position);
-            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
-        }
-
-        @SuppressLint("RestrictedApi")
-        @Override
-        public void putEditModeOn() {
-            super.putEditModeOn();
-            try {
-                mPreparationStepsRecyclerAdapter.putEditModeOn();
-                mFab.setVisibility(View.VISIBLE);
-                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                editModeFailed = true;
-            }
-        }
-
-        @SuppressLint("RestrictedApi")
-        @Override
-        public void putEditModeOff() {
-            super.putEditModeOn();
-            try {
-                mPreparationStepsRecyclerAdapter.putEditModeOff();
-                mFab.setVisibility(View.GONE);
-                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-            } catch (Exception e) {
-                // none
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.fab:{
-                    onButtonShowPopupWindowClick(getView());
-                    break;
-                }
-                case R.id.cancel_button:{
-                    mPopupWindow.dismiss();
-                    break;
-                }
-                case R.id.confirm_button:{
-                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_preparationstep_edit);
-                    String content = String.valueOf(editText.getText());
-
-                    if (!content.isEmpty()) {
-                        int num = mPreparationSteps.size() + 1;
-                        this.addPreparationStep(num, content);
-                        Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
-                    }
-                    mPopupWindow.dismiss();
-                    break;
-                }
-            }
-        }
-        private void addPreparationStep(int num, String content) {
-            mPreparationSteps.add(new PreparationStep(num,content));
-            mPreparationSteps.sort(new Comparator<PreparationStep>() {
-                @Override
-                public int compare(PreparationStep p1, PreparationStep p2) {
-                    return p2.compareTo(p1);
-                }
-            });
-            mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
-        }
-
-        private PopupWindow mPopupWindow;
-        public void onButtonShowPopupWindowClick(View view) {
-
-            // inflate the layout of the popup window
-            LayoutInflater inflater = (LayoutInflater)
-                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-            View popupView = inflater.inflate(R.layout.preparationstep_popup_window, null);
-
-
-            Display display = getActivity().getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
-
-            int margin = 50;
-
-            // create the popup window
-            //int width = LinearLayout.LayoutParams.MATCH_PARENT;
-            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-            boolean focusable = true; // lets taps outside the popup also dismiss it
-            mPopupWindow = new PopupWindow(popupView, width-margin, height, focusable);
-
-            // show the popup window
-            //mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
-            mPopupWindow.showAtLocation(view, Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, 2*margin);
-
-            final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
-            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(final View v, final boolean hasFocus) {
-                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
-                        editText.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
-                            }
-                        });
-                    }
-                }
-            });
-
-            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
-            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
-            cancelButton.setOnClickListener(this);
-            confirmButton.setOnClickListener(this);
-
-            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            if (isEditMode()) {
-                putEditModeOn();
-            } else {
-                putEditModeOff();
-            }
-        }
-    }
-
-
-
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        private final int POSITION_SUMMARY = 0;
-        private final int POSITION_INGREDIENTS = 1;
-        private final int POSITION_PREPARATION = 2;
-
-
-        // vars
-        private Recipe mRecipe;
-        private boolean mEditMode;
-        EditableFragment[] mFragments;
-
-        public SectionsPagerAdapter(FragmentManager fm, Recipe recipe, boolean editMode) {
-            super(fm);
-            this.mRecipe = recipe;
-            this.mFragments = new EditableFragment[3];
-            this.mEditMode = editMode;
-
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("edit_mode", this.mEditMode);
-            bundle.putParcelable("recipe", this.mRecipe);
-            SummaryFragment summaryFragment = SummaryFragment.newInstance();
-            summaryFragment.setArguments(bundle);
-            this.mFragments[POSITION_SUMMARY] = summaryFragment;
-
-            bundle = new Bundle();
-            bundle.putBoolean("edit_mode", this.mEditMode);
-            bundle.putParcelableArrayList("ingredients", this.mRecipe.getIngredients());
-            IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
-            ingredientsFragment.setArguments(bundle);
-            this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
-
-            bundle = new Bundle();
-            bundle.putBoolean("edit_mode", this.mEditMode);
-            bundle.putParcelableArrayList("steps", this.mRecipe.getPreparationSteps());
-            PreparationFragment preparationFragment = PreparationFragment.newInstance();
-            preparationFragment.setArguments(bundle);
-            this.mFragments[POSITION_PREPARATION] = preparationFragment;
-
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position) {
-                case POSITION_SUMMARY:
-                    return this.mFragments[POSITION_SUMMARY];
-
-                case POSITION_INGREDIENTS:
-                    return this.mFragments[POSITION_INGREDIENTS];
-
-                case POSITION_PREPARATION:
-                    if (this.mFragments[POSITION_PREPARATION].editModeFailed || mEditMode){
-                        this.mFragments[POSITION_PREPARATION].putEditModeOn();
-                    }
-                    return this.mFragments[POSITION_PREPARATION];
-
-                default:
-                    // TODO throw error
-                    return SummaryFragment.newInstance();
-            }
-        }
-
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-
-        // Edit Mode On/Off
-
-        private void putEditModeOn() {
-            for (EditableFragment f:
-                 mFragments) {
-                f.putEditModeOn();
-            }
-        }
-
-        private void putEditModeOff() {
-            for (EditableFragment f:
-                    mFragments) {
-                f.putEditModeOff();
-            }
-        }
-
-    }
-
-
-
-    public static class EditableFragment extends Fragment {
-        protected boolean mEditMode;
-        protected boolean editModeFailed = false;
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            try {
-                assert getArguments() != null;
-                this.mEditMode = getArguments().getBoolean("edit_mode");
-            } catch(Exception e) {
-                Log.d("DEBUG", "Missing edit_mode");
-            }
-        }
-
-        boolean isEditMode() {
-            return this.mEditMode;
-        }
-
-        void putEditModeOn() {
-            this.mEditMode = true;
-            // TODO verificare che non ci sia la possibilta di perdere le modifiche fatte entrando
-            // TODO due volte nella EditMode
-        }
-
-        void putEditModeOff() {
-            this.mEditMode = false;
-        }
-    }
 }
