@@ -505,20 +505,10 @@ public class RecipeActivity extends AppCompatActivity implements
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
-                //try {
-                    //ContentResolver resolver = Objects.requireNonNull(getActivity()).getContentResolver();
-                    //resolver.takePersistableUriPermission(mImageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    //resolver.getPersistedUriPermissions();
-
-                    //Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, mImageUri);
-                    // Log.d(TAG, String.valueOf(bitmap));
-
                 Log.d("DEBUGImmagine", "uri =" + mImageUri);
-                    recipe_image.setImageURI(mImageUri);
+                recipe_image.setImageURI(null);
+                recipe_image.setImageURI(mImageUri);
                 Log.d("DEBUGImmagine", "uri =" + mImageUri);
-                //} catch (IOException e) {
-                    // e.printStackTrace();lkj
-                //}
             }
 
 

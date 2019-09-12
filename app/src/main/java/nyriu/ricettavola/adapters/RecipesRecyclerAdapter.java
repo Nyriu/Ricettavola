@@ -154,6 +154,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
             } else {
                 recipeImageView.setAlpha((float) 1);
             }
+            recipeImageView.setImageURI(DatabaseRecipe.DEFAULT_IMAGE_URI);
             recipeImageView.setImageURI(imageUri);
         }
 
