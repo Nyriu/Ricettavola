@@ -80,6 +80,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Adding user "+ recipe.getTitle() + " to the database...");
         long result = database.insert(RECIPE_TABLE_NAME, null, contentValues);
 
+
+        // TODO
+        //if (result != -1) {
+        //    Cursor cursor = database.rawQuery("SELECT last_insert_rowid()", null);
+        //    //this.lastRecideIdAdded = cursor.get
+        //    Log.d(TAG, "addRecipe: ");
+        //    cursor.close();
+        //}
+
         return result != -1;
     }
 
