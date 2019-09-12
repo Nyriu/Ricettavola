@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.drm.DrmStore;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,8 +47,11 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
@@ -81,24 +86,59 @@ public class RecipeActivity extends AppCompatActivity implements
     // Database
     private DatabaseHelper mDatatbaseHelper;
 
+    // TODO remove me
+    public DatabaseRecipe newFakeRecipe(){
+        Set tags = new TreeSet();
+        tags.add("PrimoPiatto");
+
+        ArrayList<String> ingredients = new ArrayList<>();
+        ingredients.add("Primo ingrediente");
+        ingredients.add("Secondo ingrediente");
+
+        ArrayList<String> steps = new ArrayList<>();
+        steps.add("Primo step");
+
+        return new DatabaseRecipe(
+                "Placeholder",
+                DatabaseRecipe.DEFAULT_IMAGE_URI,
+                "7 min",
+                "7 min",
+                "3 persone",
+                1,
+                tags,
+                ingredients,
+                steps
+        );
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        this.mDatatbaseHelper = new DatabaseHelper(
+                this,
+                DatabaseHelper.DATABASE_NAME,
+                null,
+                DatabaseHelper.DATABASE_VERSION);
+
         // Intent stuff
         if (getIntent().hasExtra("recipe_id")) {
             this.mRecipeId = getIntent().getIntExtra("recipe_id", -1);
         } else {
-            this.mRecipe = new DatabaseRecipe();
-            //initExampleRecipe(); // TODO mettere gli hint negli EditText
+            // error
         }
         if (getIntent().hasExtra("new_recipe")) {
-                mIsNew = true;
-                //mEditMode = true; TODO subito?
-            } else {
-                Log.d(TAG, "Extra new_recipe=false...");
-            }
+            mIsNew = true;
+            //initExampleRecipe(); // TODO mettere gli hint negli EditText
+            mDatatbaseHelper.addRecipe(newFakeRecipe());
+            //putEditModeOn(); // TODO uncomment
+            ArrayList<DatabaseRecipe> recipes = mDatatbaseHelper.getAllRecipes();
+            this.mRecipeId = recipes.get(recipes.size()-1).getId();
+        } else {
+            Log.d(TAG, "Extra new_recipe=false...");
+        }
         // END Intent stuff
 
         setContentView(R.layout.activity_recipe);
@@ -126,11 +166,6 @@ public class RecipeActivity extends AppCompatActivity implements
         mCheckButton = findViewById(R.id.toolbar_check);
         mShareButton = findViewById(R.id.toolbar_share);
 
-        this.mDatatbaseHelper = new DatabaseHelper(
-                this,
-                DatabaseHelper.DATABASE_NAME,
-                null,
-                DatabaseHelper.DATABASE_VERSION);
         this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
         mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
 
@@ -188,12 +223,43 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
 
+
+    private boolean toDelete = false;
     @Override
     public void onBackPressed() {
-        if (ismEditMode()){
+        if (!mIsNew && ismEditMode()){
             putEditModeOff();
         } else {
-            super.onBackPressed();
+            if (mIsNew) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setTitle("Be careful!");
+                builder.setMessage("All changes made will be lost. Continue?");
+                builder.setPositiveButton(R.string.confirm,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDatatbaseHelper.deleteRecipe(mRecipeId);
+                                toDelete = true;
+                                mIsNew = false;
+                                onBackPressed();
+                            }
+                        });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+                if (toDelete) {
+                    super.onBackPressed();
+                }
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -220,6 +286,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
     private void putEditModeOff() {
         this.mEditMode = false;
+        this.mIsNew = false;
         putToolbarEditModeOff();
         hideSofKeyboard();
         //if (mIsNew) {

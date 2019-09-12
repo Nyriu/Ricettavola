@@ -22,8 +22,6 @@ import java.util.Map;
 
 import nyriu.ricettavola.R;
 import nyriu.ricettavola.RecipeActivity;
-import nyriu.ricettavola.models.Ingredient;
-import nyriu.ricettavola.models.PreparationStep;
 import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 
 

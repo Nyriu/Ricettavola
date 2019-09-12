@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import nyriu.ricettavola.models.Ingredient;
-
 import static Database.DatabaseRecipe.COOKING_TIME;
 import static Database.DatabaseRecipe.ID_FIELD;
 import static Database.DatabaseRecipe.IMAGE_URI_FIELD;
@@ -83,6 +81,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = database.insert(RECIPE_TABLE_NAME, null, contentValues);
 
         return result != -1;
+    }
+
+
+    public boolean deleteRecipe(int id) {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        int result = database.delete(RECIPE_TABLE_NAME, ID_FIELD + " = ? ", new String[]{id + ""});
+        return result == 1;
     }
 
     public boolean deleteRecipe(DatabaseRecipe recipe) {

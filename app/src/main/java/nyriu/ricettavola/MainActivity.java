@@ -103,19 +103,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.fab: {
                 Toast.makeText(this, "fab Clicked!", Toast.LENGTH_SHORT).show();
                 // TODO
-                //intent.putExtra("new_recipe", true);
-                //startActivity(intent);
+                Intent intent = new Intent(this, RecipeActivity.class);
+                intent.putExtra("new_recipe", true);
+                startActivity(intent);
 
-                // TODO remove me
-                DatabaseHelper databaseHelper= new DatabaseHelper(
-                        this,
-                        DatabaseHelper.DATABASE_NAME,
-                        null,
-                        DatabaseHelper.DATABASE_VERSION);
-                databaseHelper.addRecipe(newFakeRecipe());
-                // TODO aggiornare recyyclerView dopo insert
-                //mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
-                // END // TODO remove me
+                //// TODO remove me
+                //DatabaseHelper databaseHelper= new DatabaseHelper(
+                //        this,
+                //        DatabaseHelper.DATABASE_NAME,
+                //        null,
+                //        DatabaseHelper.DATABASE_VERSION);
+                //databaseHelper.addRecipe(newFakeRecipe());
+                //// TODO aggiornare recyyclerView dopo insert
+                ////mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
+                //// END // TODO remove me
                 break;
             }
         }

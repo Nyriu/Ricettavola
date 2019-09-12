@@ -17,8 +17,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import nyriu.ricettavola.R;
-import nyriu.ricettavola.RecipeActivity;
-import nyriu.ricettavola.models.Ingredient;
 
 
 public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<IngredientsRecyclerAdapter.ViewHolder> implements
