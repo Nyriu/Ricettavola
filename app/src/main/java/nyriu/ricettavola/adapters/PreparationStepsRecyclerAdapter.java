@@ -30,13 +30,13 @@ import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> implements
         ItemTouchHelperAdapter {
 
-    private Map<Integer, String> mPreparationSteps;
+    private ArrayList<String> mPreparationSteps;
     private OnPreparationStepListener mOnPreparationStepListener;
     private ItemTouchHelper mItemTouchHelper;
 
     private boolean mEditMode;
 
-    public PreparationStepsRecyclerAdapter(Map<Integer, String> preparationSteps, @NonNull OnPreparationStepListener onPreparationStepListener) {
+    public PreparationStepsRecyclerAdapter(ArrayList<String> preparationSteps, @NonNull OnPreparationStepListener onPreparationStepListener) {
         Log.d("DEBUG", "PreparationStepsRycAdap constructor before " + mPreparationSteps);
         this.mPreparationSteps = preparationSteps;
         this.mOnPreparationStepListener = onPreparationStepListener;

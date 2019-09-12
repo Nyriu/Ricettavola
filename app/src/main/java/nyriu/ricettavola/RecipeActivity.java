@@ -854,7 +854,7 @@ public class RecipeActivity extends AppCompatActivity implements
         private FloatingActionButton mFab;
 
         // vars
-        private Map<Integer, String> mPreparationSteps;
+        private ArrayList<String> mPreparationSteps;
         private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter;
         private int mRecipeId;
         private DatabaseRecipe mRecipe;
@@ -970,8 +970,7 @@ public class RecipeActivity extends AppCompatActivity implements
                     String content = String.valueOf(editText.getText());
 
                     if (!content.isEmpty()) {
-                        int num = mPreparationSteps.size() + 1;
-                        this.addPreparationStep(num, content);
+                        this.addPreparationStep(content);
                         Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
                     }
                     mPopupWindow.dismiss();
@@ -980,8 +979,8 @@ public class RecipeActivity extends AppCompatActivity implements
             }
         }
 
-        private void addPreparationStep(int num, String content) {
-            mPreparationSteps.put(num, content);
+        private void addPreparationStep(String content) {
+            mPreparationSteps.add(content);
             mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
         }
 

@@ -155,8 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ingredients.add("Primo ingrediente");
         ingredients.add("Secondo ingrediente");
 
-        HashMap steps = new HashMap<Integer, String>();
-        steps.put(1, "Primo step");
+        ArrayList<String> steps = new ArrayList<>();
+        steps.add("Primo step");
 
         return new DatabaseRecipe(
                 "Titolo",

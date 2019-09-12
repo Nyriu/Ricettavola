@@ -215,7 +215,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean updateRecipeSteps(int id, Map<Integer, String> steps) {
+    public boolean updateRecipeSteps(int id, ArrayList<String> steps) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(STEPS_FIELD, convertSteps(steps));
@@ -332,38 +332,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    // Formato step: "numero1.descrizione1;numero2.descrizione2;..."
-    private String convertSteps(Map<Integer, String> stepsMap) {
-
+    // Formato step: "descrizione1;descrizione2;..."
+    private String convertSteps(ArrayList<String> steps) {
         StringBuilder result = new StringBuilder();
 
-        int stepsNum = stepsMap.size();
-        for (int i=0; i<stepsNum; i++) {
-            result.append((i+1) + ".");
-            result.append(stepsMap.get(i+1) + ";");
+        for (int i=0; i<steps.size(); i++) {
+            result.append(steps.get(i) + ";");
         }
-
         return result.toString();
-
     }
-    private Map<Integer, String> deconvertSteps(String enc) {
-
-        Map<Integer, String> result = new HashMap<Integer, String>();
-
+    private ArrayList<String> deconvertSteps(String enc) {
         String[] tokens = enc.split(";");
-
+        ArrayList<String> result = new ArrayList<>();
 
         for (int i=0; i<tokens.length; i++) {
             if (!tokens[i].isEmpty()) {
-                int pointPosition = tokens[i].indexOf(".");
-                Integer num = Integer.parseInt(tokens[i].substring(0, pointPosition));
-                String description = tokens[i].substring(pointPosition + 1);
-                result.put(num, description);
+                result.add(tokens[i]);
             }
         }
-
         return result;
-
     }
 
 

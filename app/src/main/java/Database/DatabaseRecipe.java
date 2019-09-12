@@ -49,12 +49,12 @@ public class DatabaseRecipe {
 
     private Set tags;
     private ArrayList<String> ingredients;
-    private Map<Integer, String> steps;
+    private ArrayList<String> steps;
 
     public DatabaseRecipe() {
     }
 
-    public DatabaseRecipe(String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, ArrayList<String> ingredients, Map<Integer, String> steps) {
+    public DatabaseRecipe(String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, ArrayList<String> ingredients, ArrayList<String> steps) {
         this.title = title;
         this.imageUri = imageUri;
         this.prepTime = prepTime;
@@ -66,7 +66,7 @@ public class DatabaseRecipe {
         this.steps = steps;
     }
 
-    public DatabaseRecipe(int id, String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, ArrayList<String> ingredients, Map<Integer, String> steps) {
+    public DatabaseRecipe(int id, String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, ArrayList<String> ingredients, ArrayList<String> steps) {
         this.id = id;
         this.title = title;
         this.imageUri = imageUri;
@@ -151,11 +151,11 @@ public class DatabaseRecipe {
         this.ingredients = ingredients;
     }
 
-    public Map<Integer, String> getSteps() {
+    public ArrayList<String> getSteps() {
         return steps;
     }
 
-    public void setSteps(Map<Integer, String> steps) {
+    public void setSteps(ArrayList<String> steps) {
         this.steps = steps;
     }
 }
