@@ -33,6 +33,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
     private boolean mEditMode = false;
 
     public RecipesRecyclerAdapter(ArrayList<DatabaseRecipe> recipes, @NonNull OnRecipeListener onRecipeListener) {
+        //this.mRecipes = recipes;
         this.mRecipes = recipes;
         this.mOnRecipeListener = onRecipeListener;
     }
@@ -50,7 +51,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         viewHolder.setTitle(mRecipes.get(i).getTitle());
         viewHolder.setTags(mRecipes.get(i).getTags());
         viewHolder.setEditMode(isEditMode());
-        //viewHolder.setImageUri(mRecipes.get(i).getImageUri()); // TODO
+        viewHolder.setImageUri(mRecipes.get(i).getImageUri());
     }
 
 
@@ -147,18 +148,13 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         }
 
         private void updateImage() {
-            // TODO fare funzione
-            //try {
-            //    Uri imageUri = mRecipes.get(i).getImageUri();
-            //    if (imageUri.equals(Recipe.DEFAULT_IMAGE_URI)) {
-            //        viewHolder.recipe_image.setAlpha((float) 0.3);
-            //    } else {
-            //        viewHolder.recipe_image.setAlpha((float) 1);
-            //    }
-            //    viewHolder.recipe_image.setImageURI(imageUri);
-            //} catch (NullPointerException e) {
-            //    Log.e("DEBUG", "onBindViewHolder: " + e.getMessage());
-            //}
+            // TODO far funzionare
+            if (imageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
+                recipeImageView.setAlpha((float) 0.3);
+            } else {
+                recipeImageView.setAlpha((float) 1);
+            }
+            recipeImageView.setImageURI(imageUri);
         }
 
         @Override

@@ -16,7 +16,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static Database.DatabaseRecipe.COOKING_TIME;
 import static Database.DatabaseRecipe.ID_FIELD;
+import static Database.DatabaseRecipe.IMAGE_URI_FIELD;
+import static Database.DatabaseRecipe.PEOPLE_FIELD;
+import static Database.DatabaseRecipe.PREPARATION_TIME_FIELD;
 import static Database.DatabaseRecipe.TITLE_FIELD;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -108,6 +112,90 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public boolean updateRecipeImageUri(int id, Uri imageUri) {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(IMAGE_URI_FIELD, convertUri(imageUri));
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Errore generico...");
+        }
+
+        cursor.close();
+
+        return result != -1;
+
+    }
+
+    public boolean updateRecipePrepTime(int id, String preparationTime) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PREPARATION_TIME_FIELD, preparationTime);
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Errore generico...");
+        }
+        cursor.close();
+        return result != -1;
+    }
+
+    public boolean updateRecipeCookTime(int id, String cookTime) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COOKING_TIME, cookTime);
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Errore generico...");
+        }
+        cursor.close();
+        return result != -1;
+    }
+
+    public boolean updateRecipePortions(int id, String portions) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(PEOPLE_FIELD, portions);
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Errore generico...");
+        }
+        cursor.close();
+        return result != -1;
+    }
+
+
+
+
+
 
 
     public DatabaseRecipe getRecipe(int id) {
@@ -151,7 +239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Formato uri: "uri"
     private String convertUri(Uri uri) {
-        return uri.getPath();
+        return uri.toString();
     }
     private Uri deconvertUri(String enc) {
         return Uri.parse(enc);
@@ -258,7 +346,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
 
     }
-
-
 
 }

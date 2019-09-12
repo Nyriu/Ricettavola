@@ -255,7 +255,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void refreshRecyclerView() {
             try {
                 this.mRecipes = mDatatbaseHelper.getAllRecipes();
-                mRecipesRecyclerAdapter.notifyDataSetChanged();
+                mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes, this);
+                mRecyclerView.setAdapter(mRecipesRecyclerAdapter);
+                //mRecipesRecyclerAdapter.notifyDataSetChanged();
             } catch (NullPointerException e) {
                 Log.d(TAG, "primo refreshRecyclerView");
             }

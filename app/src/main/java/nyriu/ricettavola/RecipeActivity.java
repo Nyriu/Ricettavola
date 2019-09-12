@@ -2,6 +2,7 @@ package nyriu.ricettavola;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.drm.DrmStore;
@@ -53,7 +54,7 @@ import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
-
+import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
 
 
 public class RecipeActivity extends AppCompatActivity implements
@@ -75,6 +76,9 @@ public class RecipeActivity extends AppCompatActivity implements
     private boolean mIsNew = false;
     private int mRecipeId;
     private DatabaseRecipe mRecipe;
+
+    // Database
+    private DatabaseHelper mDatatbaseHelper;
 
 
     @Override
@@ -121,7 +125,7 @@ public class RecipeActivity extends AppCompatActivity implements
         mCheckButton = findViewById(R.id.toolbar_check);
         mShareButton = findViewById(R.id.toolbar_share);
 
-        DatabaseHelper mDatatbaseHelper = new DatabaseHelper(
+        this.mDatatbaseHelper = new DatabaseHelper(
                 this,
                 DatabaseHelper.DATABASE_NAME,
                 null,
@@ -223,6 +227,12 @@ public class RecipeActivity extends AppCompatActivity implements
         //    this.mRecipeRepository.updateRecipeTask(mRecipe);
         //}
         this.mSectionsPagerAdapter.setEditMode(false);
+        //if (mIsNew) {
+        //    mIsNew = false;
+        //    saveNewRecipe();
+        //} else {
+        //    updateRecipe()
+        //}
     }
     public void hideSofKeyboard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -243,7 +253,12 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mCheckButton.setVisibility(View.GONE);
     }
 
+    public void saveNewRecipe(){
+        //mDatatbaseHelper.addRecipe(this)
+    }
 
+    public void updateRecipe(){
+    }
 
 
 
@@ -252,6 +267,9 @@ public class RecipeActivity extends AppCompatActivity implements
         private final int POSITION_SUMMARY     = 0;
         private final int POSITION_INGREDIENTS = 1;
         private final int POSITION_PREPARATION = 2;
+
+        //private final int NUM_FRAGMENTS = 3; // TODO
+        private final int NUM_FRAGMENTS = 1;
 
 
         // vars
@@ -262,7 +280,7 @@ public class RecipeActivity extends AppCompatActivity implements
         public SectionsPagerAdapter(FragmentManager fm, int recipeId, boolean editMode) {
             super(fm);
             this.mRecipeId = recipeId;
-            this.mFragments = new EditableFragment[3];
+            this.mFragments = new EditableFragment[NUM_FRAGMENTS];
             this.mEditMode = editMode;
 
             Bundle bundle = new Bundle();
@@ -276,16 +294,10 @@ public class RecipeActivity extends AppCompatActivity implements
             //IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
             //ingredientsFragment.setArguments(bundle);
             //this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
-            summaryFragment = SummaryFragment.newInstance(); //TODO
-            summaryFragment.setArguments(bundle); //TODO
-            this.mFragments[POSITION_INGREDIENTS] = summaryFragment;// TODO cambiami!!
 
             //PreparationFragment preparationFragment = PreparationFragment.newInstance();
             //preparationFragment.setArguments(bundle);
             //this.mFragments[POSITION_PREPARATION] = preparationFragment;
-            summaryFragment = SummaryFragment.newInstance(); //TODO
-            summaryFragment.setArguments(bundle); //TODO
-            this.mFragments[POSITION_PREPARATION] =  summaryFragment; // TODO cambiami!!
         }
 
         @Override
@@ -313,7 +325,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
         @Override
         public int getCount() {
-            return 3;
+            return NUM_FRAGMENTS;
         }
 
 
@@ -493,14 +505,20 @@ public class RecipeActivity extends AppCompatActivity implements
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
+                //try {
+                    //ContentResolver resolver = Objects.requireNonNull(getActivity()).getContentResolver();
+                    //resolver.takePersistableUriPermission(mImageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    //resolver.getPersistedUriPermissions();
+
+                    //Bitmap bitmap = MediaStore.Images.Media.getBitmap(resolver, mImageUri);
                     // Log.d(TAG, String.valueOf(bitmap));
 
-                    recipe_image.setImageBitmap(bitmap);
-                } catch (IOException e) {
+                Log.d("DEBUGImmagine", "uri =" + mImageUri);
+                    recipe_image.setImageURI(mImageUri);
+                Log.d("DEBUGImmagine", "uri =" + mImageUri);
+                //} catch (IOException e) {
                     // e.printStackTrace();lkj
-                }
+                //}
             }
 
 
@@ -553,7 +571,8 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_tags_content       .setVisibility(View.VISIBLE);
             this.fab                     .setVisibility(View.VISIBLE);
 
-            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
+            // TODO far diventare una funzione
+            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) { // TODO capire perche' non funziona
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -598,12 +617,23 @@ public class RecipeActivity extends AppCompatActivity implements
         private void updateRecipe(){
             if (mImageUri==null || !mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 this.mRecipe.setImageUri(mImageUri);
+                Log.d("DEBUGImmagine", "uri =" + mImageUri);
+            } else {
+                this.mRecipe.setImageUri(DatabaseRecipe.DEFAULT_IMAGE_URI);
             }
             this.mRecipe.setTitle   (String.valueOf(this.edit_recipe_title.getText()));
             this.mRecipe.setPrepTime(String.valueOf(this.edit_preparation_content.getText()));
             this.mRecipe.setCookTime(String.valueOf(this.edit_cooking_content.getText()));
             //this.mRecipe.setPortions(String.valueOf(this.edit_portions_content.getText()));
             this.mRecipe.setPeople(String.valueOf(this.edit_portions_content.getText())); // TODO cambiami
+
+            mDatatbaseHelper.updateRecipeTitle(mRecipeId, mRecipe.getTitle());
+            mDatatbaseHelper.updateRecipeImageUri(mRecipeId, mRecipe.getImageUri());
+            mDatatbaseHelper.updateRecipePrepTime(mRecipeId, mRecipe.getPrepTime());
+            mDatatbaseHelper.updateRecipeCookTime(mRecipeId, mRecipe.getCookTime());
+            mDatatbaseHelper.updateRecipePortions(mRecipeId, mRecipe.getPeople()); // TODO cambiarmi
+            //mDatatbaseHelper.updateRecipeDifficulty(mRecipeId, mRecipe.getDifficulty()); // TODO
+            //mDatatbaseHelper.updateRecipeTags(mRecipeId, mRecipe.getTags()); // TODO
         }
 
         private final int PICK_IMAGE_REQUEST = 1;
@@ -613,6 +643,8 @@ public class RecipeActivity extends AppCompatActivity implements
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             // Always show the chooser (if there are multiple options available)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
         }
 
@@ -624,6 +656,7 @@ public class RecipeActivity extends AppCompatActivity implements
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
                 mImageUri = data.getData();
+                Log.d("DEBUGImmagine", "uri =" + mImageUri);
 
                 //try {
                     ////Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
