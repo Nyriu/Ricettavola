@@ -26,12 +26,12 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     private boolean mEditMode;
 
-    private ArrayList<Ingredient> mIngredients = new ArrayList<>();
+    private ArrayList<String> mIngredients;
     private OnIngredientListener mOnIngredientListener;
 
     //public RecipeActivity mRecipeActivity;
 
-    public IngredientsRecyclerAdapter(ArrayList<Ingredient> ingredients, @NonNull OnIngredientListener onIngredientListener) {
+    public IngredientsRecyclerAdapter(ArrayList<String> ingredients, @NonNull OnIngredientListener onIngredientListener) {
         this.mIngredients = ingredients;
         this.mOnIngredientListener = onIngredientListener;
     }
@@ -46,7 +46,7 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.setTitle(mIngredients.get(i).getDescription());
+        viewHolder.setTitle(mIngredients.get(i));
         viewHolder.setEditMode(isEditMode());
         viewHolder.mIngredientsRecyclerAdapter = this;
     }

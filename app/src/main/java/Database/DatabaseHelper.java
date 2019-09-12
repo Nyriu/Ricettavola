@@ -16,11 +16,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import nyriu.ricettavola.models.Ingredient;
+
 import static Database.DatabaseRecipe.COOKING_TIME;
 import static Database.DatabaseRecipe.ID_FIELD;
 import static Database.DatabaseRecipe.IMAGE_URI_FIELD;
+import static Database.DatabaseRecipe.INGREDIENTS_FIELD;
 import static Database.DatabaseRecipe.PEOPLE_FIELD;
 import static Database.DatabaseRecipe.PREPARATION_TIME_FIELD;
+import static Database.DatabaseRecipe.STEPS_FIELD;
 import static Database.DatabaseRecipe.TITLE_FIELD;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -192,6 +196,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public boolean updateRecipeIngredients(int id, ArrayList<String> ingredients) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(INGREDIENTS_FIELD, convertIngredients(ingredients));
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Errore generico...");
+        }
+        cursor.close();
+        return result != -1;
+    }
+
+    public boolean updateRecipeSteps(int id, Map<Integer, String> steps) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(STEPS_FIELD, convertSteps(steps));
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Errore generico...");
+        }
+        cursor.close();
+        return result != -1;
+    }
+
 
 
 
@@ -271,27 +313,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Formato ingredients: "ingredient1;ingredient2;..."
-    private String convertIngredients(String[] ingredients) {
-
+    private String convertIngredients(ArrayList<String> ingredients) {
         StringBuilder result = new StringBuilder();
-        for (int i=0; i<ingredients.length; i++) {
-            result.append(ingredients[i] + ";");
+        for (int i=0; i<ingredients.size(); i++) {
+            result.append(ingredients.get(i) + ";");
         }
-
         return result.toString();
     }
-    private String[] deconvertIngreedients(String enc) {
-
+    private ArrayList<String> deconvertIngreedients(String enc) {
         String[] tokens = enc.split(";");
-        String[] result = new String[tokens.length];
-
+        ArrayList<String> result = new ArrayList<>();
 
         for (int i=0; i<tokens.length; i++) {
             if (!tokens[i].isEmpty()) {
-                result[i] = tokens[i];
+                result.add(tokens[i]);
             }
         }
-
         return result;
     }
 

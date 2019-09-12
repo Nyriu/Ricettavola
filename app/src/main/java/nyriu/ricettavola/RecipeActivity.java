@@ -45,6 +45,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 import Database.DatabaseHelper;
@@ -268,8 +269,7 @@ public class RecipeActivity extends AppCompatActivity implements
         private final int POSITION_INGREDIENTS = 1;
         private final int POSITION_PREPARATION = 2;
 
-        //private final int NUM_FRAGMENTS = 3; // TODO
-        private final int NUM_FRAGMENTS = 1;
+        private final int NUM_FRAGMENTS = 3;
 
 
         // vars
@@ -291,13 +291,13 @@ public class RecipeActivity extends AppCompatActivity implements
             summaryFragment.setArguments(bundle);
             this.mFragments[POSITION_SUMMARY] = summaryFragment;
 
-            //IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
-            //ingredientsFragment.setArguments(bundle);
-            //this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
+            IngredientsFragment ingredientsFragment = IngredientsFragment.newInstance();
+            ingredientsFragment.setArguments(bundle);
+            this.mFragments[POSITION_INGREDIENTS] = ingredientsFragment;
 
-            //PreparationFragment preparationFragment = PreparationFragment.newInstance();
-            //preparationFragment.setArguments(bundle);
-            //this.mFragments[POSITION_PREPARATION] = preparationFragment;
+            PreparationFragment preparationFragment = PreparationFragment.newInstance();
+            preparationFragment.setArguments(bundle);
+            this.mFragments[POSITION_PREPARATION] = preparationFragment;
         }
 
         @Override
@@ -676,362 +676,381 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-//    public static class IngredientsFragment extends EditableFragment implements
-//            IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
-//
-//        // Ui compontents
-//        private RecyclerView mRecyclerView;
-//        private FloatingActionButton mFab;
-//
-//        // vars
-//        private ArrayList<Ingredient> mIngredients = new ArrayList<>();
-//        private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
-//
-//
-//        public IngredientsFragment() {
-//        }
-//
-//        /**
-//         * Returns a new instance of this fragment for the given section
-//         * number.
-//         */
-//        public static IngredientsFragment newInstance() {
-//            IngredientsFragment fragment = new IngredientsFragment();
-//            return fragment;
-//        }
-//
-//        @ Override
-//        public void onCreate(@Nullable Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-//            try {
-//                assert getArguments() != null;
-//                this.mIngredients = getArguments().getParcelableArrayList("ingredients");
-//            } catch (Exception e) {
-//                Log.d("DEBUG", "Missing ingredients");
-//            }
-//
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//
-//            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false);
-//
-//            mRecyclerView = rootView.findViewById(R.id.recyclerView);
-//            initRecyclerView();
-//
-//            setUserVisibleHint(false); // TODO cosa fa effettivamente? Toglierlo?
-//
-//            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-//            mFab.setOnClickListener(this);
-//
-//            return rootView;
-//        }
-//
-//        public void initRecyclerView() {
-//            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//            mRecyclerView.setLayoutManager(linearLayoutManager);
-//
-//            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(2);
-//            mRecyclerView.addItemDecoration(itemDecorator);
-//
-//            mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mIngredients, this);
-//            mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
-//
-//        }
-//
-//        @Override
-//        public void onIngredientClick(int position) {
-//            Log.d("DEBUG", "onIngredientClick: " + position);
-//            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
-//        }
-//
-//        @SuppressLint("RestrictedApi")
-//        @Override
-//        public void putEditModeOn() {
-//            super.putEditModeOn();
-//            mIngredientsRecyclerAdapter.putEditModeOn();
-//            mFab.setVisibility(View.VISIBLE);
-//            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-//       }
-//
-//        @SuppressLint("RestrictedApi")
-//        @Override
-//        public void putEditModeOff() {
-//            super.putEditModeOff();
-//            mIngredientsRecyclerAdapter.putEditModeOff();
-//            mFab.setVisibility(View.GONE);
-//            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-//        }
-//
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.fab:{
-//                    onButtonShowPopupWindowClick(getView());
-//                    break;
-//                }
-//                case R.id.cancel_button:{
-//                    mPopupWindow.dismiss();
-//                    break;
-//                }
-//                case R.id.confirm_button:{
-//                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_ingredient_edit);
-//                    String content = String.valueOf(editText.getText());
-//
-//                    if (!content.isEmpty()) {
-//                        mIngredients.add(new Ingredient(content));
-//                    }
-//                    mPopupWindow.dismiss();
-//                    break;
-//                }
-//            }
-//        }
-//
-//        private PopupWindow mPopupWindow;
-//        public void onButtonShowPopupWindowClick(View view) {
-//
-//            // inflate the layout of the popup window
-//            LayoutInflater inflater = (LayoutInflater)
-//                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-//            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
-//
-//            // create the popup window
-//            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-//            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//            boolean focusable = true; // lets taps outside the popup also dismiss it
-//            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-//            // show the popup window
-//            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -200);
-//
-//            final EditText editText = popupView.findViewById(R.id.new_ingredient_edit);
-//            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//                @Override
-//                public void onFocusChange(final View v, final boolean hasFocus) {
-//                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
-//                        editText.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
-//                            }
-//                        });
-//                    }
-//                }
-//            });
-//
-//            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
-//            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
-//            cancelButton.setOnClickListener(this);
-//            confirmButton.setOnClickListener(this);
-//
-//            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-//        }
-//    }
-//
-//
-//    public static class PreparationFragment extends EditableFragment implements
-//            PreparationStepsRecyclerAdapter.OnPreparationStepListener,
-//            View.OnClickListener {
-//
-//
-//        // Ui compontents
-//        private RecyclerView mRecyclerView;
-//        private FloatingActionButton mFab;
-//
-//       // vars
-//        private ArrayList<PreparationStep> mPreparationSteps = new ArrayList<>();
-//        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
-//
-//
-//        public PreparationFragment() {
-//        }
-//
-//
-//        public static PreparationFragment newInstance() {
-//            PreparationFragment fragment = new PreparationFragment();
-//            return fragment;
-//        }
-//
-//        @ Override
-//        public void onCreate(@Nullable Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-//            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-//
-//            try {
-//                assert getArguments() != null;
-//                this.mPreparationSteps = getArguments().getParcelableArrayList("steps");
-//                Log.d("DEBUG", "RecipeActivity PreparationSteps onCreate " + mPreparationSteps);
-//            } catch (Exception e) {
-//                Log.d("DEBUG", "Missing preparation step");
-//            }
-//
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//
-//            View rootView = inflater.inflate(R.layout.preparationsteps_fragment_recipe, container, false);
-//
-//            mRecyclerView = rootView.findViewById(R.id.recyclerView);
-//            initRecyclerView();
-//
-//            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-//            mFab.setOnClickListener(this);
-//
-//            return rootView;
-//        }
-//
-//        public void initRecyclerView() {
-//            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//            mRecyclerView.setLayoutManager(linearLayoutManager);
-//
-//            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
-//            mRecyclerView.addItemDecoration(itemDecorator);
-//
-//            ItemTouchHelper.Callback callback = new PreparationStepItemTouchHelper(mPreparationStepsRecyclerAdapter);
-//            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-//
-//            Log.d("DEBUG", "RecipeActivity PreparationSteps initRecyclerView " + mPreparationSteps);
-//            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
-//
-//            mPreparationStepsRecyclerAdapter.setItemTouchHelper(itemTouchHelper);
-//            itemTouchHelper.attachToRecyclerView(mRecyclerView);
-//
-//            mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
-//        }
-//
-//        @Override
-//        public void onPreparationStepClick(int position) {
-//            Log.d("DEBUG", "onPreparationsStepClick: " + position);
-//            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
-//        }
-//
-//        @SuppressLint("RestrictedApi")
-//        @Override
-//        public void putEditModeOn() {
-//            super.putEditModeOn();
-//            try {
-//                mPreparationStepsRecyclerAdapter.putEditModeOn();
-//                mFab.setVisibility(View.VISIBLE);
-//                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-//            } catch (Exception e) {
-//                editModeFailed = true;
-//            }
-//        }
-//
-//        @SuppressLint("RestrictedApi")
-//        @Override
-//        public void putEditModeOff() {
-//            super.putEditModeOn();
-//            try {
-//                mPreparationStepsRecyclerAdapter.putEditModeOff();
-//                mFab.setVisibility(View.GONE);
-//                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
-//            } catch (Exception e) {
-//                // none
-//            }
-//        }
-//
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.fab:{
-//                    onButtonShowPopupWindowClick(getView());
-//                    break;
-//                }
-//                case R.id.cancel_button:{
-//                    mPopupWindow.dismiss();
-//                    break;
-//                }
-//                case R.id.confirm_button:{
-//                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_preparationstep_edit);
-//                    String content = String.valueOf(editText.getText());
-//
-//                    if (!content.isEmpty()) {
-//                        int num = mPreparationSteps.size() + 1;
-//                        this.addPreparationStep(num, content);
-//                        Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
-//                    }
-//                    mPopupWindow.dismiss();
-//                    break;
-//                }
-//            }
-//        }
-//        private void addPreparationStep(int num, String content) {
-//            mPreparationSteps.add(new PreparationStep(num,content));
-//            mPreparationSteps.sort(new Comparator<PreparationStep>() {
-//                @Override
-//                public int compare(PreparationStep p1, PreparationStep p2) {
-//                    return p2.compareTo(p1);
-//                }
-//            });
-//            mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
-//        }
-//
-//        private PopupWindow mPopupWindow;
-//        public void onButtonShowPopupWindowClick(View view) {
-//
-//            // inflate the layout of the popup window
-//            LayoutInflater inflater = (LayoutInflater)
-//                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-//            View popupView = inflater.inflate(R.layout.preparationstep_popup_window, null);
-//
-//
-//            Display display = getActivity().getWindowManager().getDefaultDisplay();
-//            Point size = new Point();
-//            display.getSize(size);
-//            int width = size.x;
-//
-//            int margin = 50;
-//
-//            // create the popup window
-//            //int width = LinearLayout.LayoutParams.MATCH_PARENT;
-//            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//            boolean focusable = true; // lets taps outside the popup also dismiss it
-//            mPopupWindow = new PopupWindow(popupView, width-margin, height, focusable);
-//
-//            // show the popup window
-//            //mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
-//            mPopupWindow.showAtLocation(view, Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, 2*margin);
-//
-//            final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
-//            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//                @Override
-//                public void onFocusChange(final View v, final boolean hasFocus) {
-//                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
-//                        editText.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
-//                            }
-//                        });
-//                    }
-//                }
-//            });
-//
-//            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
-//            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
-//            cancelButton.setOnClickListener(this);
-//            confirmButton.setOnClickListener(this);
-//
-//            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-//        }
-//
-//        @Override
-//        public void onResume() {
-//            super.onResume();
-//            if (isEditMode()) {
-//                putEditModeOn();
-//            } else {
-//                putEditModeOff();
-//            }
-//        }
-//    }
+    public static class IngredientsFragment extends EditableFragment implements
+            IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
+
+        // Ui compontents
+        private RecyclerView mRecyclerView;
+        private FloatingActionButton mFab;
+
+        // vars
+        private ArrayList<String> mIngredients;
+        private IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
+        private DatabaseHelper mDatatbaseHelper;
+        private int mRecipeId;
+        private DatabaseRecipe mRecipe;
+
+
+        public IngredientsFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static IngredientsFragment newInstance() {
+            IngredientsFragment fragment = new IngredientsFragment();
+            return fragment;
+        }
+
+        @ Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
+
+            this.mRecipeId = getArguments().getInt("recipe_id");
+            this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
+            this.mIngredients = mRecipe.getIngredients();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.ingredients_fragment_recipe, container, false);
+
+            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+            initRecyclerView();
+
+            setUserVisibleHint(false); // TODO cosa fa effettivamente? Toglierlo?
+
+            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            mFab.setOnClickListener(this);
+
+            return rootView;
+        }
+
+        public void initRecyclerView() {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+
+            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(2);
+            mRecyclerView.addItemDecoration(itemDecorator);
+
+            mIngredientsRecyclerAdapter = new IngredientsRecyclerAdapter(mRecipe.getIngredients(), this);
+            mRecyclerView.setAdapter(mIngredientsRecyclerAdapter);
+        }
+
+        @Override
+        public void onIngredientClick(int position) {
+            Log.d("DEBUG", "onIngredientClick: " + position);
+            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+        }
+
+        @SuppressLint("RestrictedApi")
+        @Override
+        public void putEditModeOn() {
+            super.putEditModeOn();
+            mIngredientsRecyclerAdapter.putEditModeOn();
+            mFab.setVisibility(View.VISIBLE);
+            //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+       }
+
+        @SuppressLint("RestrictedApi")
+        @Override
+        public void putEditModeOff() {
+            super.putEditModeOff();
+            mIngredientsRecyclerAdapter.putEditModeOff();
+            mFab.setVisibility(View.GONE);
+            updateRecipe();
+        }
+
+        private void updateRecipe(){
+            this.mRecipe.setIngredients(mIngredients);
+            mDatatbaseHelper.updateRecipeIngredients(mRecipeId, mRecipe.getIngredients()); // TODO cambiarmi
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab:{
+                    onButtonShowPopupWindowClick(getView());
+                    break;
+                }
+                case R.id.cancel_button:{
+                    // TODO fai diventare dialog
+                    mPopupWindow.dismiss();
+                    break;
+                }
+                case R.id.confirm_button:{
+                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_ingredient_edit);
+                    String content = String.valueOf(editText.getText());
+
+                    if (!content.isEmpty()) {
+                        mIngredients.add(content);
+                    }
+                    mPopupWindow.dismiss();
+                    break;
+                }
+            }
+        }
+
+        private PopupWindow mPopupWindow;
+        public void onButtonShowPopupWindowClick(View view) {
+
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater)
+                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.ingredient_popup_window, null);
+
+            // create the popup window
+            int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            mPopupWindow = new PopupWindow(popupView, width, height, focusable);
+
+            // show the popup window
+            mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -200);
+
+            final EditText editText = popupView.findViewById(R.id.new_ingredient_edit);
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(final View v, final boolean hasFocus) {
+                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
+                        editText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                final InputMethodManager imm =(InputMethodManager)getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+                            }
+                        });
+                    }
+                }
+            });
+
+            ImageButton cancelButton  = popupView.findViewById(R.id.cancel_button);
+            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
+            cancelButton.setOnClickListener(this);
+            confirmButton.setOnClickListener(this);
+
+            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
+
+
+    public static class PreparationFragment extends EditableFragment implements
+            PreparationStepsRecyclerAdapter.OnPreparationStepListener,
+            View.OnClickListener {
+
+
+        // Ui compontents
+        private RecyclerView mRecyclerView;
+        private FloatingActionButton mFab;
+
+        // vars
+        private Map<Integer, String> mPreparationSteps;
+        private PreparationStepsRecyclerAdapter mPreparationStepsRecyclerAdapter;
+        private int mRecipeId;
+        private DatabaseRecipe mRecipe;
+        private DatabaseHelper mDatatbaseHelper;
+
+
+        public PreparationFragment() {
+        }
+
+
+        public static PreparationFragment newInstance() {
+            PreparationFragment fragment = new PreparationFragment();
+            return fragment;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
+
+
+            this.mRecipeId = getArguments().getInt("recipe_id");
+            this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
+            this.mPreparationSteps = mRecipe.getSteps();
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+
+            View rootView = inflater.inflate(R.layout.preparationsteps_fragment_recipe, container, false);
+
+            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+            initRecyclerView();
+
+            mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+            mFab.setOnClickListener(this);
+
+            return rootView;
+        }
+
+        public void initRecyclerView() {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+
+            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(5);
+            mRecyclerView.addItemDecoration(itemDecorator);
+
+            ItemTouchHelper.Callback callback = new PreparationStepItemTouchHelper(mPreparationStepsRecyclerAdapter);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+
+            Log.d("DEBUG", "RecipeActivity PreparationSteps initRecyclerView " + mPreparationSteps);
+            mPreparationStepsRecyclerAdapter = new PreparationStepsRecyclerAdapter(mPreparationSteps, this);
+
+            mPreparationStepsRecyclerAdapter.setItemTouchHelper(itemTouchHelper);
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
+            mRecyclerView.setAdapter(mPreparationStepsRecyclerAdapter);
+        }
+
+        @Override
+        public void onPreparationStepClick(int position) {
+            Log.d("DEBUG", "onPreparationsStepClick: " + position);
+            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
+        }
+
+        @SuppressLint("RestrictedApi")
+        @Override
+        public void putEditModeOn() {
+            super.putEditModeOn();
+            try {
+                mPreparationStepsRecyclerAdapter.putEditModeOn();
+                mFab.setVisibility(View.VISIBLE);
+                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                editModeFailed = true;
+            }
+        }
+
+        @SuppressLint("RestrictedApi")
+        @Override
+        public void putEditModeOff() {
+            super.putEditModeOff();
+            try {
+                mPreparationStepsRecyclerAdapter.putEditModeOff();
+                mFab.setVisibility(View.GONE);
+                updateRecipe();
+                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
+            } catch (Exception e) {
+                // none
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.fab: {
+                    onButtonShowPopupWindowClick(getView());
+                    break;
+                }
+                case R.id.cancel_button: {
+                    mPopupWindow.dismiss();
+                    break;
+                }
+                case R.id.confirm_button: {
+                    EditText editText = mPopupWindow.getContentView().findViewById(R.id.new_preparationstep_edit);
+                    String content = String.valueOf(editText.getText());
+
+                    if (!content.isEmpty()) {
+                        int num = mPreparationSteps.size() + 1;
+                        this.addPreparationStep(num, content);
+                        Log.d("DEBUG", "RecipeActivity PreparationSteps connfirm_button" + mPreparationSteps);
+                    }
+                    mPopupWindow.dismiss();
+                    break;
+                }
+            }
+        }
+
+        private void addPreparationStep(int num, String content) {
+            mPreparationSteps.put(num, content);
+            mPreparationStepsRecyclerAdapter.notifyDataSetChanged();
+        }
+
+        private PopupWindow mPopupWindow;
+
+        public void onButtonShowPopupWindowClick(View view) {
+
+            // inflate the layout of the popup window
+            LayoutInflater inflater = (LayoutInflater)
+                    getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
+            View popupView = inflater.inflate(R.layout.preparationstep_popup_window, null);
+
+
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int width = size.x;
+
+            int margin = 50;
+
+            // create the popup window
+            //int width = LinearLayout.LayoutParams.MATCH_PARENT;
+            int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            boolean focusable = true; // lets taps outside the popup also dismiss it
+            mPopupWindow = new PopupWindow(popupView, width - margin, height, focusable);
+
+            // show the popup window
+            //mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
+            mPopupWindow.showAtLocation(view, Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, 2 * margin);
+
+            final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
+            editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(final View v, final boolean hasFocus) {
+                    if (hasFocus && editText.isEnabled() && editText.isFocusable()) {
+                        editText.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                final InputMethodManager imm = (InputMethodManager) getActivity().getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                            }
+                        });
+                    }
+                }
+            });
+
+            ImageButton cancelButton = popupView.findViewById(R.id.cancel_button);
+            ImageButton confirmButton = popupView.findViewById(R.id.confirm_button);
+            cancelButton.setOnClickListener(this);
+            confirmButton.setOnClickListener(this);
+
+            mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (isEditMode()) {
+                putEditModeOn();
+            } else {
+                putEditModeOff();
+            }
+        }
+
+        private void updateRecipe() {
+            this.mRecipe.setSteps(mPreparationSteps);
+            mDatatbaseHelper.updateRecipeSteps(mRecipeId, mRecipe.getSteps());
+        }
+    }
 
 
 

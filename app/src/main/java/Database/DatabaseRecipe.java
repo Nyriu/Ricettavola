@@ -3,6 +3,7 @@ package Database;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,13 +48,13 @@ public class DatabaseRecipe {
     private int difficulty;
 
     private Set tags;
-    private String[] ingredients;
+    private ArrayList<String> ingredients;
     private Map<Integer, String> steps;
 
     public DatabaseRecipe() {
     }
 
-    public DatabaseRecipe(String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
+    public DatabaseRecipe(String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, ArrayList<String> ingredients, Map<Integer, String> steps) {
         this.title = title;
         this.imageUri = imageUri;
         this.prepTime = prepTime;
@@ -65,7 +66,7 @@ public class DatabaseRecipe {
         this.steps = steps;
     }
 
-    public DatabaseRecipe(int id, String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, String[] ingredients, Map<Integer, String> steps) {
+    public DatabaseRecipe(int id, String title, Uri imageUri, String prepTime, String cookTime, String people, int difficulty, Set tags, ArrayList<String> ingredients, Map<Integer, String> steps) {
         this.id = id;
         this.title = title;
         this.imageUri = imageUri;
@@ -142,11 +143,11 @@ public class DatabaseRecipe {
         this.tags = tags;
     }
 
-    public String[] getIngredients() {
+    public ArrayList<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String[] ingredients) {
+    public void setIngredients(ArrayList<String> ingredients) {
         this.ingredients = ingredients;
     }
 

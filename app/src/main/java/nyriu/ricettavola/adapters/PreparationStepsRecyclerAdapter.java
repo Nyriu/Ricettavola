@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import nyriu.ricettavola.R;
 import nyriu.ricettavola.RecipeActivity;
@@ -29,13 +30,13 @@ import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> implements
         ItemTouchHelperAdapter {
 
-    private ArrayList<PreparationStep> mPreparationSteps;
+    private Map<Integer, String> mPreparationSteps;
     private OnPreparationStepListener mOnPreparationStepListener;
     private ItemTouchHelper mItemTouchHelper;
 
     private boolean mEditMode;
 
-    public PreparationStepsRecyclerAdapter(ArrayList<PreparationStep> preparationSteps, @NonNull OnPreparationStepListener onPreparationStepListener) {
+    public PreparationStepsRecyclerAdapter(Map<Integer, String> preparationSteps, @NonNull OnPreparationStepListener onPreparationStepListener) {
         Log.d("DEBUG", "PreparationStepsRycAdap constructor before " + mPreparationSteps);
         this.mPreparationSteps = preparationSteps;
         this.mOnPreparationStepListener = onPreparationStepListener;
@@ -53,9 +54,8 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.setEditMode(isEditMode());
         Log.d("DEBUG", "PreparationStepsRycAdap onBind after" + mPreparationSteps);
-        mPreparationSteps.get(i).setNumber(i+1);
-        viewHolder.step_number.setText("" + mPreparationSteps.get(i).getNumber());
-        viewHolder.step_description.setText(mPreparationSteps.get(i).getDescription());
+        viewHolder.step_number.setText("" + i);
+        viewHolder.step_description.setText(mPreparationSteps.get(i));
         viewHolder.mPreparationStepsRecyclerAdapter = this;
         //viewHolder.setItemTouchHelper(this.mItemTouchHelper);
         Log.d("DEBUG", "PreparationStepsRycAdap onBind after" + mPreparationSteps);
@@ -72,10 +72,10 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
     public void onItemMove(int fromPosition, int toPosition) {
         Log.d("DEBUG", "fromPosition " + fromPosition + " toPosition " + toPosition);
         Log.d("DEBUG", "mPreparationStep lens " + this.mPreparationSteps.size());
-        PreparationStep p = mPreparationSteps.get(fromPosition);
-        mPreparationSteps.remove(p);
-        mPreparationSteps.add(toPosition, p);
-        notifyItemMoved(fromPosition, toPosition);
+        //PreparationStep p = mPreparationSteps.get(fromPosition);
+        //mPreparationSteps.remove(p);
+        //mPreparationSteps.add(toPosition, p);
+        //notifyItemMoved(fromPosition, toPosition);
     }
 
     public void setItemTouchHelper(ItemTouchHelper itemTouchHelper) {

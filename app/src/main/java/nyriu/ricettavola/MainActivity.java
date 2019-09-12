@@ -151,7 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Set tags = new TreeSet();
         tags.add("PrimoPiatto");
 
-        String[] ingredients = new String[]{"Primo ingrediente","Secondo ingrediente"};
+        ArrayList<String> ingredients = new ArrayList<>();
+        ingredients.add("Primo ingrediente");
+        ingredients.add("Secondo ingrediente");
 
         HashMap steps = new HashMap<Integer, String>();
         steps.put(1, "Primo step");
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this.mRecipes = mDatatbaseHelper.getAllRecipes();
                 mRecipesRecyclerAdapter = new RecipesRecyclerAdapter(mRecipes, this);
                 mRecyclerView.setAdapter(mRecipesRecyclerAdapter);
-                //mRecipesRecyclerAdapter.notifyDataSetChanged();
+                mRecipesRecyclerAdapter.notifyDataSetChanged();
             } catch (NullPointerException e) {
                 Log.d(TAG, "primo refreshRecyclerView");
             }
