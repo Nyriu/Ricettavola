@@ -20,7 +20,7 @@
 \section{Secondo Assignment}
 In questo \textit{assignment} vengono illustrato il processo di creazione e raffinamento del prototipo per l'applicazione Ricettavola.
 Ciascun prototipo è stato testato su una decina di persone in una fascia d'età tra i 20 e i 30 anni.
-Gli intervistati hanno anche valutato alcuni design alternativi.
+Gli intervistati hanno anche valutato un design alternativo.
 
 
 \subsection{Primo Prototipo Low-Fidelity}
@@ -28,7 +28,7 @@ Gli intervistati hanno anche valutato alcuni design alternativi.
 \subsubsection{Descrizione del Design}
 
 In figura~\ref{fig:p1_main} a sinistra è riportata la schermata principale dell'applicazione.
-Le ricette vengono mostrate in una lista, ogni elemento mostra l'immagine associata alla ricetta, il suo titolo, eventuali etichette (ad esempio primo piatto, secondo piatto, vegetariano, contorno, \dots ) e se la ricetta appartiene ai preferiti.
+Le ricette vengono mostrate in una lista, ogni elemento mostra l'immagine associata alla ricetta, il suo titolo ed eventuali etichette (ad esempio primo piatto, secondo piatto, vegetariano, contorno, \dots ).
 I tasti in alto a sinistra indicano la possibilità di aggiungere una nuova ricetta, ordinare le ricette oppure cercarne una.
 Nella schermata affianco si è valutata la possibilità di spostare il tasto di creazione di una nuova ricetta in un \textit{floating action button} posizionato in basso a destra.
 
@@ -246,23 +246,59 @@ Queste, a seconda della sezione in cui vengono scritte, sono aggiunte nelle sche
   \begin{center}
     \includegraphics[width=0.4\textwidth]{prototipo2/cuciniamo}
     \includegraphics[width=0.4\textwidth]{prototipo2/cuciniamo_tab}
-    \caption{Da sinistra a destra: riepilogo, ingredienti, preparazione}
+    \caption{Da sinistra a destra: schermata dell'assistente, TODO laterale della schermata dell'assistente}
     \label{fig:p2_cuciniamo}
   \end{center}
 \end{figure}
 
 \subsubsection{Valutazione}
 
+TODO
+Operando nello stesso modo della precedente valutazione è emerso che:
+\begin{itemize}
+  \item la lista della spesa divisa per ricetta è risultata poco chiara per alcuni utenti
+  \item hanno preferito la visualizzazione a lista classica
+  \item la todo laterale è inutile meglio sposatre le impostazioni sui 3 pallini
+  \item le schermate relative ad una ricetta sono chiare, però motli utenti non utlizzerebbero le note
+  \item qualcuno ha dubbi sulla tab verticale su una pagina swipabile
+  \item la possibilità di vedere e segnare gli ingredienti utlizzati è stata vlutata generalemente in modod positivo
+\end{itemize}
+
+
+\clearpage
+\subsubsection{Design Alternativo}
+In questa sezione verrà illustrato brevemente un design alternativo per la schermata principale.
+Riportato in figura \ref{fig:design_alternativo}, questo design presenta una griglia ordinata di quadrati.
+Ciascun quadrato contiene un'immagine di sfondo ed un titolo.
+Quando si sceglie una ricetta la si può premere e tener premuta, in questo modo compariranno due icone: quella in alto rappresenta un forno, quella in basso un cestino della spazzatura.
+Trascinando su quest'ultimo la ricetta selezionata verrà richiesta conferma per cancellare la ricetta.
+Se invece l'elemento viene trascinato fino in cima sul forno, verrà avviata la modalità assistente, come se fosse stato premuto il tasto "Cuciniamo" per quella ricetta.
+
+Inoltre ogni elemento della griglia può essere girato come fosse una carta, una transizione è illustrata nella terza immagine in figura \ref{fig:design_alternativo}.
+Sul retro della carta sono raccolte alcune informazioni generali TODO.
+Ogni carta può essere premuta per passare alle schermate dettagliate già analizzate precedentemente.
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=0.4\textwidth]{example-image}
+    \includegraphics[width=0.4\textwidth]{example-image}
+    \includegraphics[width=0.6\textwidth]{example-image}
+    \caption{Schermate del design alternativo}
+    \label{fig:design_alternativo}
+  \end{center}
+\end{figure}
+
+Alcuni utenti hanno fatto notare che la possibilità di girare più carte può essere sfruttata per confrontare in rapidità più ricette.
+In questo modo si eviterebbe di effettuare troppi passaggi di schermate per visionare i dettagli delle ricette.
+Molti intervistati hanno constatato che non utilizzerebbero spesso la funzione di rotazione delle carte, perché l'informazione sarebbe ridotta rispetto a quella che potrebbero ottenere con un semplice click.
+Anche il trascinare la ricetta in cima od in fondo allo schermo ha ottenuto valutazioni contrastanti.
+Non tutti sono disposti ad effettuare movimenti cosi ampi
+
+Durante un confronto con un intervistato è emersa la possibilità di introdurre una selezione casuale di una ricetta: l'utente preme un tasto apposito; le carte cominciano a ruotare; ad una ad una si fermano con l'immagine rivolta verso l'alto; l'ultima rimane girata mostrando i suoi dettagli.
+Questo potrebbe essere un modo divertente per scegliere cosa cucinare.
 
 
 
 
-
-
-
-
-
-
-\subsubsection{Design Alternativi}
-
+\clearpage
 \subsection{Conclusioni e Design Finale}
