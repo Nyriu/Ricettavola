@@ -234,31 +234,32 @@ public class RecipeActivity extends AppCompatActivity implements
             putEditModeOff();
         } else {
             if (mIsNew) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setCancelable(true);
-                builder.setTitle("Be careful!");
-                builder.setMessage("All changes made will be lost. Continue?");
-                builder.setPositiveButton(R.string.confirm,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mDatatbaseHelper.deleteRecipe(mRecipeId);
-                                toDelete = true;
-                                mIsNew = false;
-                                onBackPressed();
-                            }
-                        });
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
                 if (toDelete) {
                     super.onBackPressed();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setCancelable(true);
+                    builder.setTitle("Be careful!");
+                    builder.setMessage("All changes made will be lost. Continue?");
+                    builder.setPositiveButton(R.string.confirm,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mDatatbaseHelper.deleteRecipe(mRecipeId);
+                                    toDelete = true;
+                                    //mIsNew = false;
+                                    onBackPressed();
+                                }
+                            });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do nothing
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             } else {
                 super.onBackPressed();
