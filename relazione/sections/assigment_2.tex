@@ -18,19 +18,14 @@
 
 
 \section{Secondo Assignment}
+In questo \textit{assignment} vengono illustrato il processo di creazione e raffinamento del prototipo per l'applicazione Ricettavola.
+Ciascun prototipo è stato testato su una decina di persone in una fascia d'età tra i 20 e i 30 anni.
+Gli intervistati hanno anche valutato alcuni design alternativi.
+
 
 \subsection{Primo Prototipo Low-Fidelity}
 
-%Il risultato di una prima prototipizzazione è riportato in figura~\ref{fig:p1_overview}.
-%Come si può 
-%
-%\begin{figure}[ht]
-%  \begin{center}
-%    \includegraphics[width=0.6\textwidth, angle=90]{prototipo1/overview}
-%    \caption{Primo storyboard}
-%    \label{fig:p1_overview}
-%  \end{center}
-%\end{figure}
+\subsubsection{Descrizione del Design}
 
 In figura~\ref{fig:p1_main} a sinistra è riportata la schermata principale dell'applicazione.
 Le ricette vengono mostrate in una lista, ogni elemento mostra l'immagine associata alla ricetta, il suo titolo, eventuali etichette (ad esempio primo piatto, secondo piatto, vegetariano, contorno, \dots ) e se la ricetta appartiene ai preferiti.
@@ -50,6 +45,8 @@ Nella schermata affianco si è valutata la possibilità di spostare il tasto di 
 Premendo il tasto in alto a sinistra si apre una TODO laterale, riportata a sinistra in figura \ref{fig:p1_lista_spesa}.
 Qui è possibile effettuare varie operazioni, tra cui visualizzare la lista della spesa.
 Quest'ultima è divisa in due sezioni in modo che risulti chiaro quali sono gli ingredienti ancora da comprare e quali invece sono già stati acquistati.
+Si fa notare che non è presente alcun tasto per l'aggiunta degli ingredienti.
+Infatti lo scopo di questa lista è limitarsi a tener traccia degli ingredienti delle ricette che si vogliono cucinare.
 
 \begin{figure}[ht]
   \begin{center}
@@ -64,6 +61,7 @@ Quest'ultima è divisa in due sezioni in modo che risulti chiaro quali sono gli 
 \clearpage
 Dalla attività principale, premendo una ricetta, si passa alle prima schermata in figura \ref{fig:p1_ricetta}.
 Nel toolbar sono presenti alcune azioni comuni, come modificare o condividere la ricetta, e ovviamente la possibilità di tornare alla schermata precedetene.
+I tre pallini in fondo al toolbar nascondono un menù a tendina in cui dovrà comparire la voce "Aggiungi nella lista della spesa".
 Poco sotto il toolbar sono presenti tre tab: Riepilogo, Ingredienti, Preparazione.
 La prima linguetta è selezionata, infatti si possono osservare le principali informazioni della ricetta selezionata.
 Premendo su una linguetta o con un'azione di \textit{swipe} si può passare alle altre schermate.
@@ -123,25 +121,65 @@ La seconda schermata ha una funzione in più rispetto alle altre perché permett
 \end{figure}
 
 \clearpage
-In figura \ref{fig:p1_overview} sono mostrate tre versioni differenti della schermata dell'assistente.
+In figura \ref{fig:p1_overview} è riportata una visione complessiva del prototipo.
 
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[width=1\textwidth]{prototipo1/overview}
+    \includegraphics[width=\textwidth]{prototipo1/overview}
     \caption{Rappresentazione globale delle schermate}
     \label{fig:p1_overview}
   \end{center}
 \end{figure}
 
-
-
-\clearpage
-\subsubsection{Descrizione del Design}
 \subsubsection{Valutazione}
+Durante i test con gli utenti sono emerse varie considerazioni.
+Agli intervistati è stato chiesto di navigare fra le principali schermate, descriverne la funzione e cosa si sarebbero aspettati di trovare.
+
+Segue una lista con le considerazioni più importanti.
+\begin{itemize}
+  \item Fin da subito è emersa la necessità di rendere più visibile ed accessibile la lista della spesa.
+    Infatti per molti utenti è stata l'ultima schermata ad essere aperta.
+
+  \item Per gli intervistati la possibilità di cercare ma soprattutto di riordinare ricette non è fondamentale.
+
+\item Nella schermata con l'elenco delle ricette, gli utenti hanno preferito il \textit{floating action button} al tasto in alto a sinistra.
+  Molti lo hanno considerato di più facile accesso.
+
+  \item Gli utenti hanno fatto notare che dovrebbe essere possibile aggiungere elementi alla lista della spesa anche se questi elementi non appartengono a nessuna ricetta.
+
+  \item Nella schermata di riepilogo di un ricetta, è stato consigliato di aggiungere anche il tempo di cottura ed eventualmente un grado di difficoltà.
+
+  \item La funzionalità di aumento automatico delle dosi nella schermata degli ingredienti ha subito delle critiche perché certi ingredienti non possono essere moltiplicati esattamente, come le uova e tutti quegli ingredienti dosati in modo discreto (esempio "una mela").
+    La principale preoccupazione è che arrotondamenti nei calcoli rovinino le proporzioni delle ricette.
+\end{itemize}
+
+Per quanto riguarda la schermata dell'assistente:
+\begin{itemize}
+  \item sarebbe meglio sapere il numero dello step rispetto al numero totale di step.
+    Ad esempio con una barra riempibile oppure con una scritta "Step 1 di 5";
+
+  \item più di qualche intervistato ha espresso la volontà di poter poter saltare da uno step ad un altro senza passare necessariamente per gli step intermedi;
+
+  \item la maggior parte degli utenti preferisce mantenere il cellulare in verticale per poter passare più comodamente ad altre applicazioni, che solitamente vengono utilizzate in modalità \textit{portrait};
+
+  \item meno di metà persone ritiene che il timer nell'applicazione sia utile.
+    Infatti molti intervistati hanno dichiarato di usare altre applicazioni per impostare orologi oppure, se stanno cucinando, usano un orologio da parete.
+\end{itemize}
+
 
 \subsection{Secondo Prototipo Low-Fidelity}
 \subsubsection{Descrizione del Design}
 \subsubsection{Valutazione}
+
+
+
+
+
+
+
+
+
+
 
 \subsubsection{Design Alternativi}
 
