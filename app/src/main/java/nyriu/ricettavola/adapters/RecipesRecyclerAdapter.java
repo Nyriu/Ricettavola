@@ -1,9 +1,9 @@
 package nyriu.ricettavola.adapters;
 
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.SimpleOnItemTouchListener;
 import android.util.Log;
@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,7 +25,9 @@ import Database.DatabaseRecipe;
 import nyriu.ricettavola.R;
 
 
-public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecyclerAdapter.ViewHolder> {
+public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecyclerAdapter.ViewHolder> implements
+        EditableRecyclerAdapter {
+
 
     private static final String TAG = "DEBUGRecipesRecyclerAdapter";
 
@@ -85,7 +88,7 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         // UI
         private TextView titleView;
         private TextView tagsView;
-        private AppCompatImageView recipeImageView;
+        private ImageView recipeImageView;
         private AppCompatImageButton deleteButton;
 
         // vars
@@ -154,8 +157,8 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
             } else {
                 recipeImageView.setAlpha((float) 1);
             }
-            recipeImageView.setImageURI(DatabaseRecipe.DEFAULT_IMAGE_URI);
             recipeImageView.setImageURI(imageUri);
+            //recipeImageView.setImageBitmap(BitmapFactory.decodeFile(imageUri.toString()));
         }
 
         @Override

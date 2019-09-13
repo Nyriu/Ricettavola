@@ -26,7 +26,8 @@ import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 
 
 public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> implements
-        ItemTouchHelperAdapter {
+        ItemTouchHelperAdapter,
+        EditableRecyclerAdapter {
 
     private ArrayList<String> mPreparationSteps;
     private OnPreparationStepListener mOnPreparationStepListener;

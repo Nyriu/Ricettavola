@@ -6,11 +6,14 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.drm.DrmStore;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +25,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -40,11 +42,13 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +137,6 @@ public class RecipeActivity extends AppCompatActivity implements
             mIsNew = true;
             //initExampleRecipe(); // TODO mettere gli hint negli EditText
             mDatatbaseHelper.addRecipe(newFakeRecipe());
-            //putEditModeOn(); // TODO uncomment
             ArrayList<DatabaseRecipe> recipes = mDatatbaseHelper.getAllRecipes();
             this.mRecipeId = recipes.get(recipes.size()-1).getId();
         } else {
@@ -473,7 +476,7 @@ public class RecipeActivity extends AppCompatActivity implements
         // UI normal mode
         private TextView toolbar_recipe_title;
 
-        private AppCompatImageView recipe_image;
+        private ImageView recipe_image;
         private TextView recipe_title;
         private TextView preparation_content;
         private TextView cooking_content;
@@ -700,34 +703,28 @@ public class RecipeActivity extends AppCompatActivity implements
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             // Always show the chooser (if there are multiple options available)
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            //intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
         }
-
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
 
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
                 mImageUri = data.getData();
-                Log.d("DEBUGImmagine", "uri =" + mImageUri);
+                String tmp = mImageUri.getPath();
+                String tmp1 = mImageUri.toString();
 
-                //try {
-                    ////Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), mImageUri);
-                    // Log.d(TAG, String.valueOf(bitmap));
-
-                    recipe_image.setAlpha((float)1);
-                    recipe_image.setImageURI(mImageUri);
-
-                    ////recipe_image.setImageBitmap(bitmap);
-                    //} catch (IOException e) {
-                    // e.printStackTrace();
-                //}
+                Bitmap myBitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + "peacock-spiders.jpg");
+                recipe_image.setImageBitmap(myBitmap);
+                recipe_image.setAlpha((float)1);
+                //recipe_image.setImageURI(null);
+                //recipe_image.setImageURI(mImageUri);
             }
         }
+
         @Override
         public void onClick(View v) {
 
