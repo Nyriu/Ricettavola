@@ -215,7 +215,15 @@ public class RecipeActivity extends AppCompatActivity implements
             }
 
             case R.id.toolbar_share:{
-                Toast.makeText(this, "Sharing not implemented yet!",Toast.LENGTH_SHORT).show();
+                String shareBody = mRecipe.toStringForSharing();
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                //sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
+
+
+                //Toast.makeText(this, "Sharing not implemented yet!",Toast.LENGTH_SHORT).show();
                 break;
             }
 
@@ -278,7 +286,7 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mSectionsPagerAdapter.setEditMode(true);
     }
     private void putToolbarEditModeOn(){
-        mRecipeTitle.setText("Modify your recipe!");
+        mRecipeTitle.setText("Modify your recipe!"); //TODO stringalo
         //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(false);
 
         this.mEditButton .setVisibility(View.GONE);

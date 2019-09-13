@@ -1,5 +1,6 @@
 package nyriu.ricettavola;
 
+import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -46,11 +47,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
+    private DatabaseHelper mDatatbaseHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDatatbaseHelper = new DatabaseHelper(
+                this,
+                DatabaseHelper.DATABASE_NAME,
+                null,
+                DatabaseHelper.DATABASE_VERSION);
 
         setContentView(R.layout.activity_main);
 
@@ -91,6 +98,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_add_recipe) {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            //clipboard.setText("Text to copy");
+            String clipboardText = (String) clipboard.getText();
+            DatabaseRecipe recipe = DatabaseRecipe.buildFromString(clipboardText);
+            if (recipe != null){
+                mDatatbaseHelper.addRecipe(recipe);
+            } else {
+                Toast.makeText(this, "Recipe not created! Invalid text!", Toast.LENGTH_SHORT).show(); // TODO stringalo
+            }
             return true;
         }
 

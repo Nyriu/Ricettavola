@@ -4,6 +4,8 @@ package Database;
 import android.net.Uri;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -157,5 +159,107 @@ public class DatabaseRecipe {
 
     public void setSteps(ArrayList<String> steps) {
         this.steps = steps;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "DatabaseRecipe{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", imageUri=" + imageUri +
+                ", prepTime='" + prepTime + '\'' +
+                ", cookTime='" + cookTime + '\'' +
+                ", people='" + people + '\'' +
+                ", difficulty=" + difficulty +
+                ", tags=" + tags +
+                ", ingredients=" + ingredients +
+                ", steps=" + steps +
+                '}';
+    }
+
+    public String toStringForSharing() {
+        return "" + title + "\n" +
+                "prepTime='" + prepTime + "\'\n" +
+                "cookTime='" + cookTime + "\'\n" +
+                "people='" + people + "\'\n\n" +
+                //"difficulty=" + difficulty +
+                //"tags=" + fancyTagsToString(tags) +
+                "Ingredients\n" +
+                fancyIngredientsToString(ingredients) +
+                "\n" +
+                "Steps\n" +
+                fancyStepsToString(steps);
+    }
+
+    private String fancyIngredientsToString(List ingredients) {
+        String s = "";
+        for (int i=0; i<ingredients.size(); i++){
+            s += ingredients.get(i).toString() + "\n";
+        }
+        return s;
+    }
+
+    private String fancyStepsToString(List steps) {
+        String s = "";
+        for (int i=0; i<steps.size(); i++){
+            s += (i+1) + "\n";
+            s += steps.get(i).toString() + "\n\n";
+        }
+        return s;
+    }
+
+    static public DatabaseRecipe buildFromString(String s) {
+        try {
+            DatabaseRecipe recipe = new DatabaseRecipe();
+
+            String[] tokens = s.split("\n");
+            if (tokens.length < 5){
+                return null;
+            }
+            int i = 0;
+            String title    = tokens[i++];
+            String prepTime = tokens[i++].split("'")[1];
+            String cookTime = tokens[i++].split("'")[1];
+            String people   = tokens[i++].split("'")[1];
+            if (!tokens[i++].equals("")){
+                return null;
+            }
+            if (!tokens[i++].equals("Ingredients")){
+                return null;
+            }
+            ArrayList<String> ingredients = new ArrayList<>();
+            while (!tokens[i].equals("")){
+                ingredients.add(tokens[i]);
+                i++;
+            }
+            i++;
+            if (!tokens[i++].equals("Steps")){
+                return null;
+            }
+            ArrayList<String> steps = new ArrayList<>();
+            i++;
+            while (i < tokens.length){
+                steps.add(tokens[i]);
+                i = i+3;
+            }
+
+            recipe.setTitle(title);
+            recipe.setPrepTime(prepTime);
+            recipe.setCookTime(cookTime);
+            recipe.setPeople(people);
+            recipe.setIngredients(ingredients);
+            recipe.setSteps(steps);
+
+            recipe.setImageUri(DEFAULT_IMAGE_URI);
+            recipe.setDifficulty(0);
+            recipe.setTags(new HashSet());
+
+            return recipe;
+
+        } catch (Exception e){
+            return null;
+        }
     }
 }

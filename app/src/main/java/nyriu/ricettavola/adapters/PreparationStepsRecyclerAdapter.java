@@ -53,7 +53,7 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         viewHolder.setEditMode(isEditMode());
         Log.d("DEBUG", "PreparationStepsRycAdap onBind after" + mPreparationSteps);
-        viewHolder.step_number.setText("" + i);
+        viewHolder.step_number.setText("" + (i+1));
         viewHolder.step_description.setText(mPreparationSteps.get(i));
         viewHolder.mPreparationStepsRecyclerAdapter = this;
         //viewHolder.setItemTouchHelper(this.mItemTouchHelper);
