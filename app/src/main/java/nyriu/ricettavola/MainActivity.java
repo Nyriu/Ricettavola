@@ -3,6 +3,8 @@ package nyriu.ricettavola;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +19,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +32,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -91,13 +95,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.toggle_language) {
+            Configuration c = this.getResources().getConfiguration();
+            String lang = c.getLocales().get(0).getLanguage();
+            if (lang.equals("en")) {
+                setLocale("it");
+            } else {
+                setLocale("en");
+            }
+            mSectionsPagerAdapter.getRecipesFragment().setEditMode(false);
             return true;
         }
         if (id == R.id.action_add_recipe) {
@@ -107,13 +115,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             DatabaseRecipe recipe = DatabaseRecipe.buildFromString(clipboardText);
             if (recipe != null){
                 mDatatbaseHelper.addRecipe(recipe);
+                mSectionsPagerAdapter.getRecipesFragment().setEditMode(false);
+                mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
+                Toast.makeText(this, getString(R.string.clipboard_ok), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Recipe not created! Invalid text!", Toast.LENGTH_SHORT).show(); // TODO stringalo
+                Toast.makeText(this, getString(R.string.clipboard_error), Toast.LENGTH_SHORT).show();
             }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        Intent refresh = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(refresh);
     }
 
     @Override
@@ -153,35 +175,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
     }
 
-    // TODO remove me
-    public DatabaseRecipe newFakeRecipe(){
-        Set tags = new TreeSet();
-        tags.add("PrimoPiatto");
-
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("Primo ingrediente");
-        ingredients.add("Secondo ingrediente");
-
-        ArrayList<String> steps = new ArrayList<>();
-        steps.add("Primo step");
-
-        return new DatabaseRecipe(
-                "Titolo",
-                DatabaseRecipe.DEFAULT_IMAGE_URI,
-                "7 min",
-                "7 min",
-                "3 persone",
-                1,
-                tags,
-                ingredients,
-                steps
-                );
-    }
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         static final int POSITION_RECIPES       = 0;
         static final int POSITION_SHOPPING_LIST = 1;
+        private final int NUM_FRAGMENTS = 2;
 
         // vars
         private RecipesFragment mRecipesFragment;
@@ -204,14 +202,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return this.mShoppingListFragment;
                 default:
                     Log.d(TAG, "fragment number incorrect");
-                    // TODO throw error
                     return null;
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return NUM_FRAGMENTS;
         }
 
         public RecipesFragment getRecipesFragment() {
@@ -219,7 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         public ShoppingListFragment getShoppingListFragment() {
-            return mShoppingListFragment;
+          return mShoppingListFragment;
         }
     }
 

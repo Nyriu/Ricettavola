@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ricettavola</string>
+    <string name="delete_recipe_title">Elimina ricetta</string>
+    <string name="delete_recipe_content">Vuoi davvero eliminare questa ricetta?</string>
+    <string name="cancel">ANNULLA</string>
+    <string name="confirm">CONFERMA</string>
+    <string name="main_recipes_tab_title">Ricette</string>
+    <string name="main_shopping_list_tab_title">Lista della Spesa</string>
+    <string name="share_using">Condividi la tua ricetta!</string>
+    <string name="recipe_summary_tab_title">Riepilogo</string>
+    <string name="recipe_ingredients_tab_title">Ingredienti</string>
+    <string name="recipe_preparation_tab_title">Preparazione</string>
+    <string name="recipe_summary_text_preparation">Preparazione</string>
+    <string name="recipe_summary_text_cooking">Cottura</string>
+    <string name="recipe_summary_text_portions">Porzioni</string>
+    <string name="recipe_summary_text_difficulty">Difficoltà</string>
+    <string name="recipe_summary_text_tags">TAGS</string>
+    <string name="recipe_ingredient_popup_title">Inserisci un nuovo ingrediente:</string>
+    <string name="recipe_ingredient_placeholder_item">Inserisci un nuovo ingrediente</string>
+    <string name="recipe_preparationstep_popup_title">Inserisci un nuovo passaggio:</string>
+    <string name="recipe_preparationstep_placeholder_item">Inserisci un nuovo passaggio</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_add_recipe">Aggiungi ricetta da clipboard</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="clipboard_error">Ricetta non creata! Test non valido!</string>
+    <string name="title_activity_recipe">RecipeActivity</string>
+    <string name="action_toggle_language">Change language</string>
+    <string name="toolbar_title_editMode_on">Modifica la ricetta!</string>
+    <string name="recipe_warning_message_title">Stai attento!</string>
+    <string name="recipe_warning_message">Tutte le modifiche effettuate verranno perse! Vuoi continuare?</string>
+    <string name="clipboard_ok">Ricetta aggiunta!</string>
+</resources>

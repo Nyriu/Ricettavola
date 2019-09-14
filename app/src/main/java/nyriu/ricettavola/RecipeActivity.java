@@ -90,8 +90,7 @@ public class RecipeActivity extends AppCompatActivity implements
     // Database
     private DatabaseHelper mDatatbaseHelper;
 
-    // TODO remove me
-    public DatabaseRecipe newFakeRecipe(){
+    public DatabaseRecipe newFakeRecipe(){ // TODO stringalo
         Set tags = new TreeSet();
         tags.add("PrimoPiatto");
 
@@ -196,7 +195,8 @@ public class RecipeActivity extends AppCompatActivity implements
         switch (v.getId()) {
 
             case R.id.toolbar_back_arrow:{
-                finish(); // distrugge activity
+                //finish(); // distrugge activity
+                onBackPressed();
                 break;
             }
 
@@ -247,8 +247,8 @@ public class RecipeActivity extends AppCompatActivity implements
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setCancelable(true);
-                    builder.setTitle("Be careful!");
-                    builder.setMessage("All changes made will be lost. Continue?");
+                    builder.setTitle(R.string.recipe_warning_message_title);
+                    builder.setMessage(R.string.recipe_warning_message);
                     builder.setPositiveButton(R.string.confirm,
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -286,7 +286,7 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mSectionsPagerAdapter.setEditMode(true);
     }
     private void putToolbarEditModeOn(){
-        mRecipeTitle.setText("Modify your recipe!"); //TODO stringalo
+        mRecipeTitle.setText(getString(R.string.toolbar_title_editMode_on));
         //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(false);
 
         this.mEditButton .setVisibility(View.GONE);
@@ -469,8 +469,6 @@ public class RecipeActivity extends AppCompatActivity implements
 
         void putEditModeOn() {
             this.mEditMode = true;
-            // TODO verificare che non ci sia la possibilta di perdere le modifiche fatte entrando
-            // TODO due volte nella EditMode
         }
 
         void putEditModeOff() {

@@ -12,11 +12,17 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="main_recipes_tab_title">Recipes</string>
     <string name="main_shopping_list_tab_title">Shopping List</string>
+    <string name="clipboard_ok">Recipe added!</string>
+    <string name="clipboard_error">Recipe not created! Invalid text!</string>
 
 
     <!-- Recipe -->
     <string name="title_activity_recipe">RecipeActivity</string>
     <string name="share_using">Share your recipe!</string>
+    <string name="toolbar_title_editMode_on">Modify your recipe!</string>
+
+    <string name="recipe_warning_message_title">Be careful!</string>
+    <string name="recipe_warning_message">All changes made will be lost! Continue?</string>
 
     <string name="recipe_summary_tab_title">Summary</string>
     <string name="recipe_ingredients_tab_title">Ingredients</string>
@@ -35,10 +41,10 @@
     <string name="recipe_preparationstep_placeholder_item">Insert new step description</string>
 
 
-
     <!-- Main Menu Settings -->
     <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="action_add_recipe">Add recipe from clipboard</string>
+    <string name="action_toggle_language">Change language</string>
+
 
 </resources>
