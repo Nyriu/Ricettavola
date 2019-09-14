@@ -21,6 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +39,10 @@ import java.util.TreeSet;
 
 import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
+import Database.DatabaseShoppingListIngredient;
+import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.adapters.RecipesRecyclerAdapter;
+import nyriu.ricettavola.adapters.ShoppingListRecyclerAdapter;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 
@@ -53,6 +57,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager mViewPager;
     private DatabaseHelper mDatatbaseHelper;
 
+    // TODO REMOVE
+    public DatabaseRecipe newFakeRecipe(){
+        Set tags = new TreeSet();
+        //tags.add("PrimoPiatto");
+
+        ArrayList<String> ingredients = new ArrayList<>();
+        ingredients.add("First ingredient");
+        ingredients.add("Second ingredient");
+
+        ArrayList<String> steps = new ArrayList<>();
+        steps.add("First step");
+
+        return new DatabaseRecipe(
+                "Your Title",
+                DatabaseRecipe.DEFAULT_IMAGE_URI,
+                "15 min",
+                "30 min",
+                "4 people",
+                0,
+                tags,
+                ingredients,
+                steps
+        );
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DatabaseHelper.DATABASE_NAME,
                 null,
                 DatabaseHelper.DATABASE_VERSION);
+        // TODO remove sta roba
+        mDatatbaseHelper.addRecipe(newFakeRecipe());
+        mDatatbaseHelper.addShoppingListIngredient(new DatabaseShoppingListIngredient("primo"));
+        //END// TODO remove sta roba
 
         setContentView(R.layout.activity_main);
 
@@ -369,28 +402,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public static class ShoppingListFragment extends Fragment {
+    public static class ShoppingListFragment extends Fragment implements
+        ShoppingListRecyclerAdapter.OnShoppingListListener {
+
+        // Ui compontents
+        private RecyclerView mRecyclerView;
+
+        // vars
+        private ArrayList<DatabaseShoppingListIngredient> mShoppingList;
+        private ShoppingListRecyclerAdapter mShoppingListRecyclerAdapter;
+
+        // Database
+        private DatabaseHelper mDatatbaseHelper;
+
 
         public ShoppingListFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static ShoppingListFragment newInstance() {
             ShoppingListFragment fragment = new ShoppingListFragment();
             return fragment;
         }
 
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            mDatatbaseHelper = new DatabaseHelper(
+                    getContext(),
+                    DatabaseHelper.DATABASE_NAME,
+                    null,
+                    DatabaseHelper.DATABASE_VERSION);
+            this.mShoppingList = mDatatbaseHelper.getShoppingList();
+        }
+
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             View rootView = inflater.inflate(R.layout.shoppinglist_fragment_main, container, false);
 
-            TextView textView = (TextView) rootView.findViewById(R.id.text);
-            textView.setText("Shopping List!!");
+            mRecyclerView = rootView.findViewById(R.id.recyclerView);
+            initRecyclerView();
+
             return rootView;
+        }
+
+        public void initRecyclerView() {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+
+            VerticalSpacingItemDecorator itemDecorator = new VerticalSpacingItemDecorator(10);
+            mRecyclerView.addItemDecoration(itemDecorator);
+
+            mShoppingListRecyclerAdapter = new ShoppingListRecyclerAdapter(mShoppingList, this);
+            mRecyclerView.setAdapter(mShoppingListRecyclerAdapter);
+        }
+
+
+        @Override
+        public void onShoppingListIngredientClick(int position) {
+
         }
     }
 

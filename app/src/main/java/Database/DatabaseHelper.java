@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeSet;
 
 import static Database.DatabaseRecipe.COOKING_TIME;
@@ -30,7 +31,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "Database";
     public final static String DATABASE_NAME = "recipes.db";
     public static String RECIPE_TABLE_NAME = "recipes";
-    public final static int DATABASE_VERSION = 1;
+    public static String SHOPPING_LIST_TABLE_NAME = "shoppinglist";
+    public final static int DATABASE_VERSION = 2;
 
 
     public DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -40,14 +42,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(getRecipeTableQuery());
+        db.execSQL(getShoppingListTableQuery());
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + RECIPE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SHOPPING_LIST_TABLE_NAME);
         onCreate(db);
     }
 
+    // RECIPE //////////////////////////////////////////////////////////////////////////////////////
     private static String getRecipeTableQuery() {
         return "CREATE TABLE \""+ RECIPE_TABLE_NAME + "\" (\n" +
                 "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
@@ -80,18 +85,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "Adding user "+ recipe.getTitle() + " to the database...");
         long result = database.insert(RECIPE_TABLE_NAME, null, contentValues);
 
-
-        // TODO
-        //if (result != -1) {
-        //    Cursor cursor = database.rawQuery("SELECT last_insert_rowid()", null);
-        //    //this.lastRecideIdAdded = cursor.get
-        //    Log.d(TAG, "addRecipe: ");
-        //    cursor.close();
-        //}
-
         return result != -1;
     }
-
 
     public boolean deleteRecipe(int id) {
 
@@ -107,7 +102,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result == 1;
     }
 
-    // TODO ripetere con altri campi
     public boolean updateRecipeTitle(int id, String newTitle) {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -118,11 +112,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
 
         cursor.close();
@@ -141,11 +135,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
 
         cursor.close();
@@ -163,11 +157,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
         cursor.close();
         return result != -1;
@@ -182,11 +176,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
         cursor.close();
         return result != -1;
@@ -201,11 +195,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
         cursor.close();
         return result != -1;
@@ -220,11 +214,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
         cursor.close();
         return result != -1;
@@ -239,20 +233,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM " + RECIPE_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
 
         if (cursor.getCount() > 1) {
-            Log.d(TAG, "Errore: trovate più ricette con la stessa chiave primaria");
+            Log.d(TAG, "Chiave primaria non unica");
         } else if (cursor.getCount() == 1) {
             result = database.update(RECIPE_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
         } else {
-            Log.d(TAG, "Errore generico...");
+            Log.d(TAG, "Error");
         }
         cursor.close();
         return result != -1;
     }
-
-
-
-
-
 
 
     public DatabaseRecipe getRecipe(int id) {
@@ -382,6 +371,125 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 deconvertTags(cursor.getString(DatabaseRecipe.COLUMN_TAG_FIELD)),
                 deconvertIngreedients(cursor.getString(DatabaseRecipe.COLUMN_INGREDIENTS_FIELD)),
                 deconvertSteps(cursor.getString(DatabaseRecipe.COLUMN_STEPS_FIELD))
+        );
+
+    }
+
+    // SHOPPING LIST ///////////////////////////////////////////////////////////////////////////////
+    private static String getShoppingListTableQuery() {
+        return "CREATE TABLE \""+ SHOPPING_LIST_TABLE_NAME + "\" (\n" +
+                "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
+                "\t\"ingredient\"\tTEXT NOT NULL,\n" +
+                "\t\"bought\"INTEGER NOT NULL\n" +
+                ");";
+    }
+
+
+    public boolean addShoppingListIngredient(DatabaseShoppingListIngredient ingredient) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseShoppingListIngredient.INGREDIENT_FIELD, ingredient.getIngredient());
+        contentValues.put(DatabaseShoppingListIngredient.BOUGHT_FIELD, convertBoolean(ingredient.isBought()));
+
+        long result = database.insert(SHOPPING_LIST_TABLE_NAME, null, contentValues);
+        return result != -1;
+    }
+
+    public boolean deleteShoppingListIngredient(int id) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int result = database.delete(SHOPPING_LIST_TABLE_NAME, ID_FIELD + " = ? ", new String[]{id + ""});
+        return result == 1;
+    }
+
+    public boolean deleteShoppingListIngredient(DatabaseShoppingListIngredient ingredient) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int result = database.delete(SHOPPING_LIST_TABLE_NAME, ID_FIELD + " = ? ", new String[]{ingredient.getId() + ""});
+        return result == 1;
+    }
+
+    public boolean updateShoppingListIngredient(int id, String newIngredient, boolean newBought) {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseShoppingListIngredient.INGREDIENT_FIELD, newIngredient);
+        contentValues.put(DatabaseShoppingListIngredient.BOUGHT_FIELD, convertBoolean(newBought));
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + SHOPPING_LIST_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Chiave primaria non unica");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(SHOPPING_LIST_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Error");
+        }
+
+        cursor.close();
+
+        return result != -1;
+
+    }
+
+    public boolean updateShoppingListIngredient(int id, boolean newBought) {
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseShoppingListIngredient.BOUGHT_FIELD, convertBoolean(newBought));
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + SHOPPING_LIST_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Chiave primaria non unica");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(SHOPPING_LIST_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Error");
+        }
+
+        cursor.close();
+
+        return result != -1;
+
+    }
+
+    public ArrayList<DatabaseShoppingListIngredient> getShoppingList() {
+
+        ArrayList<DatabaseShoppingListIngredient> shoppingList= new ArrayList<>();
+        SQLiteDatabase database = getReadableDatabase();
+        Cursor cursor = database.rawQuery("SELECT * FROM " + SHOPPING_LIST_TABLE_NAME, null);
+
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            DatabaseShoppingListIngredient ingredient = decodeDatabaseShoppingListIngredient(cursor);
+            shoppingList.add(ingredient);
+        }
+        while (cursor.moveToNext()) {
+            DatabaseShoppingListIngredient ingredient = decodeDatabaseShoppingListIngredient(cursor);
+            shoppingList.add(ingredient);
+        }
+
+        cursor.close();
+        return shoppingList;
+    }
+
+    private int convertBoolean(boolean b) {
+        if (b) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    private boolean deconvertBoolean(int enc) {
+        return enc == 1;
+    }
+
+    private DatabaseShoppingListIngredient decodeDatabaseShoppingListIngredient(Cursor cursor) {
+        return new DatabaseShoppingListIngredient(
+                cursor.getInt(DatabaseRecipe.COLUMN_ID_FIELD),
+                cursor.getString(DatabaseShoppingListIngredient.COLUMN_INGREDIENT_FIELD),
+                deconvertBoolean(cursor.getInt(DatabaseShoppingListIngredient.COLUMN_BOUGHT_FIELD))
         );
 
     }
