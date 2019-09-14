@@ -57,30 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager mViewPager;
     private DatabaseHelper mDatatbaseHelper;
 
-    // TODO REMOVE
-    public DatabaseRecipe newFakeRecipe(){
-        Set tags = new TreeSet();
-        //tags.add("PrimoPiatto");
-
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("First ingredient");
-        ingredients.add("Second ingredient");
-
-        ArrayList<String> steps = new ArrayList<>();
-        steps.add("First step");
-
-        return new DatabaseRecipe(
-                "Your Title",
-                DatabaseRecipe.DEFAULT_IMAGE_URI,
-                "15 min",
-                "30 min",
-                "4 people",
-                0,
-                tags,
-                ingredients,
-                steps
-        );
-    }
 
 
     @Override
@@ -91,10 +67,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DatabaseHelper.DATABASE_NAME,
                 null,
                 DatabaseHelper.DATABASE_VERSION);
-        // TODO remove sta roba
-        mDatatbaseHelper.addRecipe(newFakeRecipe());
-        mDatatbaseHelper.addShoppingListIngredient(new DatabaseShoppingListIngredient("primo"));
-        //END// TODO remove sta roba
 
         setContentView(R.layout.activity_main);
 
@@ -156,9 +128,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             return true;
         }
+        if (id == R.id.action_empty_shopping_list) {
+            emptyShoppingList();
+            return true;
+        }
+
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void emptyShoppingList(){
+        // TODO mostrare messaggio di warning
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(R.string.delete_recipe_title);
+        builder.setMessage(R.string.delete_recipe_content);
+        builder.setPositiveButton(R.string.confirm,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDatatbaseHelper.deleteAllShoppingListIngredients();
+                        mSectionsPagerAdapter.getShoppingListFragment().refreshRecyclerView();
+                    }
+                });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     public void setLocale(String lang) {
         Locale myLocale = new Locale(lang);
         Resources res = getResources();
@@ -206,7 +209,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
+        mSectionsPagerAdapter.getShoppingListFragment().refreshRecyclerView();
     }
+
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -465,6 +470,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ingredient.setBought(!ingredient.isBought());
             mDatatbaseHelper.updateShoppingListIngredient(ingredient);
         }
+
+        public void refreshRecyclerView() {
+            try {
+                this.mShoppingList = mDatatbaseHelper.getShoppingList();
+                mShoppingListRecyclerAdapter = new ShoppingListRecyclerAdapter(mShoppingList, this);
+                mRecyclerView.setAdapter(mShoppingListRecyclerAdapter);
+                mShoppingListRecyclerAdapter.notifyDataSetChanged();
+            } catch (NullPointerException e) {
+                Log.d(TAG, "primo refreshRecyclerView");
+            }
+
+        }
+
     }
 
 }

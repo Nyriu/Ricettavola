@@ -45,6 +45,9 @@
     <string name="action_settings">Settings</string>
     <string name="action_add_recipe">Add recipe from clipboard</string>
     <string name="action_toggle_language">Change language</string>
+    <string name="action_add_to_shopping_list">Add ingredients to shopping list</string>
+    <string name="action_empty_shopping_list">Empty shopping list</string>
+    <string name="ingredients_added">Ingredients added!</string>
 
 
 </resources>

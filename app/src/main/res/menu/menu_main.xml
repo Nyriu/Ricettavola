@@ -10,6 +10,11 @@
         android:title="@string/action_add_recipe"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_empty_shopping_list"
+        android:orderInCategory="100"
+        android:title="@string/action_empty_shopping_list"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/toggle_language"
         android:orderInCategory="100"
         android:title="@string/action_toggle_language"

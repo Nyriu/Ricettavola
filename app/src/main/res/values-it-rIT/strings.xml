@@ -30,4 +30,7 @@
     <string name="recipe_warning_message_title">Stai attento!</string>
     <string name="recipe_warning_message">Tutte le modifiche effettuate verranno perse! Vuoi continuare?</string>
     <string name="clipboard_ok">Ricetta aggiunta!</string>
+    <string name="action_add_to_shopping_list">Aggiungi ingredienti alla lista della spesa</string>
+    <string name="action_empty_shopping_list">Svuota lista della spesa</string>
+    <string name="ingredients_added">Ingredienti aggungti!</string>
 </resources>

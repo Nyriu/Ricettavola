@@ -35,6 +35,8 @@ import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -59,6 +61,7 @@ import java.util.TreeSet;
 
 import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
+import Database.DatabaseShoppingListIngredient;
 import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
@@ -182,12 +185,32 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    //@Override
-    //public boolean onCreateOptionsMenu(Menu menu) {
-    //    //getMenuInflater().inflate(R.menu.menu_recipe, menu);
-    //    return true;
-    //}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_recipe, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.add_to_shopping_list) {
+            addIngredientsToShoppingList();
+            Toast.makeText(this, getString(R.string.ingredients_added), Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void addIngredientsToShoppingList() {
+        for (String ingr:
+             this.mRecipe.getIngredients()) {
+            mDatatbaseHelper.addShoppingListIngredient(
+                    new DatabaseShoppingListIngredient(ingr)
+            );
+        }
+    }
 
     @Override
     public void onClick(View v) {

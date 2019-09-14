@@ -395,6 +395,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    public boolean deleteAllShoppingListIngredients() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int result = database.delete(SHOPPING_LIST_TABLE_NAME, null, null);
+        return result == 1;
+    }
+
     public boolean deleteShoppingListIngredient(int id) {
         SQLiteDatabase database = this.getWritableDatabase();
         int result = database.delete(SHOPPING_LIST_TABLE_NAME, ID_FIELD + " = ? ", new String[]{id + ""});
@@ -518,4 +524,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
 
     }
+
+
 }
