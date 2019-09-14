@@ -1,24 +1,21 @@
 package nyriu.ricettavola.adapters;
 
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 
 import nyriu.ricettavola.R;
 
 
+/**
+ * Adapter per gestire gli ingredienti di una ricetta
+ * In modalita' edit gli elementi posono essere rimossi
+ */
 public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<IngredientsRecyclerAdapter.ViewHolder> implements
     EditableRecyclerAdapter {
 
@@ -94,14 +91,12 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
         public void putEditModeOff() {
             this.editMode = false;
             delete_button.setVisibility(View.GONE);
-            //notifyDataSetChanged();
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.delete_button:{
-                    Log.d("DEBUG", "onClick: ingredient delete button Clicked!!");
                     int position = getAdapterPosition();
                     mIngredients.remove(position);
                     mIngredientsRecyclerAdapter.notifyItemRemoved(position);

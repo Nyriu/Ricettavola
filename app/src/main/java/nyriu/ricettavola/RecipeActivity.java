@@ -52,6 +52,15 @@ import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 
+/**
+ * Gestisce le informazinoi di una ricetta
+ * Contiene un gestore dei frammenti e tre frammenti
+ * Il SectionsPagerAdapter funge da gestore ed intemediario tra l'attivita' ed i frammenti
+ * Tutti i frammenti sono sottocalsse di una tipologia di frammento particolare editabile
+ * Un frammento gestisce il riepilogo della ricetta
+ * Un frammento gestisce la lista di ingredienti della ricetta
+ * Un frammento gestisce la lista di passaggi per preparare la ricetta
+ */
 public class RecipeActivity extends AppCompatActivity implements
         View.OnClickListener {
 
@@ -93,7 +102,6 @@ public class RecipeActivity extends AppCompatActivity implements
         }
         if (getIntent().hasExtra("new_recipe")) {
             mIsNew = true;
-            //initExampleRecipe(); // TODO mettere gli hint negli EditText
             mDatatbaseHelper.addRecipe(newFakeRecipe());
             ArrayList<DatabaseRecipe> recipes = mDatatbaseHelper.getAllRecipes();
             this.mRecipeId = recipes.get(recipes.size()-1).getId();
@@ -137,6 +145,10 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
+    /**
+     * Generea una ricetta fantoccio con cui riempire temporaneamente gli spazi
+     * L'utente puo' usarla come esempio
+     */
     public DatabaseRecipe newFakeRecipe(){
         Set tags = new TreeSet();
         //tags.add("PrimoPiatto");
@@ -235,6 +247,11 @@ public class RecipeActivity extends AppCompatActivity implements
 
 
     private boolean toDelete = false;
+
+    /**
+     * Quando viene premuto back si verifica che le modifiche siano state salvate
+     * In caso negativo viene chiesta conferma all'utente
+     */
     @Override
     public void onBackPressed() {
         if (!mIsNew && ismEditMode()){
@@ -316,6 +333,8 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mShareButton.setVisibility(View.VISIBLE);
         this.mCheckButton.setVisibility(View.GONE);
     }
+
+
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -405,6 +424,13 @@ public class RecipeActivity extends AppCompatActivity implements
         }
 
     }
+
+
+    /**
+     * Un frammento editabile contiene uno stato interno che indica se e' in modalita' modificabile
+     * o meno
+     * Dall'esterno puo' essere richesta una transizione di stato
+     */
     public static class EditableFragment extends Fragment {
         protected boolean mEditMode;
         protected boolean editModeFailed = false;
@@ -446,7 +472,9 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-
+    /**
+     * Contiene tutte le informazioni generali della ricetta
+     */
     public static class SummaryFragment extends EditableFragment implements View.OnClickListener {
 
         // UI normal mode
@@ -457,8 +485,8 @@ public class RecipeActivity extends AppCompatActivity implements
         private TextView preparation_content;
         private TextView cooking_content;
         private TextView portions_content;
-        private TextView difficulty_content; // TODO modificare
-        private TextView tags_content;       // TODO modificare
+        private TextView difficulty_content;
+        private TextView tags_content;
 
         // UI edit mode
         private FloatingActionButton fab;
@@ -466,8 +494,8 @@ public class RecipeActivity extends AppCompatActivity implements
         private EditText edit_preparation_content;
         private EditText edit_cooking_content;
         private EditText edit_portions_content;
-        private TextView edit_difficulty_content; // TODO modificare
-        private TextView edit_tags_content;       // TODO modificare
+        private TextView edit_difficulty_content;
+        private TextView edit_tags_content;
 
 
         // vars
@@ -562,7 +590,7 @@ public class RecipeActivity extends AppCompatActivity implements
             this.recipe_title       .setText(this.mRecipe.getTitle());
             this.preparation_content.setText(this.mRecipe.getPrepTime());
             this.cooking_content    .setText(this.mRecipe.getCookTime());
-            this.portions_content   .setText(this.mRecipe.getPeople()); // TODO cambiami
+            this.portions_content   .setText(this.mRecipe.getPeople());
 
             // mantengo allineata anche la parte editabile
             this.edit_recipe_title       .setText(this.recipe_title.getText());
@@ -606,8 +634,7 @@ public class RecipeActivity extends AppCompatActivity implements
             this.edit_tags_content       .setVisibility(View.VISIBLE);
             this.fab                     .setVisibility(View.VISIBLE);
 
-            // TODO far diventare una funzione
-            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) { // TODO capire perche' non funziona
+            if (mImageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 this.recipe_image.setAlpha((float) 0.3);
             } else {
                 this.recipe_image.setAlpha((float) 1);
@@ -702,7 +729,9 @@ public class RecipeActivity extends AppCompatActivity implements
         }
     }
 
-
+    /**
+     * Contiene tutte le informazioni sugli ingredienti della ricetta
+     */
     public static class IngredientsFragment extends EditableFragment implements
             IngredientsRecyclerAdapter.OnIngredientListener, View.OnClickListener {
 
@@ -750,7 +779,7 @@ public class RecipeActivity extends AppCompatActivity implements
             mRecyclerView = rootView.findViewById(R.id.recyclerView);
             initRecyclerView();
 
-            setUserVisibleHint(false); // TODO cosa fa effettivamente? Toglierlo?
+            setUserVisibleHint(false);
 
             mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
             mFab.setOnClickListener(this);
@@ -794,7 +823,7 @@ public class RecipeActivity extends AppCompatActivity implements
 
         private void updateRecipe(){
             this.mRecipe.setIngredients(mIngredients);
-            mDatatbaseHelper.updateRecipeIngredients(mRecipeId, mRecipe.getIngredients()); // TODO cambiarmi
+            mDatatbaseHelper.updateRecipeIngredients(mRecipeId, mRecipe.getIngredients());
         }
 
         @Override
@@ -805,7 +834,6 @@ public class RecipeActivity extends AppCompatActivity implements
                     break;
                 }
                 case R.id.cancel_button:{
-                    // TODO fai diventare dialog
                     mPopupWindow.dismiss();
                     break;
                 }
@@ -864,8 +892,9 @@ public class RecipeActivity extends AppCompatActivity implements
         }
     }
 
-
-
+    /**
+     * Contiene tutte le informazioni sui passaggi della ricetta
+     */
     public static class PreparationFragment extends EditableFragment implements
             PreparationStepsRecyclerAdapter.OnPreparationStepListener,
             View.OnClickListener {

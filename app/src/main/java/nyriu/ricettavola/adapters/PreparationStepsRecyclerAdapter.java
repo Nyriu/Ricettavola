@@ -1,30 +1,26 @@
 package nyriu.ricettavola.adapters;
 
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.Map;
-
-import nyriu.ricettavola.R;
-import nyriu.ricettavola.RecipeActivity;
 import nyriu.ricettavola.util.ItemTouchHelperAdapter;
 
+import nyriu.ricettavola.R;
 
+
+/**
+ * Adapter per gestire i passaggi (step) di preparazione di una ricetta
+ * In modalita' edit gli elementi posono essere rimossi
+ */
 public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<PreparationStepsRecyclerAdapter.ViewHolder> implements
         ItemTouchHelperAdapter,
         EditableRecyclerAdapter {

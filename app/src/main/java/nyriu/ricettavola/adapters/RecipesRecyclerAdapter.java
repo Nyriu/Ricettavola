@@ -14,9 +14,14 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
 import Database.DatabaseRecipe;
+
 import nyriu.ricettavola.R;
 
 
+/**
+ * Adapter per gestire le ricette raccolte
+ * In modalita' edit gli elementi posono essere rimossi
+ */
 public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecyclerAdapter.ViewHolder> implements
         EditableRecyclerAdapter {
 

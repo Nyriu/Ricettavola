@@ -36,8 +36,13 @@ import nyriu.ricettavola.adapters.ShoppingListRecyclerAdapter;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
 
 
-
-
+/**
+ * Attivita' principale
+ * Contiene un gestore dei frammenti e due frammenti
+ * Il SectionsPagerAdapter funge da gestore ed intemediario tra l'attivita' ed i frammenti
+ * Il RecipesFragment gestiste le ricette, puo' transitare in uno stato editabile in cui le ricette possono essere elimminate
+ * ShoppingListFragment gestisce gli ingredienti della lista della spesa
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "DEBUGMainActivity";
@@ -284,6 +289,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.mRecipes = mDatatbaseHelper.getAllRecipes();
         }
 
+        /**
+         * Aggiorno il recyclewView con il database
+         */
         public void refreshRecyclerView() {
             try {
                 this.mRecipes = mDatatbaseHelper.getAllRecipes();
@@ -328,6 +336,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(intent);
         }
 
+        /**
+         * Prima di eleminare una ricetta viene chiesta conferma in un dialog
+         */
         @Override
         public void onRecipeDelete(final int position) {
             //Toast.makeText(getContext(), "Delete recype button clicked!" + position,Toast.LENGTH_SHORT).show();
@@ -457,6 +468,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mDatatbaseHelper.updateShoppingListIngredient(ingredient);
         }
 
+        /**
+         * Aggiorna il RecyclerView con il database
+         */
         public void refreshRecyclerView() {
             try {
                 this.mShoppingList = mDatatbaseHelper.getShoppingList();

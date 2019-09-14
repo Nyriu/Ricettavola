@@ -15,6 +15,11 @@ import Database.DatabaseShoppingListIngredient;
 import nyriu.ricettavola.R;
 
 
+/**
+ * Adapter per gestire le gli ingredienti nella lista della spesa
+ * Ogni elemento presenta due stati: barratto o non-barrato
+ * Lo stato dei ViewHolder viene modificato tramite un checkbox
+ */
 public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingListRecyclerAdapter.ViewHolder> {
 
     private ArrayList<DatabaseShoppingListIngredient> mShoppingList;
