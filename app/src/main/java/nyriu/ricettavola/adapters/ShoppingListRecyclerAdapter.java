@@ -3,12 +3,10 @@ package nyriu.ricettavola.adapters;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -37,10 +35,8 @@ public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingLi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        viewHolder.setId(mShoppingList.get(i).getId());
         viewHolder.setTitle(mShoppingList.get(i).getIngredient());
         viewHolder.setBought(mShoppingList.get(i).isBought());
-        //viewHolder.mShoppingListRecyclerAdapter = this;
     }
 
     @Override
@@ -55,11 +51,8 @@ public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingLi
 
         private TextView title;
         private CheckBox checkbox;
-
-        private int id;
         private boolean bought;
 
-        //private ShoppingListRecyclerAdapter mShoppingListRecyclerAdapter;
         private OnShoppingListListener mOnShoppingListListener;
 
 
@@ -76,17 +69,12 @@ public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingLi
             this.title.setText(title);
         }
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
         public void setBought(boolean b) {
             this.bought = b;
             checkbox.setChecked(b);
             if (b){
                 title.setPaintFlags(title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             } else {
-                // TODO sbarrato
                 title.setPaintFlags(title.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
         }

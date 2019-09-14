@@ -1,15 +1,6 @@
 package Database;
 
 
-import android.net.Uri;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import nyriu.ricettavola.R;
-
 public class DatabaseShoppingListIngredient {
 
     public final static String ID_FIELD               = "id";

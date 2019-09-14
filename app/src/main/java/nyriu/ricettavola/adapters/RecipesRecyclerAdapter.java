@@ -1,26 +1,18 @@
 package nyriu.ricettavola.adapters;
 
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.SimpleOnItemTouchListener;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
-
-import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
 import nyriu.ricettavola.R;
 
@@ -97,7 +89,6 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         private Set tags;
         private Uri imageUri;
         private boolean mEditMode;
-        // TODO add image Uri
 
         public ViewHolder(@NonNull View itemView, @NonNull OnRecipeListener onRecipeListener) {
             super(itemView);
@@ -151,14 +142,12 @@ public class RecipesRecyclerAdapter extends RecyclerView.Adapter<RecipesRecycler
         }
 
         private void updateImage() {
-            // TODO far funzionare
             if (imageUri.equals(DatabaseRecipe.DEFAULT_IMAGE_URI)) {
                 recipeImageView.setAlpha((float) 0.3);
             } else {
                 recipeImageView.setAlpha((float) 1);
             }
             recipeImageView.setImageURI(imageUri);
-            //recipeImageView.setImageBitmap(BitmapFactory.decodeFile(imageUri.toString()));
         }
 
         @Override

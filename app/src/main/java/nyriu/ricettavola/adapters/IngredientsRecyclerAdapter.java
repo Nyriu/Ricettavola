@@ -27,8 +27,6 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
     private ArrayList<String> mIngredients;
     private OnIngredientListener mOnIngredientListener;
 
-    //public RecipeActivity mRecipeActivity;
-
     public IngredientsRecyclerAdapter(ArrayList<String> ingredients, @NonNull OnIngredientListener onIngredientListener) {
         this.mIngredients = ingredients;
         this.mOnIngredientListener = onIngredientListener;
@@ -51,26 +49,15 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
 
     @Override
     public int getItemCount() {
-        //return mIngredients.size();
         return this.mIngredients.size();
     }
 
 
-
-
-    /**
-     * TODO describe
-     */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView title;
         ImageButton delete_button;
-        //OnIngredientListener mOnIngredientListener;
-
-        //Ingredient mIngredient;
         IngredientsRecyclerAdapter mIngredientsRecyclerAdapter;
-
-
 
         boolean editMode = false;
 
@@ -80,9 +67,6 @@ public class IngredientsRecyclerAdapter extends RecyclerView.Adapter<Ingredients
             delete_button = itemView.findViewById(R.id.delete_button);
 
             delete_button.setOnClickListener(this);
-
-            //this.mOnIngredientListener = onIngredientListener;
-            //itemView.setOnClickListener(this);
         }
 
         public void setTitle(String s) {

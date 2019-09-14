@@ -188,7 +188,7 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            //mGestureDetector.onTouchEvent(event); // TODO uncomment to move items up and down
+            //mGestureDetector.onTouchEvent(event); // uncomment to move items up and down
             return true;
         }
     }

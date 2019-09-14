@@ -2,20 +2,12 @@ package nyriu.ricettavola;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.drm.DrmStore;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -29,10 +21,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,16 +39,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-
 import Database.DatabaseHelper;
 import Database.DatabaseRecipe;
 import Database.DatabaseShoppingListIngredient;
@@ -66,8 +50,6 @@ import nyriu.ricettavola.adapters.IngredientsRecyclerAdapter;
 import nyriu.ricettavola.adapters.PreparationStepsRecyclerAdapter;
 import nyriu.ricettavola.util.PreparationStepItemTouchHelper;
 import nyriu.ricettavola.util.VerticalSpacingItemDecorator;
-
-import static android.content.Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION;
 
 
 public class RecipeActivity extends AppCompatActivity implements
@@ -104,7 +86,6 @@ public class RecipeActivity extends AppCompatActivity implements
                 null,
                 DatabaseHelper.DATABASE_VERSION);
 
-        // Intent stuff
         if (getIntent().hasExtra("recipe_id")) {
             this.mRecipeId = getIntent().getIntExtra("recipe_id", -1);
         } else {
@@ -119,18 +100,14 @@ public class RecipeActivity extends AppCompatActivity implements
         } else {
             Log.d(TAG, "Extra new_recipe=false...");
         }
-        // END Intent stuff
 
         setContentView(R.layout.activity_recipe);
 
         mToolbar = (Toolbar) findViewById(R.id.recipe_toolbar);
         setSupportActionBar(mToolbar);
 
-        // Create the adapter that will return a fragment for each
-        // of the primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), mRecipeId, ismEditMode());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
@@ -147,7 +124,7 @@ public class RecipeActivity extends AppCompatActivity implements
         mShareButton = findViewById(R.id.toolbar_share);
 
         this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
-        mRecipeTitle.setText(mRecipe.getTitle()); // TODO modificare/spostare
+        mRecipeTitle.setText(mRecipe.getTitle());
 
         setListeners();
     }
@@ -160,7 +137,7 @@ public class RecipeActivity extends AppCompatActivity implements
     }
 
 
-    public DatabaseRecipe newFakeRecipe(){ // TODO stringalo
+    public DatabaseRecipe newFakeRecipe(){
         Set tags = new TreeSet();
         //tags.add("PrimoPiatto");
 
@@ -222,7 +199,6 @@ public class RecipeActivity extends AppCompatActivity implements
         switch (v.getId()) {
 
             case R.id.toolbar_back_arrow:{
-                //finish(); // distrugge activity
                 onBackPressed();
                 break;
             }
@@ -245,12 +221,8 @@ public class RecipeActivity extends AppCompatActivity implements
                 String shareBody = mRecipe.toStringForSharing();
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                //sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
-
-
-                //Toast.makeText(this, "Sharing not implemented yet!",Toast.LENGTH_SHORT).show();
                 break;
             }
 
@@ -314,8 +286,6 @@ public class RecipeActivity extends AppCompatActivity implements
     }
     private void putToolbarEditModeOn(){
         mRecipeTitle.setText(getString(R.string.toolbar_title_editMode_on));
-        //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(false);
-
         this.mEditButton .setVisibility(View.GONE);
         this.mBackArrow  .setVisibility(View.GONE);
         this.mShareButton.setVisibility(View.GONE);
@@ -328,18 +298,7 @@ public class RecipeActivity extends AppCompatActivity implements
         this.mIsNew = false;
         putToolbarEditModeOff();
         hideSofKeyboard();
-        //if (mIsNew) {
-        //    this.mRecipeRepository.insertRecipeTask(mRecipe);
-        //} else {
-        //    this.mRecipeRepository.updateRecipeTask(mRecipe);
-        //}
         this.mSectionsPagerAdapter.setEditMode(false);
-        //if (mIsNew) {
-        //    mIsNew = false;
-        //    saveNewRecipe();
-        //} else {
-        //    updateRecipe()
-        //}
     }
     public void hideSofKeyboard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -352,22 +311,11 @@ public class RecipeActivity extends AppCompatActivity implements
 
     private void putToolbarEditModeOff(){
         mRecipeTitle.setText(mRecipe.getTitle());
-        //mToolbar.getMenu().findItem(R.id.action_settings).setVisible(true);
-
         this.mEditButton .setVisibility(View.VISIBLE);
         this.mBackArrow  .setVisibility(View.VISIBLE);
         this.mShareButton.setVisibility(View.VISIBLE);
         this.mCheckButton.setVisibility(View.GONE);
     }
-
-    public void saveNewRecipe(){
-        //mDatatbaseHelper.addRecipe(this)
-    }
-
-    public void updateRecipe(){
-    }
-
-
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -380,12 +328,10 @@ public class RecipeActivity extends AppCompatActivity implements
 
         // vars
         private boolean mEditMode;
-        private int mRecipeId;
         EditableFragment[] mFragments;
 
         public SectionsPagerAdapter(FragmentManager fm, int recipeId, boolean editMode) {
             super(fm);
-            this.mRecipeId = recipeId;
             this.mFragments = new EditableFragment[NUM_FRAGMENTS];
             this.mEditMode = editMode;
 
@@ -417,13 +363,10 @@ public class RecipeActivity extends AppCompatActivity implements
                     return this.mFragments[POSITION_INGREDIENTS];
 
                 case POSITION_PREPARATION:
-                    //if (this.mFragments[POSITION_PREPARATION].editModeFailed || mEditMode){
-                    //    this.mFragments[POSITION_PREPARATION].putEditModeOn();
-                    //}
                     return this.mFragments[POSITION_PREPARATION];
 
                 default:
-                    // TODO throw error
+                    //throw error
                     return SummaryFragment.newInstance();
             }
         }
@@ -472,7 +415,6 @@ public class RecipeActivity extends AppCompatActivity implements
             try {
                 assert getArguments() != null;
                 this.mEditMode = getArguments().getBoolean("edit_mode");
-                //setEditMode(mEditMode); // TODO attivare e vedere se preparationFrgament tuona
             } catch(Exception e) {
                 Log.d("DEBUG", "Missing edit_mode");
             }
@@ -620,7 +562,6 @@ public class RecipeActivity extends AppCompatActivity implements
             this.recipe_title       .setText(this.mRecipe.getTitle());
             this.preparation_content.setText(this.mRecipe.getPrepTime());
             this.cooking_content    .setText(this.mRecipe.getCookTime());
-            //this.portions_content   .setText(this.mRecipe.getPortions());
             this.portions_content   .setText(this.mRecipe.getPeople()); // TODO cambiami
 
             // mantengo allineata anche la parte editabile
@@ -718,27 +659,20 @@ public class RecipeActivity extends AppCompatActivity implements
             this.mRecipe.setTitle   (String.valueOf(this.edit_recipe_title.getText()));
             this.mRecipe.setPrepTime(String.valueOf(this.edit_preparation_content.getText()));
             this.mRecipe.setCookTime(String.valueOf(this.edit_cooking_content.getText()));
-            //this.mRecipe.setPortions(String.valueOf(this.edit_portions_content.getText()));
-            this.mRecipe.setPeople(String.valueOf(this.edit_portions_content.getText())); // TODO cambiami
+            this.mRecipe.setPeople(String.valueOf(this.edit_portions_content.getText()));
 
             mDatatbaseHelper.updateRecipeTitle(mRecipeId, mRecipe.getTitle());
             mDatatbaseHelper.updateRecipeImageUri(mRecipeId, mRecipe.getImageUri());
             mDatatbaseHelper.updateRecipePrepTime(mRecipeId, mRecipe.getPrepTime());
             mDatatbaseHelper.updateRecipeCookTime(mRecipeId, mRecipe.getCookTime());
-            mDatatbaseHelper.updateRecipePortions(mRecipeId, mRecipe.getPeople()); // TODO cambiarmi
-            //mDatatbaseHelper.updateRecipeDifficulty(mRecipeId, mRecipe.getDifficulty()); // TODO
-            //mDatatbaseHelper.updateRecipeTags(mRecipeId, mRecipe.getTags()); // TODO
+            mDatatbaseHelper.updateRecipePortions(mRecipeId, mRecipe.getPeople());
         }
 
         private final int PICK_IMAGE_REQUEST = 1;
         private void changeImage() {
             Intent intent = new Intent();
-            // Show only images, no videos or anything else
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            // Always show the chooser (if there are multiple options available)
-            //intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            //intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
         }
 
@@ -787,10 +721,6 @@ public class RecipeActivity extends AppCompatActivity implements
         public IngredientsFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static IngredientsFragment newInstance() {
             IngredientsFragment fragment = new IngredientsFragment();
             return fragment;
@@ -842,7 +772,6 @@ public class RecipeActivity extends AppCompatActivity implements
         @Override
         public void onIngredientClick(int position) {
             Log.d("DEBUG", "onIngredientClick: " + position);
-            //Toast.makeText(getContext(), "ViewHolder Clicked!" + position,Toast.LENGTH_SHORT).show();
         }
 
         @SuppressLint("RestrictedApi")
@@ -1041,7 +970,6 @@ public class RecipeActivity extends AppCompatActivity implements
                 mPreparationStepsRecyclerAdapter.putEditModeOff();
                 mFab.setVisibility(View.GONE);
                 updateRecipe();
-                //mIngredientsRecyclerAdapter.notifyDataSetChanged();
             } catch (Exception e) {
                 // none
             }
@@ -1094,14 +1022,10 @@ public class RecipeActivity extends AppCompatActivity implements
 
             int margin = 50;
 
-            // create the popup window
-            //int width = LinearLayout.LayoutParams.MATCH_PARENT;
             int height = LinearLayout.LayoutParams.WRAP_CONTENT;
             boolean focusable = true; // lets taps outside the popup also dismiss it
             mPopupWindow = new PopupWindow(popupView, width - margin, height, focusable);
 
-            // show the popup window
-            //mPopupWindow.showAtLocation(view, Gravity.CENTER, 0, -400);
             mPopupWindow.showAtLocation(view, Gravity.TOP + Gravity.CENTER_HORIZONTAL, 0, 2 * margin);
 
             final EditText editText = popupView.findViewById(R.id.new_preparationstep_edit);
