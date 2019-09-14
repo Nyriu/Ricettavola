@@ -35,4 +35,6 @@
     <string name="ingredients_added">Ingredienti aggiunti!</string>
     <string name="action_remove_bought">Rimuovi ingredienti acquistati</string>
     <string name="ingredients_not_added">Qualcosa è andato storto ingredienti non agigunti...</string>
+    <string name="delete_shopping_list_title">Eliminazione Lista della Spesa</string>
+    <string name="delete_shopping_list_content">Vuoi eliminare la lista della spesa?</string>
 </resources>

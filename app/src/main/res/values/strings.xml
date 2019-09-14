@@ -7,6 +7,9 @@
     <string name="cancel">CANCEL</string>
     <string name="confirm">CONFIRM</string>
 
+    <string name="delete_shopping_list_title">Delete Shopping List</string>
+    <string name="delete_shopping_list_content">Do you want to empty the shopping list?</string>
+
 
     <!-- Main -->
     <string name="title_activity_main">MainActivity</string>

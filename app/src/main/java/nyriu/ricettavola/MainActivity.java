@@ -145,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void emptyShoppingList(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
-        builder.setTitle(R.string.delete_recipe_title);
-        builder.setMessage(R.string.delete_recipe_content);
+        builder.setTitle(R.string.delete_shopping_list_title);
+        builder.setMessage(R.string.delete_shopping_list_content);
         builder.setPositiveButton(R.string.confirm,
                 new DialogInterface.OnClickListener() {
                     @Override
