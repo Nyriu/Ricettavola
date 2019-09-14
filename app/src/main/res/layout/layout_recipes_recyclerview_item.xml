@@ -30,13 +30,13 @@
             android:id="@+id/recipe_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/recipe_image"
             android:layout_toEndOf="@+id/recipe_image"
             android:layout_marginStart="16dp"
             android:text="Title"
             android:textColor="@color/black"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="20sp" />
+            android:layout_centerVertical="true"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/tags"
@@ -51,6 +51,7 @@
             android:singleLine="true"
             android:text="TAGS HERE"
             android:textAppearance="?attr/textAppearanceListItem"
+            android:visibility="gone"
             android:textSize="14sp" />
 
             <android.support.v7.widget.AppCompatImageButton

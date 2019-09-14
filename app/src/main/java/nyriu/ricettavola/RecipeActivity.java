@@ -90,31 +90,6 @@ public class RecipeActivity extends AppCompatActivity implements
     // Database
     private DatabaseHelper mDatatbaseHelper;
 
-    public DatabaseRecipe newFakeRecipe(){ // TODO stringalo
-        Set tags = new TreeSet();
-        tags.add("PrimoPiatto");
-
-        ArrayList<String> ingredients = new ArrayList<>();
-        ingredients.add("Primo ingrediente");
-        ingredients.add("Secondo ingrediente");
-
-        ArrayList<String> steps = new ArrayList<>();
-        steps.add("Primo step");
-
-        return new DatabaseRecipe(
-                "Placeholder",
-                DatabaseRecipe.DEFAULT_IMAGE_URI,
-                "7 min",
-                "7 min",
-                "3 persone",
-                1,
-                tags,
-                ingredients,
-                steps
-        );
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +154,31 @@ public class RecipeActivity extends AppCompatActivity implements
         mEditButton .setOnClickListener(this);
         mCheckButton.setOnClickListener(this);
         mShareButton.setOnClickListener(this);
+    }
+
+
+    public DatabaseRecipe newFakeRecipe(){ // TODO stringalo
+        Set tags = new TreeSet();
+        //tags.add("PrimoPiatto");
+
+        ArrayList<String> ingredients = new ArrayList<>();
+        ingredients.add("First ingredient");
+        ingredients.add("Second ingredient");
+
+        ArrayList<String> steps = new ArrayList<>();
+        steps.add("First step");
+
+        return new DatabaseRecipe(
+                "Your Title",
+                DatabaseRecipe.DEFAULT_IMAGE_URI,
+                "15 min",
+                "30 min",
+                "4 people",
+                0,
+                tags,
+                ingredients,
+                steps
+        );
     }
 
 
@@ -721,14 +721,9 @@ public class RecipeActivity extends AppCompatActivity implements
 
             if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
                 mImageUri = data.getData();
-                String tmp = mImageUri.getPath();
-                String tmp1 = mImageUri.toString();
-
-                Bitmap myBitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + "peacock-spiders.jpg");
-                recipe_image.setImageBitmap(myBitmap);
                 recipe_image.setAlpha((float)1);
-                //recipe_image.setImageURI(null);
-                //recipe_image.setImageURI(mImageUri);
+                recipe_image.setImageURI(null);
+                recipe_image.setImageURI(mImageUri);
             }
         }
 
