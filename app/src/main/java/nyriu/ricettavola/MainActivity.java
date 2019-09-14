@@ -128,6 +128,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             return true;
         }
+        if (id == R.id.action_remove_bought) {
+            mDatatbaseHelper.deleteBoughtShoppingListIngredients();
+            mSectionsPagerAdapter.getShoppingListFragment().refreshRecyclerView();
+            return true;
+        }
         if (id == R.id.action_empty_shopping_list) {
             emptyShoppingList();
             return true;
@@ -138,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void emptyShoppingList(){
-        // TODO mostrare messaggio di warning
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle(R.string.delete_recipe_title);

@@ -401,6 +401,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result == 1;
     }
 
+    public boolean deleteBoughtShoppingListIngredients() {
+        SQLiteDatabase database = this.getWritableDatabase();
+        int result = database.delete(SHOPPING_LIST_TABLE_NAME, DatabaseShoppingListIngredient.BOUGHT_FIELD + " = ? ", new String[]{1 + ""});
+        return result == 1;
+    }
+
     public boolean deleteShoppingListIngredient(int id) {
         SQLiteDatabase database = this.getWritableDatabase();
         int result = database.delete(SHOPPING_LIST_TABLE_NAME, ID_FIELD + " = ? ", new String[]{id + ""});
@@ -413,29 +419,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result == 1;
     }
 
-    public boolean updateShoppingListIngredient(int id, String newIngredient, boolean newBought) {
+    //public boolean updateShoppingListIngredient(int id, String newIngredient, boolean newBought) {
 
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DatabaseShoppingListIngredient.INGREDIENT_FIELD, newIngredient);
-        contentValues.put(DatabaseShoppingListIngredient.BOUGHT_FIELD, convertBoolean(newBought));
+    //    SQLiteDatabase database = this.getWritableDatabase();
+    //    ContentValues contentValues = new ContentValues();
+    //    contentValues.put(DatabaseShoppingListIngredient.INGREDIENT_FIELD, newIngredient);
+    //    contentValues.put(DatabaseShoppingListIngredient.BOUGHT_FIELD, convertBoolean(newBought));
 
-        int result = -1;
-        Cursor cursor = database.rawQuery("SELECT * FROM " + SHOPPING_LIST_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+    //    int result = -1;
+    //    Cursor cursor = database.rawQuery("SELECT * FROM " + SHOPPING_LIST_TABLE_NAME + " WHERE " + ID_FIELD + " = ?" + id, null);
 
-        if (cursor.getCount() > 1) {
-            Log.d(TAG, "Chiave primaria non unica");
-        } else if (cursor.getCount() == 1) {
-            result = database.update(SHOPPING_LIST_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
-        } else {
-            Log.d(TAG, "Error");
-        }
+    //    if (cursor.getCount() > 1) {
+    //        Log.d(TAG, "Chiave primaria non unica");
+    //    } else if (cursor.getCount() == 1) {
+    //        result = database.update(SHOPPING_LIST_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+    //    } else {
+    //        Log.d(TAG, "Error");
+    //    }
 
-        cursor.close();
+    //    cursor.close();
 
-        return result != -1;
+    //    return result != -1;
 
-    }
+    //}
 
 
     public boolean updateShoppingListIngredient(DatabaseShoppingListIngredient ingredient) {

@@ -48,6 +48,7 @@
     <string name="action_add_to_shopping_list">Add ingredients to shopping list</string>
     <string name="action_empty_shopping_list">Empty shopping list</string>
     <string name="ingredients_added">Ingredients added!</string>
+    <string name="action_remove_bought">Remove bought ingredients</string>
 
 
 </resources>
