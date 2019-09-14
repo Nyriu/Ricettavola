@@ -403,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public static class ShoppingListFragment extends Fragment implements
-        ShoppingListRecyclerAdapter.OnShoppingListListener {
+            ShoppingListRecyclerAdapter.OnShoppingListListener {
 
         // Ui compontents
         private RecyclerView mRecyclerView;
@@ -459,10 +459,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mRecyclerView.setAdapter(mShoppingListRecyclerAdapter);
         }
 
-
         @Override
         public void onShoppingListIngredientClick(int position) {
-
+            DatabaseShoppingListIngredient ingredient = mShoppingList.get(position);
+            ingredient.setBought(!ingredient.isBought());
+            mDatatbaseHelper.updateShoppingListIngredient(ingredient);
         }
     }
 

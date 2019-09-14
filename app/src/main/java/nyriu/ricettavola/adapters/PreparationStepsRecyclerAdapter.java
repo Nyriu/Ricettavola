@@ -81,9 +81,6 @@ public class PreparationStepsRecyclerAdapter extends RecyclerView.Adapter<Prepar
         this.mItemTouchHelper = itemTouchHelper;
     }
 
-    /**
-     * TODO describe
-     */
     public class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnClickListener,
             View.OnTouchListener,

@@ -1,5 +1,6 @@
 package nyriu.ricettavola.adapters;
 
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -39,7 +40,7 @@ public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingLi
         viewHolder.setId(mShoppingList.get(i).getId());
         viewHolder.setTitle(mShoppingList.get(i).getIngredient());
         viewHolder.setBought(mShoppingList.get(i).isBought());
-        viewHolder.mShoppingListRecyclerAdapter = this;
+        //viewHolder.mShoppingListRecyclerAdapter = this;
     }
 
     @Override
@@ -52,21 +53,23 @@ public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingLi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView title;
-        CheckBox checkbox; // TODO
+        private TextView title;
+        private CheckBox checkbox;
 
-        int id;
-        boolean bought;
+        private int id;
+        private boolean bought;
 
-        ShoppingListRecyclerAdapter mShoppingListRecyclerAdapter;
+        //private ShoppingListRecyclerAdapter mShoppingListRecyclerAdapter;
+        private OnShoppingListListener mOnShoppingListListener;
 
 
 
         public ViewHolder(@NonNull View itemView, @NonNull OnShoppingListListener onShoppingListListener) {
             super(itemView);
+            this.mOnShoppingListListener = onShoppingListListener;
             title     = itemView.findViewById(R.id.ingredient_content);
             checkbox  = itemView.findViewById(R.id.checkbox_bought);
-
+            checkbox.setOnClickListener(this);
         }
 
         public void setTitle(String title) {
@@ -79,29 +82,19 @@ public class ShoppingListRecyclerAdapter extends RecyclerView.Adapter<ShoppingLi
 
         public void setBought(boolean b) {
             this.bought = b;
+            checkbox.setChecked(b);
             if (b){
-                // TODO
-                // check
-                // barrato
+                title.setPaintFlags(title.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
+                // TODO sbarrato
+                title.setPaintFlags(title.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
-            //this.title.setText(title);
         }
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.checkbox_bought:{
-                    // TODO update on database
-                    break;
-                }
-                ///case R.id.delete_button:{
-                ///    Log.d("DEBUG", "onClick: ingredient delete button Clicked!!");
-                ///    int position = getAdapterPosition();
-                ///    mIngredients.remove(position);
-                ///    mIngredientsRecyclerAdapter.notifyItemRemoved(position);
-                ///    break;
-                ///}
-            }
+            setBought(!bought);
+            this.mOnShoppingListListener.onShoppingListIngredientClick(getAdapterPosition());
         }
     }
 

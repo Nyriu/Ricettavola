@@ -431,6 +431,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+
+    public boolean updateShoppingListIngredient(DatabaseShoppingListIngredient ingredient) {
+        int id = ingredient.getId();
+
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseShoppingListIngredient.INGREDIENT_FIELD, ingredient.getIngredient());
+        contentValues.put(DatabaseShoppingListIngredient.BOUGHT_FIELD, convertBoolean(ingredient.isBought()));
+
+        int result = -1;
+        Cursor cursor = database.rawQuery("SELECT * FROM " + SHOPPING_LIST_TABLE_NAME + " WHERE " + ID_FIELD + " = " + id, null);
+
+        if (cursor.getCount() > 1) {
+            Log.d(TAG, "Chiave primaria non unica");
+        } else if (cursor.getCount() == 1) {
+            result = database.update(SHOPPING_LIST_TABLE_NAME, contentValues, ID_FIELD + " = ? ", new String[]{id + ""});
+        } else {
+            Log.d(TAG, "Error");
+        }
+
+        cursor.close();
+
+        return result != -1;
+
+    }
     public boolean updateShoppingListIngredient(int id, boolean newBought) {
 
         SQLiteDatabase database = this.getWritableDatabase();
@@ -493,5 +518,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
 
     }
-
 }
