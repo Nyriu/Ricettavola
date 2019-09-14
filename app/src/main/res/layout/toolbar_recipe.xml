@@ -68,7 +68,7 @@
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_mode_edit_black_24dp"
+            android:src="@drawable/ic_mode_edit_white_24dp"
             android:background="?attr/selectableItemBackground"
             android:id="@+id/toolbar_edit"
             android:layout_centerInParent="true"
@@ -76,7 +76,7 @@
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_check_black_24dp"
+            android:src="@drawable/ic_check_white_24dp"
             android:background="?attr/selectableItemBackground"
             android:id="@+id/toolbar_check"
             android:layout_centerInParent="true"

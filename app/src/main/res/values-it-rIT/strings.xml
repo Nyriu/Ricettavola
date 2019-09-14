@@ -32,6 +32,7 @@
     <string name="clipboard_ok">Ricetta aggiunta!</string>
     <string name="action_add_to_shopping_list">Aggiungi ingredienti alla lista della spesa</string>
     <string name="action_empty_shopping_list">Svuota lista della spesa</string>
-    <string name="ingredients_added">Ingredienti aggungti!</string>
+    <string name="ingredients_added">Ingredienti aggiunti!</string>
     <string name="action_remove_bought">Rimuovi ingredienti acquistati</string>
+    <string name="ingredients_not_added">Qualcosa è andato storto ingredienti non agigunti...</string>
 </resources>

@@ -196,20 +196,24 @@ public class RecipeActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         if (id == R.id.add_to_shopping_list) {
-            addIngredientsToShoppingList();
-            Toast.makeText(this, getString(R.string.ingredients_added), Toast.LENGTH_SHORT).show();
+            if (addIngredientsToShoppingList()){
+                Toast.makeText(this, getString(R.string.ingredients_added), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.ingredients_not_added), Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void addIngredientsToShoppingList() {
+    private boolean addIngredientsToShoppingList() {
+        boolean res = true;
         for (String ingr:
              this.mRecipe.getIngredients()) {
-            mDatatbaseHelper.addShoppingListIngredient(
-                    new DatabaseShoppingListIngredient(ingr)
-            );
+            res = res &&
+                    mDatatbaseHelper.addShoppingListIngredient(new DatabaseShoppingListIngredient(ingr));
         }
+        return res;
     }
 
     @Override

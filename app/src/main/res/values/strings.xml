@@ -41,13 +41,13 @@
     <string name="recipe_preparationstep_placeholder_item">Insert new step description</string>
 
 
-    <!-- Main Menu Settings -->
     <string name="action_settings">Settings</string>
     <string name="action_add_recipe">Add recipe from clipboard</string>
     <string name="action_toggle_language">Change language</string>
     <string name="action_add_to_shopping_list">Add ingredients to shopping list</string>
     <string name="action_empty_shopping_list">Empty shopping list</string>
     <string name="ingredients_added">Ingredients added!</string>
+    <string name="ingredients_not_added">Something went wrong! Ingredients not added...</string>
     <string name="action_remove_bought">Remove bought ingredients</string>
 
 
