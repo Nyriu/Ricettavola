@@ -1,6 +1,10 @@
 package Database;
 
-
+/**
+ * Rappresenta un ingrediente della lista della spesa
+ * L'ingrediente puo' essere "da comprare" oppure "comprato" (bought)
+ * Il campo "id" viene gestito automaticamente dal database
+ */
 public class DatabaseShoppingListIngredient {
 
     public final static String ID_FIELD               = "id";

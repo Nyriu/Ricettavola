@@ -11,7 +11,12 @@ import java.util.Set;
 
 import nyriu.ricettavola.R;
 
+/**
+ * Rappresenta una ricetta con vari attributi
+ * Il campo "id" viene gestito automaticamente dal Database
+ */
 public class DatabaseRecipe {
+
     static public final Uri DEFAULT_IMAGE_URI =
             Uri.parse("android.resource://nyriu.ricettavola/" +
                     R.drawable.ic_insert_photo_black_24dp);
@@ -179,6 +184,11 @@ public class DatabaseRecipe {
                 '}';
     }
 
+
+    /**
+     * Ritorna una lista facilemente leggibile e facilemtene parsabile
+     * Da usare in fase di condivisione della ricetta
+     */
     public String toStringForSharing() {
         return "" + title + "\n" +
                 "prepTime='" + prepTime + "\'\n" +
@@ -210,6 +220,10 @@ public class DatabaseRecipe {
         return s;
     }
 
+    /**
+     * Ritorna la ricetta corrispondente alla stringa in uscita da toStringForSharing()
+     * Se il parsing fallisce viene dato null
+     */
     static public DatabaseRecipe buildFromString(String s) {
         try {
             DatabaseRecipe recipe = new DatabaseRecipe();

@@ -22,6 +22,11 @@ import static Database.DatabaseRecipe.PREPARATION_TIME_FIELD;
 import static Database.DatabaseRecipe.STEPS_FIELD;
 import static Database.DatabaseRecipe.TITLE_FIELD;
 
+
+/**
+ * DatabaseHelper racchiude tutte le funzioni per creare e modificare il datatabase,
+ * questo e' composto da due tabelle "recipes" e "shoppinglist"
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "Database";
@@ -49,6 +54,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // RECIPE //////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @return la query per creare la tabella delle ricette
+     */
     private static String getRecipeTableQuery() {
         return "CREATE TABLE \""+ RECIPE_TABLE_NAME + "\" (\n" +
                 "\t\"id\"\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
