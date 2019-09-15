@@ -2,21 +2,6 @@
 %!TEX root = tesi.tex
 %!TEX encoding = UTF-8 Unicode
 
-% in figura~\ref{fig:p1_overview}.
-%\begin{figure}[ht]
-%  \begin{center}
-%    \includegraphics[width=0.6\textwidth]{prototipo1/main_ricette_lista_tags}
-%    \caption{Primo storyboard}
-%    \label{fig:roa}
-%  \end{center}
-%\end{figure}
-
-
-
-
-
-
-
 \section{Secondo Assignment}
 In questo \textit{assignment} vengono illustrato il processo di creazione e raffinamento del prototipo per l'applicazione Ricettavola.
 Ciascun prototipo è stato testato su una decina di persone in una fascia d'età tra i 20 e i 30 anni.
@@ -32,17 +17,19 @@ Le ricette vengono mostrate in una lista, ogni elemento mostra l'immagine associ
 I tasti in alto a sinistra indicano la possibilità di aggiungere una nuova ricetta, ordinare le ricette oppure cercarne una.
 Nella schermata affianco si è valutata la possibilità di spostare il tasto di creazione di una nuova ricetta in un \textit{floating action button} posizionato in basso a destra.
 
+
+
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.45\textwidth]{prototipo1/main_ricette_lista_tags}
-    \includegraphics[width=0.43\textwidth]{prototipo1/main_ricette_lista_tags_fab}
+    \includegraphics[width=0.47\textwidth]{p1_main_ricetta}
+    \includegraphics[width=0.47\textwidth]{p1_main_ricetta_b}
     \caption{Schermata principale}
     \label{fig:p1_main}
   \end{center}
 \end{figure}
 
 \clearpage
-Premendo il tasto in alto a sinistra si apre una TODO laterale, riportata a sinistra in figura \ref{fig:p1_lista_spesa}.
+Premendo il tasto in alto a sinistra si apre un \textit{navigation drawer}, riportata a sinistra in figura \ref{fig:p1_lista_spesa}.
 Qui è possibile effettuare varie operazioni, tra cui visualizzare la lista della spesa.
 Quest'ultima è divisa in due sezioni in modo che risulti chiaro quali sono gli ingredienti ancora da comprare e quali invece sono già stati acquistati.
 Si fa notare che non è presente alcun tasto per l'aggiunta degli ingredienti.
@@ -50,9 +37,9 @@ Infatti lo scopo di questa lista è limitarsi a tener traccia degli ingredienti 
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.47\textwidth]{prototipo1/tab_laterale}
-    \includegraphics[width=0.49\textwidth]{prototipo1/main_lista_della_spesa}
-    \caption{Da sinistra a destra: TODO laterale, la lista della spesa}
+    \includegraphics[width=0.47\textwidth]{p1_tab}
+    \includegraphics[width=0.46\textwidth]{p1_main_lista}
+    \caption{Da sinistra a destra: \textit{navigation drawer}, la lista della spesa}
     \label{fig:p1_lista_spesa}
   \end{center}
 \end{figure}
@@ -71,9 +58,9 @@ Il tasto "Cuciamo!" in fondo allo schermo permette di avviare la modalità assis
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.325\textwidth]{prototipo1/ricetta_riepilogo}
-    \includegraphics[width=0.325\textwidth]{prototipo1/ricetta_ingredienti}
-    \includegraphics[width=0.325\textwidth]{prototipo1/ricetta_preparazione}
+    \includegraphics[width=0.32\textwidth]{p1_ricetta_riepilogo}
+    \includegraphics[width=0.33\textwidth]{p1_ricetta_ingredienti}
+    \includegraphics[width=0.31\textwidth]{p1_ricetta_preparazione}
     \caption{Da sinistra a destra: riepilogo, ingredienti, preparazione}
     \label{fig:p1_ricetta}
   \end{center}
@@ -91,9 +78,9 @@ Ogni campo verrà compilato da suggerimenti così da guidare l'utente nella comp
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.325\textwidth]{prototipo1/edit_ricetta_riepilogo}
-    \includegraphics[width=0.325\textwidth]{prototipo1/edit_ricetta_ingredienti}
-    \includegraphics[width=0.325\textwidth]{prototipo1/edit_ricetta_preparazione}
+    \includegraphics[width=0.325\textwidth]{p1_edit_ricetta_riepilogo}
+    \includegraphics[width=0.325\textwidth]{p1_edit_ricetta_ingredienti}
+    \includegraphics[width=0.32\textwidth]{p1_edit_ricetta_preparazione}
     \caption{Da sinistra a destra: riepilogo, ingredienti, preparazione}
     \label{fig:p1_edit_ricetta}
   \end{center}
@@ -114,9 +101,9 @@ La seconda schermata ha una funzione in più rispetto alle altre perché permett
 \clearpage
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.78\textwidth]{prototipo1/cuciamo_a}
-    \includegraphics[width=0.78\textwidth]{prototipo1/cuciamo_b}
-    \includegraphics[width=0.78\textwidth]{prototipo1/cuciamo_c}
+    \includegraphics[width=0.78\textwidth]{p1_cuciniamo_a}
+    \includegraphics[width=0.78\textwidth]{p1_cuciniamo_b}
+    \includegraphics[width=0.78\textwidth]{p1_cuciniamo_c}
     \caption{Prime versioni della schermata dell'assistente}
     \label{fig:p1_cuciniamo}
   \end{center}
@@ -127,7 +114,7 @@ In figura \ref{fig:p1_overview} è riportata una visione complessiva del prototi
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=\textwidth]{prototipo1/overview}
+    \includegraphics[width=\textwidth]{p1_overview}
     \caption{Rappresentazione globale delle schermate}
     \label{fig:p1_overview}
   \end{center}
@@ -187,15 +174,15 @@ In questo design differente l'ultimo elemento della lista funge da tasto di aggi
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.49\textwidth]{prototipo2/main_ricette}
-    \includegraphics[width=0.49\textwidth]{prototipo2/main_ricette_variant}
+    \includegraphics[width=0.49\textwidth]{p2_main_ricette}
+    \includegraphics[width=0.48\textwidth]{p2_main_ricette_a}
     \caption{Nuova schermata principale}
     \label{fig:p2_main_ricette}
   \end{center}
 \end{figure}
 
-In figura \ref{fig:p2_main_lista_della_spesa} sono rappresentati il nuovo TODO laterale e la nuova schermata della lista della spesa.
-Si può notare che dal TODO laterale sono state rimosse le voci che permettevano di esportare ed importare ricette.
+In figura \ref{fig:p2_main_lista_della_spesa} sono rappresentati il nuovo \textit{navigation drawer} e la nuova schermata della lista della spesa.
+Si può notare che dal \textit{navigation drawer} sono state rimosse le voci che permettevano di esportare ed importare ricette.
 
 Le due sezioni della lista della spesa sono distinguibili più facilmente grazie a due titoli: "Da Comprare" per il primo gruppo e "In Dispensa" per il secondo.
 Notare che ora gli ingredienti sono contenuti nelle rispettive ricette.
@@ -205,14 +192,12 @@ Quando viene aggiunta una spunta ad un ingrediente, questo viene spostato nella 
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.49\textwidth]{prototipo2/main_tab}
-    \includegraphics[width=0.49\textwidth]{prototipo2/main_lista_della_spesa}
-    \caption{Nuovo TODO laterale e schermata della lista della spesa}
+    \includegraphics[width=0.47\textwidth]{p2_main_tab}
+    \includegraphics[width=0.49\textwidth]{p2_main_lista}
+    \caption{Nuovo \textit{navigation drawer} e schermata della lista della spesa}
     \label{fig:p2_main_lista_della_spesa}
   \end{center}
 \end{figure}
-\clearpage
-
 
 Nella figura \ref{fig:p2_ricetta} sono riportate le schermate di visualizzazione di una ricetta.
 Nella sezione di riepilogo sono stati aggiunti il tempo di cottura e la difficoltà, mentre in quella degli ingredienti sono stati rimossi i tasti per modificare le quantità degli ingredienti.
@@ -221,13 +206,14 @@ Nelle note possono essere aggiunte piccole modifiche alla ricetta di cui non si 
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.325\textwidth]{prototipo2/ricetta_riepilogo}
-    \includegraphics[width=0.325\textwidth]{prototipo2/ricetta_ingredienti}
-    \includegraphics[width=0.325\textwidth]{prototipo2/ricetta_preparazione}
+    \includegraphics[width=0.325\textwidth]{p2_ricetta_riepilogo}
+    \includegraphics[width=0.325\textwidth]{p2_ricetta_ingredienti}
+    \includegraphics[width=0.325\textwidth]{p2_ricetta_preparazione}
     \caption{Da sinistra a destra: riepilogo, ingredienti, preparazione}
     \label{fig:p2_ricetta}
   \end{center}
 \end{figure}
+
 
 Infine viene illustrata la nuova versione delle schermate della assistente, riportata in figura \ref{fig:p2_cuciniamo}.
 Dopo aver premuto il tasto "Cuciniamo" nella schermata di preparazione della ricetta si aprirà una schermata simile a quella a sinistra in figura \ref{fig:p2_cuciniamo} ma indicante il primo step della ricetta.
@@ -239,30 +225,34 @@ Nella parte bassa dello schermo sono riportati tutti gli ingredienti della ricet
 L'utente potrà rimuoverli mano a mano che vengono utilizzati.
 Si fa notare che la transizione da uno step all'altro, per venire incontro alle esigenze emerse nell'iterazione precedente, può avvenire in due modi: tramite \textit{swipe} oppure tramite tocco di uno dei pallini della barra superiore.
 
-La seconda immagine in figura \ref{fig:p2_cuciniamo} riporta la possibilità di far comparire un TODO laterale in cui segnare eventuali note.
+La seconda immagine in figura \ref{fig:p2_cuciniamo} riporta la possibilità di far comparire un \textit{navigation drawer} in cui segnare eventuali note.
 Queste, a seconda della sezione in cui vengono scritte, sono aggiunte nelle schermate "Ingredienti" oppure "Preparazione" di figura \ref{fig:p2_ricetta}.
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.4\textwidth]{prototipo2/cuciniamo}
-    \includegraphics[width=0.4\textwidth]{prototipo2/cuciniamo_tab}
-    \caption{Da sinistra a destra: schermata dell'assistente, TODO laterale della schermata dell'assistente}
+    \includegraphics[width=0.49\textwidth]{p2_cuciniamo}
+    \includegraphics[width=0.49\textwidth]{p2_cuciniamo_tab}
+    \caption{Da sinistra a destra: schermata dell'assistente, \textit{navigation drawer} della schermata dell'assistente}
     \label{fig:p2_cuciniamo}
   \end{center}
 \end{figure}
 
+\clearpage
 \subsubsection{Valutazione}
 
-TODO
 Operando nello stesso modo della precedente valutazione è emerso che:
 \begin{itemize}
-  \item la lista della spesa divisa per ricetta è risultata poco chiara per alcuni utenti
-  \item hanno preferito la visualizzazione a lista classica
-  \item la todo laterale è inutile meglio sposatre le impostazioni sui 3 pallini
-  \item le schermate relative ad una ricetta sono chiare, però motli utenti non utlizzerebbero le note
-  \item qualcuno ha dubbi sulla tab verticale su una pagina swipabile
-  \item la possibilità di vedere e segnare gli ingredienti utlizzati è stata vlutata generalemente in modod positivo
+  \item la lista della spesa divisa per ricetta è risultata poco chiara per alcuni utenti, infatti i titoli delle ricette possono essere confusi con degli ingredienti;
+  \item in generale hanno preferito la visualizzazione delle ricette in forma di lista verticale;
+  \item la maggior parte degli intervistati non ha avuto ragioni per utilizzare il \textit{navigation drawer}, è stato consigliato di spostare le impostazioni in un menù a tendina;
+  \item le schermate relative ad una ricetta sono chiare e di facile navigazione;
+  \item la possibilità di aggiungere note non è parsa vantaggiosa, inoltre si potrebbero creare difficoltà con il tasto "Cuciniamo", che coprirebbe parte delle note;
+  \item anche nella schermata dell'assistente il \textit{navigation drawer} non è piaciuto, il motivo principale è il rischio di cambiare step cercando di estrarlo; è stato consigliato di aggiungere un tasto con cui farlo uscire senza dover effettuare gesti di strisciamento con le dita;
+  \item la possibilità di vedere e segnare gli ingredienti utilizzati è stata valutata positivamente.
 \end{itemize}
+
+% C'è da fare una precisazione riguardo all'ultimo punto, infatti gli intervistati n
+% dire che meta' vuole che siano globali e meta' che siano dello step?
 
 
 \clearpage
@@ -270,19 +260,19 @@ Operando nello stesso modo della precedente valutazione è emerso che:
 In questa sezione verrà illustrato brevemente un design alternativo per la schermata principale.
 Riportato in figura \ref{fig:design_alternativo}, questo design presenta una griglia ordinata di quadrati.
 Ciascun quadrato contiene un'immagine di sfondo ed un titolo.
-Quando si sceglie una ricetta la si può premere e tener premuta, in questo modo compariranno due icone: quella in alto rappresenta un forno, quella in basso un cestino della spazzatura.
-Trascinando su quest'ultimo la ricetta selezionata verrà richiesta conferma per cancellare la ricetta.
-Se invece l'elemento viene trascinato fino in cima sul forno, verrà avviata la modalità assistente, come se fosse stato premuto il tasto "Cuciniamo" per quella ricetta.
+Quando si sceglie una ricetta la si può premere e tener premuta, in questo modo compariranno due icone: quella in alto rappresenta un forno, quella in basso un cestino della spazzatura, come si può vedere nella seconda immagine in figura \ref{fig:design_alternativo}.
+Trascinando la ricetta selezionata sul cestino verrà richiesta conferma per la sua cancellazione.
+Se invece l'elemento viene trascinato fino in cima, sul forno, verrà avviata la modalità assistente, come se fosse stato premuto il tasto "Cuciniamo" per quella ricetta.
 
 Inoltre ogni elemento della griglia può essere girato come fosse una carta, una transizione è illustrata nella terza immagine in figura \ref{fig:design_alternativo}.
-Sul retro della carta sono raccolte alcune informazioni generali TODO.
-Ogni carta può essere premuta per passare alle schermate dettagliate già analizzate precedentemente.
+Sul retro della carta sono raccolte alcune informazioni generali sulla ricetta.
+Ogni carta può essere premuta brevemente per passare alle schermate dettagliate già analizzate precedentemente.
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.4\textwidth]{example-image}
-    \includegraphics[width=0.4\textwidth]{example-image}
-    \includegraphics[width=0.6\textwidth]{example-image}
+    \includegraphics[width=0.45\textwidth]{d_ricette}
+    \includegraphics[width=0.43\textwidth]{d_selezione}
+    \includegraphics[width=0.9\textwidth]{d_rotazione}
     \caption{Schermate del design alternativo}
     \label{fig:design_alternativo}
   \end{center}
@@ -295,15 +285,65 @@ Anche il trascinare la ricetta in cima od in fondo allo schermo ha ottenuto valu
 Non tutti sono disposti ad effettuare movimenti cosi ampi o che sono percepiti come spreco di tempo rispetto a quello che si impiegherebbe con semplici click.
 Altri hanno sottolineato che occasionalmente potrebbe essere divertente trascinare gli elementi sullo schermo.
 
-Durante un confronto con un intervistato è emersa la possibilità di introdurre una selezione casuale di una ricetta: l'utente preme un tasto apposito; le carte cominciano a ruotare; ad una ad una si fermano con l'immagine rivolta verso l'alto; l'ultima rimane girata mostrando i suoi dettagli.
-Questo potrebbe essere un modo divertente per scegliere cosa cucinare.
-
-
+Durante un confronto con un intervistato è emersa la possibilità di introdurre un'innovativa selezione casuale di una ricetta: l'utente preme un tasto apposito; le carte cominciano a ruotare; ad una ad una si fermano con l'immagine rivolta verso l'alto; l'ultima rimane girata mostrando i suoi dettagli.
+Questo potrebbe essere un modo divertente per scegliere cosa cucinare in momenti di indecisione.
 
 
 \clearpage
 \subsection{Design Finale}
 Il design finale è un ulteriore raffinamento del secondo design presentato.
-Sono state create nel dettaglio le voci nei menù a tendina, le schermate di creazione di una nuova ricetta e cioè che succede se una ricetta viene mantenuta premuta.
+Sono state create nel dettaglio le voci nei menù a tendina e le schermate di creazione di una nuova ricetta.
 
+Per quanto riguarda i menù si può osservare figura \ref{fig:p3_menu}.
+Nell'immagine a sinistra il menù contiene le voci:
+\begin{itemize}
+  \item "Importa ricetta" permette di importare ricette dall'esterno;
+  \item "Svuota lista della spesa" elimina tutti gli elementi presenti nella lista della spesa;
+  \item "Impostazioni" permette di accedere alle impostazioni, da cui si potrà cambiare, ad esempio, la lingua dell'applicazione.
+\end{itemize}
+Si fa notare che il tasto in alto a sinistra è stato rimosso, il suo posto è occupato dal nome dell'applicazione.
+Nell'immagine a destra di figura \ref{fig:p3_menu} è stato riportato il menù per la schermata di visualizzazione di una ricetta.
+Il menù comprende una sola voce "Aggiungi ingredienti alla lista della spesa".
+Ovviamente il menu è accessibile non solo dalla schermata di riepilogo, ma anche dalle altre due schermate, infatti il /textit{toolbar} è uno spazio comune alle tre.
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=0.45\textwidth]{p3_main_menu}
+    \includegraphics[width=0.45\textwidth]{p3_ricetta_menu}
+    \caption{Da sinistra a destra: menù dell'attività principale e menù della vista di una ricetta}
+    \label{fig:p3_menu}
+  \end{center}
+\end{figure}
+\clearpage
+
+In figura \ref{fig:p3_edit_ricetta} sono riportate le schermate visualizzabili dopo la pressione del \textit{floating action button} della schermata principale.
+Le schermate offrono la possibilità di riempire i campi relativi a titolo, tempistiche, eccetera di una ricetta.
+La freccia in alto a sinistra permette di tornare alla schermata precedente, verrà visualizzato un messaggio per avvertire l'utente che perderà tutte le modifiche effettuate.
+Premendo il tasto in alto a destra si possono salvare le modifiche effettuate, le schermate diventeranno quelle mostrate in figura \ref{fig:p2_ricetta}.
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_riepilogo}
+    \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_ingredienti}
+    \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_preparazione}
+    \caption{Da sinistra a destra, in modalità editabile: riepilogo, ingredienti, preparazione}
+    \label{fig:p3_edit_ricetta}
+  \end{center}
+\end{figure}
+
+Le uniche modifiche effettuate alle altre schermate sono:
+\begin{itemize}
+  \item nella schermata principale è stato rimosso il \textit{navigation drawer}, quindi anche il tasto in alto a sinistra; una scritta con il nome dell'applicazione ha preso il posto di quest'ultimo;
+
+  \item anche il \textit{navigation drawer} nella schermata dell'assistente è stato rimosso;
+
+  \item come si poteva vedere dalle schermate in figura \ref{fig:p3_edit_ricetta} non è più possibile prendere note per gli ingredienti e i passaggi delle ricette;
+\end{itemize}
+
+
+\clearpage
 \subsection{User Testing Finale}
+I \textit{task}:
+\begin{enumerate}
+  \item TODO
+\end{enumerate}
+
