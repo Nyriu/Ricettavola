@@ -317,14 +317,16 @@ Ovviamente il menu è accessibile non solo dalla schermata di riepilogo, ma anch
 
 In figura \ref{fig:p3_edit_ricetta} sono riportate le schermate visualizzabili dopo la pressione del \textit{floating action button} della schermata principale.
 Le schermate offrono la possibilità di riempire i campi relativi a titolo, tempistiche, eccetera di una ricetta.
+Nella terza immagine viene mostrata anche la finestra che si apre premendo il \textit{floating action button}, ovviamente la stessa operazione nella schermata degli ingredienti aprirà una finestra con del testo leggermente diverso.
 La freccia in alto a sinistra permette di tornare alla schermata precedente, verrà visualizzato un messaggio per avvertire l'utente che perderà tutte le modifiche effettuate.
 Premendo il tasto in alto a destra si possono salvare le modifiche effettuate, le schermate diventeranno quelle mostrate in figura \ref{fig:p2_ricetta}.
+Si fa notare che la modalità editabile può essere riattivata premendo il tasto a forma di matita.
 
 \begin{figure}[ht]
   \begin{center}
     \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_riepilogo}
     \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_ingredienti}
-    \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_preparazione}
+    \includegraphics[width=0.3\textwidth]{p3_edit_ricetta_preparazione} %TODO add postit
     \caption{Da sinistra a destra, in modalità editabile: riepilogo, ingredienti, preparazione}
     \label{fig:p3_edit_ricetta}
   \end{center}
@@ -339,11 +341,49 @@ Le uniche modifiche effettuate alle altre schermate sono:
   \item come si poteva vedere dalle schermate in figura \ref{fig:p3_edit_ricetta} non è più possibile prendere note per gli ingredienti e i passaggi delle ricette;
 \end{itemize}
 
+Come ultima cosa si vuole sottolineare che ora la schermata dell'assistente è pensata per essere usata esclusivamente con il cellulare in verticale.
+Questo perché è risultato che la maggior parte degli utenti preferisce non dover girare in orizzontale il cellulare.
 
 \clearpage
 \subsection{User Testing Finale}
-I \textit{task}:
-\begin{enumerate}
-  \item TODO
-\end{enumerate}
+\subsubsection{Task}
+\paragraph{Task 1: Creare una nuova ricetta.}
+Gli utenti premono subito il \textit{floating action button} della schermata principale e non hanno alcun problema a riempire i campi della schermata riepilogo.
+Spostandosi con le linguette in alto riescono a raggiungere le altre schermate.
+Sia nella schermata sugli ingredienti che in quella sui passaggi, usano le funzioni di aggiunta degli elementi correttamente.
 
+\paragraph{Task 2: Eliminare un ingrediente di una ricetta.}
+Partendo dalla schermata principale, premono con sicurezza su una ricetta e si dirigono subito sulla schermata seconda tab; qui premono il tasto a forma di matita e poi il cestino relativo all'ingrediente che volevano eliminare.
+Capiscono subito che l'icona a forma di cestino indica un operazione di "elimina elemento".
+
+\paragraph{Task 3: Condividere una ricetta.}
+Inizialmente si aspettano che le ricette siano condivisibili anche dalla schermata principale ma dopo aver premuto su una ricetta riconoscono istantaneamente il tasto di condivisione.
+
+\paragraph{Task 4: Aggiungere gli ingredienti di una ricetta nella lista della spesa.}
+In principio navigano nella schermata della lista della spesa, per aggiungere manualmente gli ingredienti.
+Poi, non sapendo tutti gli ingredienti da aggiungere, si spostano sulla schermata degli ingredienti.
+Qui esplorano la possibilità di premere i tre pallini in alto a destra e scoprono la funzionalità automatica.
+
+\paragraph{Task 5: Segnare un elemento della lista della spesa come acquistato.}
+Nella schermata della lista della spesa, premono con convinzione sul \textit{check box} affianco all'elemento da segnare.
+
+\paragraph{Task 6: Svuotare la lista della spesa.}
+Si spostano sulla schermata della lista della spesa e cercano funzionalità nel menù a tendina.
+Identificano senza problemi la voce corretta.
+
+\paragraph{Task 7: Avviare la modalità assistente per una ricetta.}
+Inizialmente non hanno ben chiaro cosa si intenda per modalità assistente, con un po' di aiuto giungono alla schermata dei passaggi di una ricetta.
+Qui vedono il grande tasto in fondo allo schermo e lo premono.
+Dopo aver visto la schermata dell'assistente comprendono meglio il suo scopo.
+Riescono a capire quale sia lo step attuale, quanti ne mancano e quanti sono stati già eseguiti.
+
+\subsubsection{Test dei cinque secondi}
+\paragraph{Schermata principale}
+Ricordano che è divisa in due sezioni e che c'è un elenco di elementi
+
+\paragraph{Riepilogo ricetta}
+Ricordano una grande immagine in alto, un elenco di informazioni in basso e la possibilità di condividere in alto.
+
+\paragraph{Riepilogo ingredienti e passaggi}
+In entrambi i casi ricordano degli elenchi di elementi.
+Per interagire con essi e modificarli bisogna premere la matita in alto.
