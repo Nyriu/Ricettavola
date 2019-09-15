@@ -15,8 +15,6 @@
 
 
 \section{Risultato}
-Ora verranno illustrate le schermate dell'applicazione implementata con Android Studio.
-
 In figura \ref{fig:def_main} è riportata le schermata principale.
 Si può notare che la lista delle ricette non presenta differenze rispetto al prototipo a bassa fedeltà.
 La lista della spesa invece non è suddivisa per ricette, spetterà all'utente assicurarsi se gli ingredienti ripetuti sono stati ripetuti volutamente o per errore.
@@ -46,7 +44,7 @@ Notare che le due immagini corrispondono allo stesso messaggio, ma nel secondo l
 
 In figura \ref{fig:def_main_2} è illustrato il menù a tendina dell'attività principale.
 L'ultima voce, a prescindere dalla lingua, riporta "Change language" così la sua funzione rimane chiara indipendentemente dalla lingua attuale.
-Premendo questa voce si può ruotare tra due lingue: italiano ed inglese.
+Premendo questa voce si può passare a rotazione tra lingue italiano ed inglese.
 Appena sopra sono presenti due voci per la manipolazione della lista della spesa.
 Premendo "Aggiungi ricetta da clipboard" verrà verificato se il testo nella \textit{clipboard} corrisponde a quello di una ricetta.
 In caso affermativo la ricetta apparirà nell'elenco delle ricette, altrimenti comparirà un messaggio d'errore.
@@ -115,5 +113,48 @@ Premendo il tasto per aggiungere una ricetta verrà mostrata la schermata in fig
 \end{figure}
 
 \clearpage
+\subsection{Differenze dalla progettazione}
+Nella schermata di riepilogo, nonostante il database delle ricette sia già predisposto, non vengono visualizzate difficoltà e tags.
+Inoltre non è stata implementata l'attività dell'assistente.
+Queste scelte sono state fatte per concentrare l'attenzione sulle schermate e sulle funzionalità principali.
+Si è preferito analizzare con maggior cura le attività principali piuttosto che aggiungerne altre ed introdurre errori o gravi bachi.
+I TAG non sono stati aggiunti perché la loro utilità risiedeva nel poter essere condivisi fra più ricette, in modo da poterle eventualmente partizionare per TAG.
+Di nuovo, si è preferito evitare di aggiungere ulteriore complessità.
+
 \subsection{Problematiche Principali}
-TODO
+Tralasciando problematiche banali o dovute al fatto che questo è il risultato di un primo approccio allo strumento \textit{Android Studio}, una delle difficoltà principali riguarda gli \textit{ImageView}.
+Quando l'utente seleziona l'immagine, questa viene caricata correttamente sia nella schermata di riepilogo che nel \textit{ViewHolder} del \textit{RecyclerView} delle ricette. 
+Purtroppo gli \textit{ImageView} si comportano in modi inaspettati quando si cambia attività, ma soprattutto quando viene selezionata la stessa immagine più volte.
+Nonostante sia stato investito parecchio tempo alla ricerca di una soluzione, non è stato possibile trovarne nessuna soddisfacente.
+Seguendo i numerosi consigli trovati in rete, il problema persiste.
+
+In fase di consegna del progetto avrei potuto omettere tutto ciò che riguardava le immagini ma, anche se \textit{feature} incompleta, ho preferito lasciarlo.
+Principalmente per dar valore al tempo speso alla ricerca di una soluzione ed in secondo luogo perché in ogni sito o libro di ricette vengono illustrate le foto dei risultati.
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=0.49\textwidth]{definitivo/bug_1}
+    \includegraphics[width=0.49\textwidth]{definitivo/bug_2}
+    \caption{Dimostrazione dei comportamenti particolari degli ImageView}
+    \label{fig:bug_1}
+  \end{center}
+\end{figure}
+
+In figura \ref{fig:bug_1} ed in figura \ref{fig:bug_2} sono riportate le schermate che mostrano la problematica.
+La prima schermata in figura \ref{fig:bug_1} contiene due ricette: la prima dovrebbe mostrare la foto di una torta alle mele, la seconda viene mostrata correttamente.
+Nella seconda schermata è state creata una copia della ricetta alle mele (utilizzando la funzionalità di esportazione ed importazione tramite \textit{clipboard}), associando a questa nuova copia la stessa immagine di prima, ci si accorge che ogni occorrenza dell'immagine viene mostrata correttamente.
+In figura \ref{fig:bug_2} è stato effettuata la stessa procedura ma con l'immagine dei frutti.
+
+Si supponeva che tale comportamento fosse dovuto al modo in cui si ottengono i riferimenti alle immagini, ma anche utilizzando chiamate ad altre attività differenti ("applicazione galleria" piuttosto che applicazione "foto" oppure "galleria di Google").
+Si è provato ad usare \textit{ImageView} differenti oppure a segnalarli come invalidi, ma nulla ha risolto questa problematica.
+
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=0.49\textwidth]{definitivo/bug_3}
+    \includegraphics[width=0.49\textwidth]{definitivo/bug_4}
+    \caption{Dimostrazione dei comportamenti particolari degli ImageView}
+    \label{fig:bug_2}
+  \end{center}
+\end{figure}
+
