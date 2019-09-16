@@ -23,7 +23,7 @@
     <string name="action_settings">Impostazioni</string>
     <string name="action_add_recipe">Aggiungi ricetta da clipboard</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="clipboard_error">Ricetta non creata! Test non valido!</string>
+    <string name="clipboard_error">Ricetta non creata! Testo non valido!</string>
     <string name="title_activity_recipe">RecipeActivity</string>
     <string name="action_toggle_language">Change language</string>
     <string name="toolbar_title_editMode_on">Modifica la ricetta!</string>

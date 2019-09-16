@@ -229,7 +229,7 @@ public class DatabaseRecipe {
             DatabaseRecipe recipe = new DatabaseRecipe();
 
             String[] tokens = s.split("\n");
-            if (tokens.length < 5){
+            if (tokens.length < 10){
                 return null;
             }
             int i = 0;

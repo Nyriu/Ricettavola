@@ -107,14 +107,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (id == R.id.action_add_recipe) {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
             //clipboard.setText("Text to copy");
-            String clipboardText = (String) clipboard.getText();
-            DatabaseRecipe recipe = DatabaseRecipe.buildFromString(clipboardText);
-            if (recipe != null){
-                mDatatbaseHelper.addRecipe(recipe);
-                mSectionsPagerAdapter.getRecipesFragment().setEditMode(false);
-                mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
-                Toast.makeText(this, getString(R.string.clipboard_ok), Toast.LENGTH_SHORT).show();
-            } else {
+            try {
+                String clipboardText = (String) clipboard.getText();
+                DatabaseRecipe recipe = DatabaseRecipe.buildFromString(clipboardText);
+                if (recipe != null) {
+                    mDatatbaseHelper.addRecipe(recipe);
+                    mSectionsPagerAdapter.getRecipesFragment().setEditMode(false);
+                    mSectionsPagerAdapter.getRecipesFragment().refreshRecyclerView();
+                    Toast.makeText(this, getString(R.string.clipboard_ok), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.clipboard_error), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e){
                 Toast.makeText(this, getString(R.string.clipboard_error), Toast.LENGTH_SHORT).show();
             }
             return true;

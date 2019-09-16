@@ -132,7 +132,9 @@ public class RecipeActivity extends AppCompatActivity implements
         mShareButton = findViewById(R.id.toolbar_share);
 
         this.mRecipe = mDatatbaseHelper.getRecipe(mRecipeId);
-        mRecipeTitle.setText(mRecipe.getTitle());
+        if (!ismEditMode()) {
+            mRecipeTitle.setText(mRecipe.getTitle());
+        }
 
         setListeners();
     }
