@@ -588,7 +588,6 @@ public class RecipeActivity extends AppCompatActivity implements
             }
 
 
-            this.toolbar_recipe_title.setText(this.mRecipe.getTitle());
             this.recipe_title       .setText(this.mRecipe.getTitle());
             this.preparation_content.setText(this.mRecipe.getPrepTime());
             this.cooking_content    .setText(this.mRecipe.getCookTime());
@@ -952,6 +951,9 @@ public class RecipeActivity extends AppCompatActivity implements
             mFab = (FloatingActionButton) rootView.findViewById(R.id.fab);
             mFab.setOnClickListener(this);
 
+            if (editModeFailed){
+                this.putEditModeOn();
+            }
             return rootView;
         }
 
