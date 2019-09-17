@@ -29,8 +29,8 @@ Gli ingredienti possono essere selezionati o deselezionati.
   \end{center}
 \end{figure}
 
-Tendo premuto su una ricetta è possibile far comparire un cestino per ogni elemento.
-Se l'icona viene premuta compare una messaggio come quello in figura \ref{fig:def_main_3}.
+Tenendo premuto su una ricetta è possibile far comparire un cestino per ogni elemento.
+Se l'icona viene premuta compare il messaggio in figura \ref{fig:def_main_3}.
 Notare che le due immagini corrispondono allo stesso messaggio, ma nel secondo la lingua dell'applicazione è impostata sull'inglese.
 
 \begin{figure}[ht]
@@ -43,10 +43,10 @@ Notare che le due immagini corrispondono allo stesso messaggio, ma nel secondo l
 \end{figure}
 
 In figura \ref{fig:def_main_2} è illustrato il menù a tendina dell'attività principale.
-L'ultima voce, a prescindere dalla lingua, riporta "Change language" così la sua funzione rimane chiara indipendentemente dalla lingua attuale.
-Premendo questa voce si può passare a rotazione tra lingue italiano ed inglese.
+L'ultima voce, a prescindere dalla lingua, riporta ``Change language" così la sua funzione rimane chiara indipendentemente dalla lingua attuale.
+Premendo questa voce si può passare a rotazione tra le lingue italiano ed inglese.
 Appena sopra sono presenti due voci per la manipolazione della lista della spesa.
-Premendo "Aggiungi ricetta da clipboard" verrà verificato se il testo nella \textit{clipboard} corrisponde a quello di una ricetta.
+Premendo ``Aggiungi ricetta da clipboard" verrà verificato se il testo nella \textit{clipboard} corrisponde a quello di una ricetta.
 In caso affermativo la ricetta apparirà nell'elenco delle ricette, altrimenti comparirà un messaggio d'errore.
 
 \begin{figure}[ht]
@@ -117,7 +117,7 @@ Premendo il tasto per aggiungere una ricetta verrà mostrata la schermata in fig
 Nella schermata di riepilogo, nonostante il database delle ricette sia già predisposto, non vengono visualizzate difficoltà e tags.
 Inoltre non è stata implementata l'attività dell'assistente.
 Queste scelte sono state fatte per concentrare l'attenzione sulle schermate e sulle funzionalità principali.
-Si è preferito analizzare con maggior cura le attività principali piuttosto che aggiungerne altre ed introdurre errori o gravi bachi.
+Si è preferito analizzare con maggior cura le attività principali piuttosto che aggiungerne altre, rischiando di introdurre errori o gravi bachi.
 I TAG non sono stati aggiunti perché la loro utilità risiedeva nel poter essere condivisi fra più ricette, in modo da poterle eventualmente partizionare per TAG.
 Di nuovo, si è preferito evitare di aggiungere ulteriore complessità.
 
@@ -125,11 +125,11 @@ Di nuovo, si è preferito evitare di aggiungere ulteriore complessità.
 Tralasciando problematiche banali o dovute al fatto che questo è il risultato di un primo approccio allo strumento \textit{Android Studio}, una delle difficoltà principali riguarda gli \textit{ImageView}.
 Quando l'utente seleziona l'immagine, questa viene caricata correttamente sia nella schermata di riepilogo che nel \textit{ViewHolder} del \textit{RecyclerView} delle ricette. 
 Purtroppo gli \textit{ImageView} si comportano in modi inaspettati quando si cambia attività, ma soprattutto quando viene selezionata la stessa immagine più volte.
-Nonostante sia stato investito parecchio tempo alla ricerca di una soluzione, non è stato possibile trovarne nessuna soddisfacente.
-Seguendo i numerosi consigli trovati in rete, il problema persiste.
+Nonostante sia stato investito parecchio tempo nella ricerca di una soluzione, non è stato possibile trovarne una soddisfacente.
+Anche seguendo i numerosi consigli trovati in rete, il problema persiste.
 
-In fase di consegna del progetto avrei potuto omettere tutto ciò che riguardava le immagini ma, anche se \textit{feature} incompleta, ho preferito lasciarlo.
-Principalmente per dar valore al tempo speso alla ricerca di una soluzione ed in secondo luogo perché in ogni sito o libro di ricette vengono illustrate le foto dei risultati.
+In fase di consegna del progetto avrei potuto omettere tutto ciò che riguardava le immagini ma, anche se \textit{feature} incompleta, ho preferito lasciarla.
+Principalmente per dar valore al tempo speso nella ricerca di una soluzione ed in secondo luogo perché in ogni sito o libro di ricette vengono illustrate le foto dei risultati.
 
 \begin{figure}[ht]
   \begin{center}
@@ -141,11 +141,12 @@ Principalmente per dar valore al tempo speso alla ricerca di una soluzione ed in
 \end{figure}
 
 In figura \ref{fig:bug_1} ed in figura \ref{fig:bug_2} sono riportate le schermate che mostrano la problematica.
-La prima schermata in figura \ref{fig:bug_1} contiene due ricette: la prima dovrebbe mostrare la foto di una torta alle mele, la seconda viene mostrata correttamente.
+La prima schermata in figura \ref{fig:bug_1} contiene due ricette: la prima dovrebbe mostrare la foto di una torta alle mele, la seconda viene mostrata correttamente, però l'immagine con i frutti svanisce.
 Nella seconda schermata è state creata una copia della ricetta alle mele (utilizzando la funzionalità di esportazione ed importazione tramite \textit{clipboard}), associando a questa nuova copia la stessa immagine di prima, ci si accorge che ogni occorrenza dell'immagine viene mostrata correttamente.
 In figura \ref{fig:bug_2} è stato effettuata la stessa procedura ma con l'immagine dei frutti.
+Sembra che possa essere mostrata solo un'immagine alla volta.
 
-Si supponeva che tale comportamento fosse dovuto al modo in cui si ottengono i riferimenti alle immagini, ma anche utilizzando chiamate ad altre attività differenti ("applicazione galleria" piuttosto che applicazione "foto" oppure "galleria di Google").
+Si supponeva che tale comportamento fosse dovuto al modo in cui si ottengono i riferimenti alle immagini, ma il problema persiste anche utilizzando chiamate ad altre attività differenti ("applicazione galleria" piuttosto che applicazione "foto" oppure "galleria di Google").
 Si è provato ad usare \textit{ImageView} differenti oppure a segnalarli come invalidi, ma nulla ha risolto questa problematica.
 
 

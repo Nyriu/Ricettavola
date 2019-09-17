@@ -15,14 +15,12 @@ Gli intervistati hanno anche valutato un design alternativo.
 In figura~\ref{fig:p1_main} a sinistra è riportata la schermata principale dell'applicazione.
 Le ricette vengono mostrate in una lista, ogni elemento mostra l'immagine associata alla ricetta, il suo titolo ed eventuali etichette (ad esempio primo piatto, secondo piatto, vegetariano, contorno, \dots ).
 I tasti in alto a sinistra indicano la possibilità di aggiungere una nuova ricetta, ordinare le ricette oppure cercarne una.
-Nella schermata affianco si è valutata la possibilità di spostare il tasto di creazione di una nuova ricetta in un \textit{floating action button} posizionato in basso a destra.
-
-
+Nella schermata sulla destra si è valutata la possibilità di spostare il tasto di creazione di una nuova ricetta in un \textit{floating action button}, posizionato in basso a destra.
 
 \begin{figure}[ht]
   \begin{center}
-    \includegraphics[width=0.47\textwidth]{p1_main_ricetta}
     \includegraphics[width=0.47\textwidth]{p1_main_ricetta_b}
+    \includegraphics[width=0.47\textwidth]{p1_main_ricetta}
     \caption{Schermata principale}
     \label{fig:p1_main}
   \end{center}
@@ -46,12 +44,12 @@ Infatti lo scopo di questa lista è limitarsi a tener traccia degli ingredienti 
 
 
 \clearpage
-Dalla attività principale, premendo una ricetta, si passa alle prima schermata in figura \ref{fig:p1_ricetta}.
-Nel toolbar sono presenti alcune azioni comuni, come modificare o condividere la ricetta, e ovviamente la possibilità di tornare alla schermata precedetene.
+Dall'attività principale, premendo una ricetta, si passa alle prima schermata in figura \ref{fig:p1_ricetta}.
+Nel toolbar sono presenti alcune azioni comuni, come modificare o condividere la ricetta, e ovviamente la possibilità di tornare alla schermata precedente.
 I tre pallini in fondo al toolbar nascondono un menù a tendina in cui dovrà comparire la voce "Aggiungi nella lista della spesa".
 Poco sotto il toolbar sono presenti tre tab: Riepilogo, Ingredienti, Preparazione.
 La prima linguetta è selezionata, infatti si possono osservare le principali informazioni della ricetta selezionata.
-Premendo su una linguetta o con un'azione di \textit{swipe} si può passare alle altre schermate.
+Premendo su una linguetta oppure effettuando un'azione di \textit{swipe} si può passare alle altre schermate.
 La seconda immagine mostra tutti gli ingredienti necessari, inoltre offre la possibilità di incrementare automaticamente la quantità di ingredienti in funzione del numero di persone.
 L'ultima schermata illustra i passaggi numerati della ricetta.
 Il tasto "Cuciamo!" in fondo allo schermo permette di avviare la modalità assistente per questa ricetta.
@@ -68,7 +66,7 @@ Il tasto "Cuciamo!" in fondo allo schermo permette di avviare la modalità assis
 
 Prima di spiegare quali sono le schermate della modalità assistente, si vuole fare una parentesi sulla modalità di modifica di una ricetta.
 In figura \ref{fig:p1_edit_ricetta} si possono osservare come le schermate di figura \ref{fig:p1_ricetta} vengono modificate quando viene premuto il tasto a forma di matita.
-Ovviamente anche la toolbar deve essere modificato perché essere possibile salvare la ricetta dopo averla modificata, ma non è accettabile che si voglia condividere una ricetta in fase di modifica.
+Ovviamente anche il toolbar deve essere modificato perché deve essere possibile salvare la ricetta dopo averla modificata, inoltre non è accettabile che si possa condividere una ricetta in fase di modifica.
 La prima schermata permette di modificare il tempo di preparazione attraverso delle freccette.
 Notare che ogni campo contenente testo diventa modificabile.
 La possibilità di poter arrangiare l'ordine di ingredienti e passaggi della preparazione è indicato dalle tre barre orizzontali vicine ad ogni elemento delle liste.
@@ -88,15 +86,15 @@ Ogni campo verrà compilato da suggerimenti così da guidare l'utente nella comp
 
 
 In figura \ref{fig:p1_cuciniamo} sono mostrate tre versioni differenti della schermata assistente.
-Innanzitutto si fa notare che le queste schermate sono pensate per essere usate esclusivamente in modalità \textit{landscape}.
-Questa scelta è stata fatta per tentare di massimizzare la dimensione del testo nella schermata, così che fosse facilmente leggibile anche da una certa distanza.
-Un altro punto in comune fra le schermate è quello di presentare due tasti ben visibili per procedere al prossimo passo oppure per rileggere quelli già effettuati.
-Il criterio con cui questi tasti sono stati creati è quello di permettere all'utente di spostarsi tra i passaggi della ricetta sporcando soltanto due zone dello schermo.
-Si può ipotizzare infatti che chi cucina abbia le mani bagnate o sporche di pasta, con i due tasti appena descritti si vuole minimizzare l'area toccata con le dita.
+Innanzitutto si fa notare che queste schermate sono pensate per essere usate esclusivamente in modalità \textit{landscape}.
+Questa scelta è stata fatta per massimizzare la dimensione del testo nella schermata, così che fosse facilmente leggibile anche da una certa distanza.
+Una caratteristica in comune tra tutte le schermate è la possibilità di procedere al prossimo passo, o ritornare al precedente, attraverso due tasti ben visibili.
+Il criterio con cui questi tasti sono stati creati è quello di permettere all'utente di spostarsi tra i passaggi della ricetta toccando soltanto due zone ben precise dello schermo.
+Si può ipotizzare infatti che chi cucina abbia le mani bagnate o sporche di pasta, con i due tasti appena descritti si vuole minimizzare l'area toccata con le dita, quindi l'area che si andrebbe a sporcare.
 Ogni schermata presenta in alto il numero dello step corrente.
 È sembrato utile integrare questa schermata con un timer, così da averlo sempre a portata di mano.
 
-La seconda schermata ha una funzione in più rispetto alle altre perché permette di osservare, nel riquadro sotto a quello dell'orologio, gli ingredienti della ricetta.
+La seconda schermata ha una funzione in più rispetto alle altre perché permette di osservare, nel riquadro sottostante a quello dell'orologio, gli ingredienti della ricetta.
 
 \clearpage
 \begin{figure}[ht]
@@ -122,15 +120,15 @@ In figura \ref{fig:p1_overview} è riportata una visione complessiva del prototi
 
 \subsubsection{Valutazione}
 Durante i test con gli utenti sono emerse varie considerazioni.
-Agli intervistati è stato chiesto di navigare fra le principali schermate, descriverne la funzione e cosa si sarebbero aspettati di trovare.
+Agli intervistati è stato chiesto di navigare fra le principali schermate, descriverne la funzione e quello che si sarebbero aspettati di trovare.
 
 Segue una lista con le considerazioni più importanti.
 \begin{itemize}
   \item Fin da subito è emersa la necessità di rendere più visibile ed accessibile la lista della spesa.
     Infatti per molti utenti è stata l'ultima schermata ad essere aperta.
 
-  \item Le voci "esporta" ed "importa" nel menù laterale non sono sembrate utili a nessun utente.
-    La possibilità di esportare od importare più ricette contemporaneamente da eventuali file non si è rivelata d'interesse.
+  \item Le voci ``esporta" ed ``importa" nel menù laterale non sono sembrate utili a nessun utente.
+    La possibilità di esportare od importare più ricette contemporaneamente da eventuali file esterni non si è rivelata d'interesse.
 
   \item Per gli intervistati la possibilità di cercare ma soprattutto di riordinare ricette non è fondamentale.
 
@@ -141,18 +139,18 @@ Segue una lista con le considerazioni più importanti.
 
   \item Nella schermata di riepilogo di un ricetta, è stato consigliato di aggiungere anche il tempo di cottura ed eventualmente un grado di difficoltà.
 
-  \item La funzionalità di aumento automatico delle dosi nella schermata degli ingredienti ha subito delle critiche perché certi ingredienti non possono essere moltiplicati esattamente, come le uova e tutti quegli ingredienti dosati in modo discreto (esempio "una mela").
+  \item La funzionalità di aumento automatico delle dosi nella schermata degli ingredienti ha subito delle critiche perché certi ingredienti non possono essere moltiplicati esattamente, come le uova e tutti quegli ingredienti dosati in modo discreto (esempio ``una mela").
     La principale preoccupazione è che arrotondamenti nei calcoli rovinino le proporzioni delle ricette.
 \end{itemize}
 
 Per quanto riguarda la schermata dell'assistente:
 \begin{itemize}
-  \item sarebbe meglio sapere il numero dello step rispetto al numero totale di step.
-    Ad esempio con una barra riempibile oppure con una scritta "Step 1 di 5";
+  \item sarebbe meglio sapere il numero dello \textit{step} rispetto al numero totale di \textit{step}.
+    Ad esempio con una barra riempibile oppure con una scritta ``Step 1 di 5";
 
-  \item molte persone hanno apprezzato l'idea di sporcare poco lo schermo del cellulare ma hanno anche aggiunto che a prescindere lo utilizzerebbero con le mani il più ulite possibile.
+  \item molte persone hanno apprezzato l'idea di sporcare poco lo schermo del cellulare ma hanno anche aggiunto che, a prescindere, lo utilizzerebbero con le mani il più ulite possibile;
 
-  \item più di qualche intervistato ha espresso la volontà di poter poter saltare da uno step ad un altro senza passare necessariamente per gli step intermedi;
+  \item più di qualche intervistato ha espresso la volontà di poter saltare da uno \textit{step} ad un altro senza passare necessariamente per gli step intermedi;
 
   \item la maggior parte degli utenti preferisce mantenere il cellulare in verticale per poter passare più comodamente ad altre applicazioni, che solitamente vengono utilizzate in modalità \textit{portrait};
 
@@ -184,11 +182,11 @@ In questo design differente l'ultimo elemento della lista funge da tasto di aggi
 In figura \ref{fig:p2_main_lista_della_spesa} sono rappresentati il nuovo \textit{navigation drawer} e la nuova schermata della lista della spesa.
 Si può notare che dal \textit{navigation drawer} sono state rimosse le voci che permettevano di esportare ed importare ricette.
 
-Le due sezioni della lista della spesa sono distinguibili più facilmente grazie a due titoli: "Da Comprare" per il primo gruppo e "In Dispensa" per il secondo.
+Le due sezioni della lista della spesa sono distinguibili più facilmente grazie a due titoli: ``Da Comprare" per il primo gruppo e ``In Dispensa" per il secondo.
 Notare che ora gli ingredienti sono contenuti nelle rispettive ricette.
 Questa scelta è stata fatta considerando la possibilità di dover comprare uno stesso ingrediente per due o più ricette differenti.
-Si vuole evitare che l'utente pensi di aver introdotto due volte lo stesso ingrediente erroneamente, altrimenti rischia di non comprare abbastanza ingredienti.
-Quando viene aggiunta una spunta ad un ingrediente, questo viene spostato nella sezione "In Dispensa" nella ricetta di appartenenza.
+Si vuole evitare che l'utente pensi di aver introdotto due volte lo stesso ingrediente erroneamente, altrimenti rischierebbe di non comprare abbastanza ingredienti.
+Quando viene aggiunta una spunta ad un ingrediente, questo viene spostato nella sezione ``In Dispensa" nella ricetta di appartenenza.
 
 \begin{figure}[ht]
   \begin{center}
@@ -216,17 +214,17 @@ Nelle note possono essere aggiunte piccole modifiche alla ricetta di cui non si 
 
 
 Infine viene illustrata la nuova versione delle schermate della assistente, riportata in figura \ref{fig:p2_cuciniamo}.
-Dopo aver premuto il tasto "Cuciniamo" nella schermata di preparazione della ricetta si aprirà una schermata simile a quella a sinistra in figura \ref{fig:p2_cuciniamo} ma indicante il primo step della ricetta.
+Dopo aver premuto il tasto ``Cuciniamo" nella schermata di preparazione della ricetta si aprirà una schermata simile a quella a sinistra in figura \ref{fig:p2_cuciniamo} ma indicante il primo step della ricetta.
 Effettuando un'azione di scorrimento a destra si ottiene esattamente la schermata raffigurata.
-In testa alla schermata è stata aggiunta una barra in cui ogni pallino rappresenta uno step.
-Nel caso in cui la ricetta avesse molti step si potrebbe far scorrere la barra a destra e a sinistra per visionarli tutti.
-I pallini vengono riempiti se corrispondono a step precedenti oppure a quello attuale.
+In testa alla schermata è stata aggiunta una barra in cui ogni pallino rappresenta uno \textit{step}.
+Nel caso in cui la ricetta avesse molti \textit{step} si potrebbe far scorrere la barra a destra e a sinistra per visionarli tutti.
+I pallini vengono riempiti se corrispondono a \textit{step} precedenti oppure a quello attuale.
 Nella parte bassa dello schermo sono riportati tutti gli ingredienti della ricetta.
 L'utente potrà rimuoverli mano a mano che vengono utilizzati.
-Si fa notare che la transizione da uno step all'altro, per venire incontro alle esigenze emerse nell'iterazione precedente, può avvenire in due modi: tramite \textit{swipe} oppure tramite tocco di uno dei pallini della barra superiore.
+Si fa notare che la transizione da uno \textit{step} all'altro, per venire incontro alle esigenze emerse nelle interviste precedenti, può avvenire in due modi: tramite \textit{swipe} oppure tramite tocco di uno dei pallini della barra superiore.
 
 La seconda immagine in figura \ref{fig:p2_cuciniamo} riporta la possibilità di far comparire un \textit{navigation drawer} in cui segnare eventuali note.
-Queste, a seconda della sezione in cui vengono scritte, sono aggiunte nelle schermate "Ingredienti" oppure "Preparazione" di figura \ref{fig:p2_ricetta}.
+Queste, a seconda della sezione in cui vengono scritte, sono aggiunte nelle schermate ``Ingredienti" oppure ``Preparazione" di figura \ref{fig:p2_ricetta}.
 
 \begin{figure}[ht]
   \begin{center}
@@ -243,11 +241,11 @@ Queste, a seconda della sezione in cui vengono scritte, sono aggiunte nelle sche
 Operando nello stesso modo della precedente valutazione è emerso che:
 \begin{itemize}
   \item la lista della spesa divisa per ricetta è risultata poco chiara per alcuni utenti, infatti i titoli delle ricette possono essere confusi con degli ingredienti;
-  \item in generale hanno preferito la visualizzazione delle ricette in forma di lista verticale;
-  \item la maggior parte degli intervistati non ha avuto ragioni per utilizzare il \textit{navigation drawer}, è stato consigliato di spostare le impostazioni in un menù a tendina;
-  \item le schermate relative ad una ricetta sono chiare e di facile navigazione;
-  \item la possibilità di aggiungere note non è parsa vantaggiosa, inoltre si potrebbero creare difficoltà con il tasto "Cuciniamo", che coprirebbe parte delle note;
-  \item anche nella schermata dell'assistente il \textit{navigation drawer} non è piaciuto, il motivo principale è il rischio di cambiare step cercando di estrarlo; è stato consigliato di aggiungere un tasto con cui farlo uscire senza dover effettuare gesti di strisciamento con le dita;
+  \item tra le due varianti della schermata principale hanno preferito la visualizzazione del tipo lista verticale.
+  \item la maggior parte degli intervistati non ha avuto ragioni per utilizzare il \textit{navigation drawer} della schermata principale, è stato consigliato di spostare le impostazioni in un menù a tendina;
+  \item le schermate relative ad una ricetta sono state ritenute chiare e di facile navigazione;
+  \item la possibilità di aggiungere note non è parsa vantaggiosa, inoltre si potrebbero creare difficoltà con il tasto ``Cuciniamo", che potrebbe coprire parte delle note;
+  \item anche nella schermata dell'assistente il \textit{navigation drawer} non è piaciuto, il motivo principale è il rischio di cambiare \textit{step} cercando di estrarlo; è stato consigliato di aggiungere un tasto con cui farlo uscire senza dover effettuare gesti di strisciamento con le dita;
   \item la possibilità di vedere e segnare gli ingredienti utilizzati è stata valutata positivamente.
 \end{itemize}
 
@@ -262,7 +260,7 @@ Riportato in figura \ref{fig:design_alternativo}, questo design presenta una gri
 Ciascun quadrato contiene un'immagine di sfondo ed un titolo.
 Quando si sceglie una ricetta la si può premere e tener premuta, in questo modo compariranno due icone: quella in alto rappresenta un forno, quella in basso un cestino della spazzatura, come si può vedere nella seconda immagine in figura \ref{fig:design_alternativo}.
 Trascinando la ricetta selezionata sul cestino verrà richiesta conferma per la sua cancellazione.
-Se invece l'elemento viene trascinato fino in cima, sul forno, verrà avviata la modalità assistente, come se fosse stato premuto il tasto "Cuciniamo" per quella ricetta.
+Se invece l'elemento viene trascinato fino in cima, sul forno, verrà avviata la modalità assistente, come se fosse stato premuto il tasto ``Cuciniamo" per quella ricetta.
 
 Inoltre ogni elemento della griglia può essere girato come fosse una carta, una transizione è illustrata nella terza immagine in figura \ref{fig:design_alternativo}.
 Sul retro della carta sono raccolte alcune informazioni generali sulla ricetta.
@@ -297,14 +295,14 @@ Sono state create nel dettaglio le voci nei menù a tendina e le schermate di cr
 Per quanto riguarda i menù si può osservare figura \ref{fig:p3_menu}.
 Nell'immagine a sinistra il menù contiene le voci:
 \begin{itemize}
-  \item "Importa ricetta" permette di importare ricette dall'esterno;
-  \item "Svuota lista della spesa" elimina tutti gli elementi presenti nella lista della spesa;
-  \item "Impostazioni" permette di accedere alle impostazioni, da cui si potrà cambiare, ad esempio, la lingua dell'applicazione.
+  \item ``Importa ricetta" permette di importare ricette dall'esterno;
+  \item ``Svuota lista della spesa" elimina tutti gli elementi presenti nella lista della spesa;
+  \item ``Impostazioni" permette di accedere alle impostazioni, da cui si potrà cambiare, ad esempio, la lingua dell'applicazione.
 \end{itemize}
 Si fa notare che il tasto in alto a sinistra è stato rimosso, il suo posto è occupato dal nome dell'applicazione.
 Nell'immagine a destra di figura \ref{fig:p3_menu} è stato riportato il menù per la schermata di visualizzazione di una ricetta.
 Il menù comprende una sola voce "Aggiungi ingredienti alla lista della spesa".
-Ovviamente il menu è accessibile non solo dalla schermata di riepilogo, ma anche dalle altre due schermate, infatti il /textit{toolbar} è uno spazio comune alle tre.
+Ovviamente il menu è accessibile non solo dalla schermata di riepilogo, ma anche dalle altre due schermate, infatti il \textit{toolbar} è uno spazio comune alle tre.
 \begin{figure}[ht]
   \begin{center}
     \includegraphics[width=0.45\textwidth]{p3_main_menu}
@@ -322,7 +320,7 @@ Premendo il tasto in alto a destra si possono salvare le modifiche effettuate, l
 Si fa notare che la modalità editabile può essere riattivata premendo il tasto a forma di matita.
 
 
-In figura \ref{fig:p3_add_step_window} viene mostrata anche la finestra che si apre premendo il \textit{floating action button} nella schermata "Preparazione", ovviamente la stessa operazione nella schermata degli ingredienti aprirà una finestra con del testo leggermente diverso.
+In figura \ref{fig:p3_add_step_window} viene mostrata anche la finestra che si apre premendo il \textit{floating action button} nella schermata ``Preparazione", ovviamente la stessa operazione nella schermata degli ingredienti aprirà una finestra con del testo leggermente diverso.
 
 \begin{figure}[ht]
   \begin{center}
@@ -353,7 +351,7 @@ Le uniche modifiche effettuate alle altre schermate sono:
 \end{itemize}
 
 Come ultima cosa si vuole sottolineare che ora la schermata dell'assistente è pensata per essere usata esclusivamente con il cellulare in verticale.
-Questo perché è risultato che la maggior parte degli utenti preferisce non dover girare in orizzontale il cellulare.
+Questo perché dalle interviste è risultato che la maggior parte degli utenti preferisce non dover girare in orizzontale il cellulare.
 
 \clearpage
 \subsection{User Testing Finale}
@@ -364,11 +362,11 @@ Spostandosi con le linguette in alto riescono a raggiungere le altre schermate.
 Sia nella schermata sugli ingredienti che in quella sui passaggi, usano le funzioni di aggiunta degli elementi correttamente.
 
 \paragraph{Task 2: Eliminare un ingrediente di una ricetta.}
-Partendo dalla schermata principale, premono con sicurezza su una ricetta e si dirigono subito sulla schermata seconda tab; qui premono il tasto a forma di matita e poi il cestino relativo all'ingrediente che volevano eliminare.
-Capiscono subito che l'icona a forma di cestino indica un operazione di "elimina elemento".
+Partendo dalla schermata principale, premono con sicurezza su una ricetta e si dirigono subito sulla schermata degli ingredienti; qui premono il tasto a forma di matita e poi il cestino relativo all'ingrediente che volevano eliminare.
+Capiscono subito che l'icona a forma di cestino indica un operazione di ``elimina elemento".
 
 \paragraph{Task 3: Condividere una ricetta.}
-Inizialmente si aspettano che le ricette siano condivisibili anche dalla schermata principale ma dopo aver premuto su una ricetta riconoscono istantaneamente il tasto di condivisione.
+Inizialmente si aspettano che le ricette siano condivisibili anche dalla schermata principale ma dopo aver premuto su una ricetta, nella schermata di riepilogo, riconoscono istantaneamente il tasto di condivisione.
 
 \paragraph{Task 4: Aggiungere gli ingredienti di una ricetta nella lista della spesa.}
 In principio navigano nella schermata della lista della spesa, per aggiungere manualmente gli ingredienti.
@@ -386,7 +384,7 @@ Identificano senza problemi la voce corretta.
 Inizialmente non hanno ben chiaro cosa si intenda per modalità assistente, con un po' di aiuto giungono alla schermata dei passaggi di una ricetta.
 Qui vedono il grande tasto in fondo allo schermo e lo premono.
 Dopo aver visto la schermata dell'assistente comprendono meglio il suo scopo.
-Riescono a capire quale sia lo step attuale, quanti ne mancano e quanti sono stati già eseguiti.
+Riescono a capire quale sia lo \textit{step} attuale, quanti ne mancano e quanti sono stati già eseguiti.
 
 \clearpage
 \subsubsection{Test dei cinque secondi}
