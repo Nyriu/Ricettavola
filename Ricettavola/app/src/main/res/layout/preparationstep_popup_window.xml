@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="50dp"
+    android:background="@color/darkGrey">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:textSize="22sp"
+        android:textColor="@color/black"
+        android:text="@string/recipe_preparationstep_popup_title"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/new_preparationstep_edit"
+        android:minWidth="200dp"
+        android:minHeight="150dp"
+        android:maxLines="7"
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:hint="@string/recipe_preparationstep_placeholder_item"
+        android:gravity="top|left"
+        android:inputType="textMultiLine"
+         />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_close_black_24dp"
+            android:id="@+id/cancel_button" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_check_black_24dp"
+            android:id="@+id/confirm_button"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

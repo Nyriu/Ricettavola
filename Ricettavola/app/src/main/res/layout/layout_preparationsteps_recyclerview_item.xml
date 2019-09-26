@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:background="#C5CAE9"
+    android:foreground="?attr/selectableItemBackground"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        >
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="top|left"
+            android:id="@+id/relative_layout"
+            android:layout_weight="95"
+            >
+
+            <TextView
+                android:id="@+id/step_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textColor="@color/black"
+                android:textAppearance="?attr/textAppearanceListItem"
+                android:background="@color/lightGrey"
+                android:textSize="20sp"
+                android:padding="5dp"
+                />
+
+            <TextView
+                android:id="@+id/step_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Placeholder"
+                android:layout_toEndOf="@+id/step_number"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <EditText
+                android:id="@+id/edit_step_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/step_number"
+                android:layout_marginStart="20dp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:hint="@string/recipe_preparationstep_placeholder_item"
+                android:visibility="gone"
+                />
+
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:id="@+id/delete_button_container"
+            android:visibility="visible"
+            android:layout_margin="10dp"
+            >
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_delete_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/delete_button"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

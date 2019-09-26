@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:weightSum="100"
+    android:orientation="horizontal"
+    android:background="@color/colorPrimary"
+    android:gravity="center_vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:id="@+id/toolbar_back_arrow_container"
+        android:visibility="visible"
+        android:layout_margin="10dp"
+        >
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back_black_24dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/toolbar_back_arrow"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="70"
+        android:text="Titolo Ricetta"
+        android:textColor="@color/white"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:textSize="23sp"
+        android:visibility="visible"
+        android:id="@+id/toolbar_recipe_title"
+        />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:id="@+id/toolbar_share_container"
+        android:layout_margin="10dp"
+        >
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_share_black_24dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/toolbar_share"
+            android:layout_centerInParent="true"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:id="@+id/toolbar_edit_container"
+        android:layout_margin="10dp"
+        >
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_mode_edit_white_24dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/toolbar_edit"
+            android:layout_centerInParent="true"
+            />
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_check_white_24dp"
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/toolbar_check"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
