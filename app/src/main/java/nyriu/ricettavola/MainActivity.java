@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab: {
+                mSectionsPagerAdapter.getRecipesFragment().setEditMode(false);
                 Intent intent = new Intent(this, RecipeActivity.class);
                 intent.putExtra("new_recipe", true);
                 startActivity(intent);
@@ -335,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onRecipeClick(int position) {
             //Toast.makeText(getContext(), "ViewHolder clicked!" + position,Toast.LENGTH_SHORT).show();
+            setEditMode(false);
             Intent intent = new Intent(getContext(), RecipeActivity.class);
             intent.putExtra("recipe_id", this.mRecipes.get(position).getId());
             startActivity(intent);
